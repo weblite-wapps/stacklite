@@ -6,11 +6,11 @@ import bus from './bus'
 import config from '../../config'
 
 export default {
-  postAnswers: (username, userId, wisId, answers) =>
+  postQuestion: (username, userId, wisId, form) =>
     request
-      .post(config.server + '/postAnswer/')
+      .post(config.server + '/postQuestion/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ username, userId, wisId, answers })
+      .send({ username, userId, wisId, form })
       .catch(() => bus.$emit('show-message', 'Error has occured ...')),
 
   getUserAnswers: (userId, wisId) =>
@@ -21,9 +21,9 @@ export default {
       .then(res => res.body)
       .catch(() => bus.$emit('show-message', 'Error has occured ...')),
 
-  getAllAnswers: wisId =>
+  getAllQuestions: wisId =>
     request
-      .get(config.server + '/getAllAnswers/')
+      .get(config.server + '/getAllQuestions/')
       .set('Access-Control-Allow-Origin', '*')
       .query({ wisId })
       .then(res => res.body)

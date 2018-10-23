@@ -1,11 +1,17 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-exports.Answer = mongoose.model(
-  'Answer',
+exports.Question = mongoose.model(
+  'Question',
   new mongoose.Schema({
-    username: String,
-    userId: String,
+    authorName: String,
+    authorId: String,
     wisId: String,
-    answers: Array,
+    title: String,
+    text: String,
+    tag: String,
+    upLevel: Array,
+    downLevel: Array,
+    answers: Number,
+    date: String,
   }),
 )

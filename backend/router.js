@@ -1,13 +1,13 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var database = require('./database')
+const express = require('express')
+const bodyParser = require('body-parser')
+const database = require('./database')
 
-var router = express.Router()
+const router = express.Router()
 router.use(bodyParser.json())
 
-router.post('/postAnswer', ({ body }, res) =>
+router.post('/postQuestion', ({ body }, res) =>
   database
-    .addAnswer(body.username, body.userId, body.wisId, body.answers)
+    .addQuestion(body.username, body.userId, body.wisId, body.form)
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),
 )
@@ -19,9 +19,9 @@ router.get('/getUserAnswer', ({ query }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
-router.get('/getAllAnswers', (req, res) =>
+router.get('/getAllQuestions', (req, res) =>
   database
-    .getAllAnswers(req.query.wisId)
+    .getAllQuestions(req.query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )
