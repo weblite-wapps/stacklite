@@ -10,11 +10,15 @@
 </template>
 
 <script>
+//helper
+import bus from '../helper/function/bus'
+
 export default {
   name: 'QuestionForm',
 
   props: {
     addQuestion: Function,
+    switchState: Function,
   },
 
   data() {
@@ -27,7 +31,12 @@ export default {
 
   methods: {
     sendQuestionToDB() {
-      this.addQuestion({ title: this.title, text: this.text, tag: this.tag })
+      const valid = this.title == '' || this.text == '' ? false : true
+      if (!valid) bus.$emit('show-message', 'please fill all requirements ...')
+      else {
+        this.addQuestion({ title: this.title, text: this.text, tag: this.tag })
+        this.switchState('questionsMode')
+      }
     },
   },
 }

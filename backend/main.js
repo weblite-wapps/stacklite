@@ -13,8 +13,8 @@ database.connect('stacklite_db')
 app.use(cors({ origin: '*' }))
 app.use('/', router.Router)
 
-// const key = fs.readFileSync(path.resolve('./certs/express.key'), 'utf8')
-// const cert = fs.readFileSync(path.resolve('./certs/express.crt'), 'utf8')
+const key = fs.readFileSync(path.resolve('./certs/express.key'), 'utf8')
+const cert = fs.readFileSync(path.resolve('./certs/express.crt'), 'utf8')
 
-// https.createServer({ key, cert }, app).listen(3091)
-app.listen(3091)
+https.createServer({ key, cert }, app).listen(3091)
+// app.listen(3091, () => console.log('Aydas backend start'))

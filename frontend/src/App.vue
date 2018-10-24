@@ -1,11 +1,14 @@
 <template>
   <div class="root">
-    <QuestionForm :addQuestion="addQuestion" />
+
+    <Questions v-if="state === 'questionsMode'" :questions=questions :switchState=switchState />
+    <QuestionForm v-if="state === 'askingMode'" :addQuestion="addQuestion" :switchState=switchState />
+
     <SnackBar/>
     <button @click="fetchData" type="sbmit">
       fetch
-    </button>
-    {{questions}}
+    </button>  
+    
   </div>
 </template>
 
@@ -13,6 +16,7 @@
 <script>
 // components
 import QuestionForm from './components/QuestionForm'
+import Questions from './components/Questions'
 import SnackBar from './helper/components/SnackBar'
 // helper
 import webliteHandler from './helper/function/weblite.api'
@@ -26,6 +30,7 @@ export default {
 
   components: {
     QuestionForm,
+    Questions,
     SnackBar,
   },
 
@@ -35,6 +40,7 @@ export default {
       userId: '1',
       wisId: '123',
       questions: [],
+      state: 'questionsMode',
     }
   },
 
@@ -43,10 +49,13 @@ export default {
   },
 
   methods: {
+    switchState(state) {
+      this.state = state
+    },
+
     fetchData() {
       requests.getAllQuestions(this.wisId).then(res => {
         this.questions = res
-        //switchState('reviewing')
       })
       // requests.getUserAnswers(this.userId, this.wisId).then(res => {
       //   if (R.prop('found', res)) {
@@ -61,16 +70,12 @@ export default {
       // })
     },
     addQuestion(form) {
-      const valid = form.title == '' || form.text == '' ? false : true
-      if (!valid) bus.$emit('show-message', 'please fill all requirements ...')
-      else {
-        requests
-          .postQuestion(this.username, this.userId, this.wisId, form)
-          .then(() => {
-            //switchState('reviewing')
-            bus.$emit('show-message', 'Submitted ...')
-          })
-      }
+      requests
+        .postQuestion(this.username, this.userId, this.wisId, form)
+        .then(() => {
+          this.switchState('questionsMode')
+          bus.$emit('show-message', 'Submitted ...')
+        })
     },
   },
 }

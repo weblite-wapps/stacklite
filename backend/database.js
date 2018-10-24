@@ -2,20 +2,20 @@ const mongoose = require('mongoose')
 const models = require('./db_models')
 
 exports.connect = function connect(name) {
-  mongoose.connect('mongodb://localhost/' + name)
+  mongoose.connect(`mongodb://localhost/${name}`)
 
   const db = mongoose.connection
   db.on('error', console.error.bind(console, 'connection error:'))
   db.once('open', () => {
     console.log('connected to database successfully ...')
-    //db.db.dropDatabase()
+    db.db.dropDatabase()
   })
 }
 
 exports.addQuestion = (username, userId, wisId, form) =>
   new models.Question({
-    username,
-    userId,
+    authorName: username,
+    authorId: userId,
     wisId,
     title: form.title,
     text: form.text,
