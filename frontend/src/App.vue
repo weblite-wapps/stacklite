@@ -1,14 +1,22 @@
 <template>
   <div class="root">
 
-    <Questions v-if="state === 'questionsMode'" :questions=questions :switchState=switchState />
-    <QuestionForm v-if="state === 'askingMode'" :addQuestion="addQuestion" :switchState=switchState />
+    <QuestionForm 
+      v-if="state === 'askingMode'" 
+      :addQuestion="addQuestion" 
+      :switchState="switchState" 
+    />
 
-    <SnackBar/>
-    <button @click="fetchData" type="sbmit">
-      fetch
-    </button>  
-    
+    <Questions 
+      v-if="state === 'questionsMode'" 
+      :questions="questions" 
+      :userId="userId"
+      :state="state"
+      :fetchRecentQuestions="fetchRecentQuestions" 
+      :updateLevel="updateLevel"
+      :switchState="switchState"
+    />
+    <SnackBar/>  
   </div>
 </template>
 
@@ -22,6 +30,7 @@ import SnackBar from './helper/components/SnackBar'
 import webliteHandler from './helper/function/weblite.api'
 import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
+import { request } from 'http'
 // R && W
 const { R, W } = window
 
@@ -37,7 +46,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '1000',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -53,22 +62,18 @@ export default {
       this.state = state
     },
 
-    fetchData() {
+    fetchRecentQuestions() {
       requests.getAllQuestions(this.wisId).then(res => {
         this.questions = res
       })
-      // requests.getUserAnswers(this.userId, this.wisId).then(res => {
-      //   if (R.prop('found', res)) {
-      //     this.fillMyData(res.answers)
-      //   } else {
-      //     this.answers = R.map(
-      //       ({ type }) => (type === 'checkbox' ? [] : ''),
-      //       this.questions,
-      //     )
-      //     switchState('answering')
-      //   }
-      // })
     },
+
+    updateLevel(score, userId, questionId) {
+      requests
+        .updateLevel(score, userId, questionId)
+        .then(() => bus.$emit('show-message', 'updated ...'))
+    },
+
     addQuestion(form) {
       requests
         .postQuestion(this.username, this.userId, this.wisId, form)

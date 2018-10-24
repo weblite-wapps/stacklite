@@ -20,11 +20,17 @@ exports.addQuestion = (username, userId, wisId, form) =>
     title: form.title,
     text: form.text,
     tag: form.tag,
-    upLevel: [],
-    downLelve: [],
+    level: 0,
+    voters: [],
     answers: 0,
     date: '',
   }).save()
+
+exports.updateLevel = (score, userId, questionId) =>
+  models.Question.findByIdAndUpdate(questionId, {
+    $inc: { level: score },
+    $push: { voters: userId },
+  })
 
 exports.getUserAnswer = (userId, wisId) =>
   models.Question.findOne({ userId, wisId })

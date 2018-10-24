@@ -11,7 +11,19 @@ export default {
       .post(config.server + '/postQuestion/')
       .set('Access-Control-Allow-Origin', '*')
       .send({ username, userId, wisId, form })
-      .catch(() => bus.$emit('show-message', 'Error has occured ...')),
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in posting Question...'),
+      ),
+
+  updateLevel: (score, userId, questionId) =>
+    request
+      .post(config.server + '/updateLevel')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ score, userId, questionId })
+      .then(res => console.log(res))
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in updating level...'),
+      ),
 
   getUserAnswers: (userId, wisId) =>
     request
@@ -27,5 +39,10 @@ export default {
       .set('Access-Control-Allow-Origin', '*')
       .query({ wisId })
       .then(res => res.body)
-      .catch(() => bus.$emit('show-message', 'Error has occured ...')),
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting all questions...',
+        ),
+      ),
 }

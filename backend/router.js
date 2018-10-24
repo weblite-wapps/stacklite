@@ -12,6 +12,13 @@ router.post('/postQuestion', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/updateLevel', ({ body }, res) =>
+  database
+    .updateLevel(body.score, body.userId, body.questionId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.get('/getUserAnswer', ({ query }, res) =>
   database
     .getUserAnswer(query.userId, query.wisId)
