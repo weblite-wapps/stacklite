@@ -14,14 +14,28 @@ router.post('/postQuestion', ({ body }, res) =>
 
 router.post('/updateLevel', ({ body }, res) =>
   database
-    .updateLevel(body.score, body.userId, body.questionId)
+    .updateLevel(body.score, body.userId, body.wisId, body.questionId)
     .then(() => res.send(body))
     .catch(err => res.status(500).send(err)),
 )
 
-router.get('/getUserAnswer', ({ query }, res) =>
+router.post('/addToFavorite', ({ body }, res) =>
   database
-    .getUserAnswer(query.userId, query.wisId)
+    .addToFavorite(body.questionId, body.userId, body.wisId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserQuestions', ({ query }, res) =>
+  database
+    .getUserQuestions(query.userId, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserFavoriteQuestions', ({ query }, res) =>
+  database
+    .getUserFavoriteQuestions(query.userId, query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )

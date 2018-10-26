@@ -23,21 +23,66 @@ exports.addQuestion = (username, userId, wisId, form) =>
     level: 0,
     voters: [],
     answers: 0,
-    date: '',
+    date: new Date(),
+    favorite: [],
   }).save()
 
-exports.updateLevel = (score, userId, questionId) =>
-  models.Question.findByIdAndUpdate(questionId, {
-    $inc: { level: score },
-    $push: { voters: userId },
-  })
+exports.updateLevel = (score, userId, wisId, questionId) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    {
+      $inc: { level: score },
+      $push: { voters: userId },
+    },
+  )
 
-exports.getUserAnswer = (userId, wisId) =>
-  models.Question.findOne({ userId, wisId })
-    .exec()
-    .then(res => {
-      if (!res) return { found: false, answers: [] }
-      return { found: true, answers: res.answers }
-    })
+exports.getUserQuestions = (userId, wisId) =>
+  models.Question.find({ authorId: userId, wisId }).exec()
 
 exports.getAllQuestions = wisId => models.Question.find({ wisId }).exec()
+
+exports.addToFavorite = (questionId, userId, wisId) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    {
+      $push: { favorite: userId },
+    },
+  )
+
+exports.getUserFavoriteQuestions = (userId, wisId) =>
+  models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
+
+// exports.addToFavorite = (userId, wisId, questionId) =>
+//   models.Favorite.findOneAndUpdate(
+//     {
+//       userId,
+//       wisId,
+//     },
+//     {
+//       $push: { questions: questionId },
+//     },
+//   )
+
+// exports.createNewFavorite = (userId, wisId) =>
+//   new models.Favorite({
+//     userId,
+//     wisId,
+//     questions: [],
+//   }).save()
+
+// exports.handleAddToFavoriteRequest = (userId, wisId, questionId) =>
+//   models.Favorite.findOne({ userId, wisId })
+//     .exec()
+//     .then(res => {
+//       if (!res) this.createNewFavorite(userId, wisId)
+//       this.addToFavorite(userId, wisId, questionId)
+//     })
+
+// exports.getFavorites = (userId, wisId) =>
+//   models.Favorite.find({ userId, wisId }).exec()

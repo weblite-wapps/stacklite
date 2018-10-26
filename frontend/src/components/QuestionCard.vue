@@ -5,10 +5,11 @@
     <p> tag: {{question.tag}}</p>
     <p> author: {{question.authorName}}</p>
     <p> level: {{level}}</p>
+    <p> date: {{question.date}}</p>
     <button @click="share()" type="submit">
       share
     </button>
-    <button @click="addToFavorite()" type="submit">
+    <button @click="addToFavorite(question._id)" type="submit">
       favorite
     </button>
     <button @click="changeLevel(1)" type="submit">
@@ -30,54 +31,32 @@ export default {
     state: String,
     switchState: Function,
     updateLevel: Function,
+    addToFavorite: Function,
   },
 
   data() {
     return {
-      title: '',
-      text: '',
-      level: 0,
-      authorName: '',
-      tag: '',
-      date: '',
-      answers: 0,
-      voters: [],
+      level: -100,
     }
   },
 
-  created: function() {
-    const {
-      title,
-      text,
-      tag,
-      level,
-      authorName,
-      date,
-      answers,
-      voters,
-    } = this.question
-    //   this.title = title
-    //   this.text = text
-    //   this.tag = tag
-    this.level = level
-    //   this.authorName = authorName
-    //   this.date = date
-    //   this.answers = answers
-    //   this.voters = voters
-  },
-
   methods: {
-    addToFavorite() {},
-
     share() {},
 
     changeLevel(score) {
       const { question } = this
-      if (R.indexOf(this.userId, question.voters) === -1) {
-        this.updateLevel(score, this.userId, question._id)
+      if (
+        R.indexOf(this.userId, question.voters) === -1 &&
+        this.level === question.level
+      ) {
+        this.updateLevel(score, question._id)
         this.level += score
       }
     },
+  },
+
+  mounted: function() {
+    this.level = this.question.level
   },
 }
 </script>

@@ -15,23 +15,49 @@ export default {
         bus.$emit('show-message', 'Error has occured in posting Question...'),
       ),
 
-  updateLevel: (score, userId, questionId) =>
+  updateLevel: (score, userId, wisId, questionId) =>
     request
       .post(config.server + '/updateLevel')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ score, userId, questionId })
-      .then(res => console.log(res))
+      .send({ score, userId, wisId, questionId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in updating level...'),
       ),
 
-  getUserAnswers: (userId, wisId) =>
+  addToFavorite: (questionId, userId, wisId) =>
     request
-      .get(config.server + '/getUserAnswer/')
+      .post(config.server + '/addToFavorite')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ questionId, userId, wisId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in adding to favorite...'),
+      ),
+
+  getUserQuestions: (userId, wisId) =>
+    request
+      .get(config.server + '/getUserQuestions/')
       .set('Access-Control-Allow-Origin', '*')
       .query({ userId, wisId })
       .then(res => res.body)
-      .catch(() => bus.$emit('show-message', 'Error has occured ...')),
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured getting user questions ...',
+        ),
+      ),
+
+  getUserFavoriteQuestions: (userId, wisId) =>
+    request
+      .get(config.server + '/getUserFavoriteQuestions/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ userId, wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured getting user favorite questions ...',
+        ),
+      ),
 
   getAllQuestions: wisId =>
     request

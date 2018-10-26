@@ -1,6 +1,6 @@
 <template>
   <div class="root">
-
+    
     <QuestionForm 
       v-if="state === 'askingMode'" 
       :addQuestion="addQuestion" 
@@ -13,7 +13,10 @@
       :userId="userId"
       :state="state"
       :fetchRecentQuestions="fetchRecentQuestions" 
+      :fetchUserQuestions="fetchUserQuestions"
+      :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :updateLevel="updateLevel"
+      :addToFavorite="addToFavorite"
       :switchState="switchState"
     />
     <SnackBar/>  
@@ -26,11 +29,13 @@
 import QuestionForm from './components/QuestionForm'
 import Questions from './components/Questions'
 import SnackBar from './helper/components/SnackBar'
+
 // helper
 import webliteHandler from './helper/function/weblite.api'
 import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
 import { request } from 'http'
+
 // R && W
 const { R, W } = window
 
@@ -45,8 +50,8 @@ export default {
 
   data() {
     return {
-      username: 'Armin',
-      userId: '1000',
+      username: 'Asghar',
+      userId: '1',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -68,10 +73,25 @@ export default {
       })
     },
 
-    updateLevel(score, userId, questionId) {
+    fetchUserQuestions() {
+      requests.getUserQuestions(this.userId, this.wisId).then(res => {
+        this.questions = res
+        console.log(res)
+      })
+    },
+
+    fetchUserFavoriteQuestions() {
+      requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
+        this.questions = res
+        console.log(res)
+        bus.$emit('show-message', 'fetch favorites ...')
+      })
+    },
+
+    updateLevel(score, questionId) {
       requests
-        .updateLevel(score, userId, questionId)
-        .then(() => bus.$emit('show-message', 'updated ...'))
+        .updateLevel(score, this.userId, this.wisId, questionId)
+        .then(() => bus.$emit('show-message', 'level updated ...'))
     },
 
     addQuestion(form) {
@@ -79,8 +99,14 @@ export default {
         .postQuestion(this.username, this.userId, this.wisId, form)
         .then(() => {
           this.switchState('questionsMode')
-          bus.$emit('show-message', 'Submitted ...')
+          bus.$emit('show-message', 'question added ...')
         })
+    },
+
+    addToFavorite(questionId) {
+      requests
+        .addToFavorite(questionId, this.userId, this.wisId)
+        .then(() => bus.$emit('show-message', 'added to favorite ...'))
     },
   },
 }

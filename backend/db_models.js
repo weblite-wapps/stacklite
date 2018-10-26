@@ -13,5 +13,15 @@ exports.Question = mongoose.model(
     voters: Array,
     answers: Number,
     date: String,
+    favorite: Array,
   }),
 )
+
+// exports.Favorite = mongoose.model(
+//   'Favorite',
+//   new mongoose.Schema({
+//     userId: String,
+//     wisId: String,
+//     questions: Array,
+//   }),
+// )
