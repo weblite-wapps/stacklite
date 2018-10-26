@@ -33,6 +33,18 @@ export default {
         bus.$emit('show-message', 'Error has occured in adding to favorite...'),
       ),
 
+  removeFromFavorite: (questionId, userId, wisId) =>
+    request
+      .post(config.server + '/removeFromFavorite')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ questionId, userId, wisId })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in removing from favorite...',
+        ),
+      ),
+
   getUserQuestions: (userId, wisId) =>
     request
       .get(config.server + '/getUserQuestions/')

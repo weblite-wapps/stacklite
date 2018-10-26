@@ -25,6 +25,7 @@
       :switchState="switchState"
       :updateLevel="updateLevel"
       :addToFavorite="addToFavorite"
+      :removeFromFavorite="removeFromFavorite"
     />
 
   </div>
@@ -51,6 +52,7 @@ export default {
     fetchUserFavoriteQuestions: Function,
     updateLevel: Function,
     addToFavorite: Function,
+    removeFromFavorite: Function,
   },
 
   computed: {

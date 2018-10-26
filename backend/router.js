@@ -26,6 +26,13 @@ router.post('/addToFavorite', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/removeFromFavorite', ({ body }, res) =>
+  database
+    .removeFromFavorite(body.questionId, body.userId, body.wisId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.get('/getUserQuestions', ({ query }, res) =>
   database
     .getUserQuestions(query.userId, query.wisId)

@@ -55,6 +55,17 @@ exports.addToFavorite = (questionId, userId, wisId) =>
     },
   )
 
+exports.removeFromFavorite = (questionId, userId, wisId) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    {
+      $pull: { favorite: userId },
+    },
+  )
+
 exports.getUserFavoriteQuestions = (userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
 

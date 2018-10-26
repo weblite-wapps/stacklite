@@ -9,7 +9,7 @@
     <button @click="share()" type="submit">
       share
     </button>
-    <button @click="addToFavorite(question._id)" type="submit">
+    <button @click="addFavorite()" type="submit">
       favorite
     </button>
     <button @click="changeLevel(1)" type="submit">
@@ -18,6 +18,7 @@
     <button @click="changeLevel(-1)" type="submit">
       downLevel
     </button>
+    {{favorite}}
   </div>  
 </template>
 
@@ -32,15 +33,23 @@ export default {
     switchState: Function,
     updateLevel: Function,
     addToFavorite: Function,
+    removeFromFavorite: Function,
   },
 
   data() {
     return {
       level: -100,
+      favorite: false,
     }
   },
 
   methods: {
+    addFavorite() {
+      this.favorite
+        ? this.removeFromFavorite(this.question._id)
+        : this.addToFavorite(this.question._id)
+      this.favorite = !this.favorite
+    },
     share() {},
 
     changeLevel(score) {
@@ -57,6 +66,8 @@ export default {
 
   mounted: function() {
     this.level = this.question.level
+    this.favorite =
+      R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
   },
 }
 </script>

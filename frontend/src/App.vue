@@ -17,6 +17,7 @@
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :updateLevel="updateLevel"
       :addToFavorite="addToFavorite"
+      :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
     />
     <SnackBar/>  
@@ -50,7 +51,7 @@ export default {
 
   data() {
     return {
-      username: 'Asghar',
+      username: 'Armin',
       userId: '1',
       wisId: '123',
       questions: [],
@@ -107,6 +108,12 @@ export default {
       requests
         .addToFavorite(questionId, this.userId, this.wisId)
         .then(() => bus.$emit('show-message', 'added to favorite ...'))
+    },
+
+    removeFromFavorite(questionId) {
+      requests
+        .removeFromFavorite(questionId, this.userId, this.wisId)
+        .then(() => bus.$emit('show-message', 'removed from favorite ...'))
     },
   },
 }
