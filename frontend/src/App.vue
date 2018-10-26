@@ -77,14 +77,12 @@ export default {
     fetchUserQuestions() {
       requests.getUserQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
-        console.log(res)
       })
     },
 
     fetchUserFavoriteQuestions() {
       requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
-        console.log(res)
         bus.$emit('show-message', 'fetch favorites ...')
       })
     },

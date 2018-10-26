@@ -68,32 +68,3 @@ exports.removeFromFavorite = (questionId, userId, wisId) =>
 
 exports.getUserFavoriteQuestions = (userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
-
-// exports.addToFavorite = (userId, wisId, questionId) =>
-//   models.Favorite.findOneAndUpdate(
-//     {
-//       userId,
-//       wisId,
-//     },
-//     {
-//       $push: { questions: questionId },
-//     },
-//   )
-
-// exports.createNewFavorite = (userId, wisId) =>
-//   new models.Favorite({
-//     userId,
-//     wisId,
-//     questions: [],
-//   }).save()
-
-// exports.handleAddToFavoriteRequest = (userId, wisId, questionId) =>
-//   models.Favorite.findOne({ userId, wisId })
-//     .exec()
-//     .then(res => {
-//       if (!res) this.createNewFavorite(userId, wisId)
-//       this.addToFavorite(userId, wisId, questionId)
-//     })
-
-// exports.getFavorites = (userId, wisId) =>
-//   models.Favorite.find({ userId, wisId }).exec()

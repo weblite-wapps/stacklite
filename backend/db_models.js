@@ -16,12 +16,3 @@ exports.Question = mongoose.model(
     favorite: Array,
   }),
 )
-
-// exports.Favorite = mongoose.model(
-//   'Favorite',
-//   new mongoose.Schema({
-//     userId: String,
-//     wisId: String,
-//     questions: Array,
-//   }),
-// )

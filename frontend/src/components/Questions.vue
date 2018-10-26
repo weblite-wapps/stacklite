@@ -1,5 +1,20 @@
 <template>
   <div>
+    Search By :
+      <select v-model="searchFilter">
+        <option
+          v-for="(filter, i) in searchFilters"
+          :key="i"
+          :value="filter"
+        > {{filter}} </option>
+      </select>
+
+    <input
+      v-model="query"
+      type="textbox"
+      placeholder="Search here"
+    >
+
     <button @click="switchState('askingMode')" type="sbmit">
       ask question
     </button>
@@ -17,7 +32,7 @@
     </button>
 
     <QuestionCard 
-      v-for="(q) in reverseQuestions"
+      v-for="(q) in filteredQuestions"
       :key="q._id"
       :question="q"
       :userId="userId"
@@ -42,6 +57,15 @@ export default {
     QuestionCard,
   },
 
+  data() {
+    return {
+      query: '',
+      searchFilter: '',
+      searchFilterTemp: '',
+      searchFilters: ['title', 'tag', 'author', 'text', 'date', 'level'],
+    }
+  },
+
   props: {
     questions: [Array, Object],
     userId: String,
@@ -55,9 +79,24 @@ export default {
     removeFromFavorite: Function,
   },
 
+  methods: {
+    searchTitle(question) {
+      if (!this.query.length) return true
+      this.searchFilter === 'author'
+        ? (this.searchFilterTemp = 'authorName')
+        : (this.searchFilterTemp = this.searchFilter)
+
+      const position = R.prop(this.searchFilterTemp, question)
+        .toString()
+        .toLowerCase()
+        .search(this.query.toLowerCase())
+      return position < 0 ? false : true
+    },
+  },
+
   computed: {
-    reverseQuestions() {
-      return R.reverse(this.questions)
+    filteredQuestions() {
+      return R.filter(this.searchTitle, R.reverse(this.questions))
     },
   },
 
