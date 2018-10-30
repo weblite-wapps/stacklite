@@ -1,9 +1,14 @@
 <template>
   <div>
-    <textarea v-model="text" placeholder="your answer is ..."></textarea>
-    <button @click="storeAnswer(text)" type='submit'>
-      submit
-    <button>
+    <p> answer text: {{answer.text}} <p/>
+    <p> author: {{answer.authorName}} <p/>
+    <p> level: {{level}} <p/>
+    <button @click="changeLevel(1)" type="submit">
+      upLevel
+    </button>
+    <button @click="changeLevel(-1)" type="submit">
+      downLevel
+    </button>
   </div>
 </template>
 
@@ -11,12 +16,31 @@
 export default {
   data() {
     return {
-      text: '',
+      level: -100,
     }
   },
 
   props: {
-    storeAnswer: Function,
+    answer: Object,
+    userId: String,
+    updateAnswerLevel: Function,
+  },
+
+  methods: {
+    changeLevel(score) {
+      const { answer } = this
+      if (
+        R.indexOf(this.userId, answer.voters) === -1 &&
+        this.level === answer.level
+      ) {
+        this.updateAnswerLevel(score, answer._id)
+        this.level += score
+      }
+    },
+  },
+
+  mounted: function() {
+    this.level = this.answer.level
   },
 }
 </script>

@@ -30,8 +30,6 @@ export default {
   props: {
     question: Object,
     userId: String,
-    state: String,
-    switchState: Function,
     updateLevel: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,

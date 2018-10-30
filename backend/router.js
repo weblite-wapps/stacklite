@@ -32,6 +32,13 @@ router.post('/updateLevel', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/updateAnswerLevel', ({ body }, res) =>
+  database
+    .updateAnswerLevel(body.score, body.userId, body.wisId, body.answerId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.post('/addToFavorite', ({ body }, res) =>
   database
     .addToFavorite(body.questionId, body.userId, body.wisId)

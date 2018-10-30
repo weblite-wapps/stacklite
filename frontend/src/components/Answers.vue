@@ -12,6 +12,9 @@
     <AnswerCard
       v-for="(answer, i) in answers"
       :key="i"
+      :answer="answer"
+      :userId="userId"
+      :updateAnswerLevel="updateAnswerLevel"
     />
 
   </div>
@@ -29,10 +32,12 @@ export default {
   },
 
   props: {
-    answers: Array,
+    userId: String,
     questionTitle: String,
+    answers: Array,
     switchState: Function,
     storeAnswer: Function,
+    updateAnswerLevel: Function,
   },
 }
 </script>

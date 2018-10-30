@@ -24,6 +24,18 @@ export default {
         bus.$emit('show-message', 'Error has occured in updating level...'),
       ),
 
+  updateAnswerLevel: (score, userId, wisId, answerId) =>
+    request
+      .post(config.server + '/updateAnswerLevel')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ score, userId, wisId, answerId })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in updating answer level...',
+        ),
+      ),
+
   addToFavorite: (questionId, userId, wisId) =>
     request
       .post(config.server + '/addToFavorite')

@@ -32,12 +32,10 @@
     </button>
 
     <QuestionCard 
-      v-for="(q) in filteredQuestions"
-      :key="q._id"
-      :question="q"
+      v-for="(question) in filteredQuestions"
+      :key="question._id"
+      :question="question"
       :userId="userId"
-      :state="state"
-      :switchState="switchState"
       :updateLevel="updateLevel"
       :addToFavorite="addToFavorite"
       :removeFromFavorite="removeFromFavorite"

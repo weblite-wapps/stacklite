@@ -23,10 +23,12 @@
 
     <Answers
       v-if="state === 'answersMode'"
-      :answers="answers"
+      :userId="userId"
       :questionTitle="questionTitle"
+      :answers="answers"
       :switchState="switchState"
       :storeAnswer="storeAnswer"
+      :updateAnswerLevel="updateAnswerLevel"
     />
 
     <SnackBar/>  
@@ -131,6 +133,12 @@ export default {
       requests
         .updateLevel(score, this.userId, this.wisId, questionId)
         .then(() => bus.$emit('show-message', 'level updated ...'))
+    },
+
+    updateAnswerLevel(score, answerId) {
+      requests
+        .updateAnswerLevel(score, this.userId, this.wisId, answerId)
+        .then(() => bus.$emit('show-message', 'answer level updated ...'))
     },
 
     addQuestion(form) {

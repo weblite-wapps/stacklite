@@ -39,6 +39,18 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     },
   )
 
+exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
+  models.Answer.findOneAndUpdate(
+    {
+      _id: answerId,
+      wisId,
+    },
+    {
+      $inc: { level: score },
+      $push: { voters: userId },
+    },
+  )
+
 exports.getUserQuestions = (userId, wisId) =>
   models.Question.find({ authorId: userId, wisId }).exec()
 
