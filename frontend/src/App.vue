@@ -20,6 +20,15 @@
       :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
     />
+
+    <Answers
+      v-if="state === 'answersMode'"
+      :answers="answers"
+      :questionTitle="questionTitle"
+      :switchState="switchState"
+      :storeAnswer="storeAnswer"
+    />
+
     <SnackBar/>  
   </div>
 </template>
@@ -56,11 +65,20 @@ export default {
       wisId: '123',
       questions: [],
       state: 'questionsMode',
+      answers: [],
+      questionId: '',
+      questionTitle: '',
     }
   },
 
   created() {
     W && webliteHandler(this)
+    bus.$on('answers-mode', question => {
+      this.questionId = question.id
+      this.questionTitle = question.title
+      this.fetchAnswers()
+      this.switchState('answersMode')
+    })
   },
 
   methods: {
@@ -85,6 +103,28 @@ export default {
         this.questions = res
         bus.$emit('show-message', 'fetch favorites ...')
       })
+    },
+
+    fetchAnswers() {
+      requests.getAnswers(this.questionId, this.wisId).then(res => {
+        this.answers = res
+        bus.$emit('show-message', 'fetch answers ...')
+      })
+    },
+
+    storeAnswer(text) {
+      requests
+        .storeAnswer(
+          this.questionId,
+          this.username,
+          this.userId,
+          this.wisId,
+          text,
+        )
+        .then(() => {
+          this.switchState('questionsMode')
+          bus.$emit('show-message', 'answer added ...')
+        })
     },
 
     updateLevel(score, questionId) {

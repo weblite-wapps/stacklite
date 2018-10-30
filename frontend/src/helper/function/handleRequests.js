@@ -83,4 +83,23 @@ export default {
           'Error has occured in getting all questions...',
         ),
       ),
+
+  getAnswers: (questionId, wisId) =>
+    request
+      .get(config.server + '/getAnswers/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ questionId, wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured getting answers ...'),
+      ),
+
+  storeAnswer: (questionId, username, userId, wisId, text) =>
+    request
+      .post(config.server + '/storeAnswer/')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ questionId, username, userId, wisId, text })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in storing answer...'),
+      ),
 }

@@ -16,3 +16,18 @@ exports.Question = mongoose.model(
     favorite: Array,
   }),
 )
+
+exports.Answer = mongoose.model(
+  'Answer',
+  new mongoose.Schema({
+    questionId: { type: String, index: true },
+    authorName: String,
+    authorId: String,
+    wisId: String,
+    text: String,
+    level: Number,
+    voters: Array,
+    date: String,
+    replys: Array,
+  }),
+)

@@ -68,3 +68,19 @@ exports.removeFromFavorite = (questionId, userId, wisId) =>
 
 exports.getUserFavoriteQuestions = (userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
+
+exports.getAnswers = (questionId, wisId) =>
+  models.Answer.find({ questionId, wisId }).exec()
+
+exports.storeAnswer = (questionId, username, userId, wisId, text) =>
+  new models.Answer({
+    questionId,
+    authorName: username,
+    authorId: userId,
+    wisId,
+    text,
+    level: 0,
+    voters: [],
+    date: new Date(),
+    replys: [],
+  }).save()

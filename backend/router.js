@@ -12,6 +12,19 @@ router.post('/postQuestion', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/storeAnswer', ({ body }, res) =>
+  database
+    .storeAnswer(
+      body.questionId,
+      body.username,
+      body.userId,
+      body.wisId,
+      body.text,
+    )
+    .then(() => res.send('submitted'))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.post('/updateLevel', ({ body }, res) =>
   database
     .updateLevel(body.score, body.userId, body.wisId, body.questionId)
@@ -36,6 +49,13 @@ router.post('/removeFromFavorite', ({ body }, res) =>
 router.get('/getUserQuestions', ({ query }, res) =>
   database
     .getUserQuestions(query.userId, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getAnswers', ({ query }, res) =>
+  database
+    .getAnswers(query.questionId, query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div @click="goToAnswersMode()">
+    <p> type: {{question._id}}</P>
     <p> title: {{question.title}}</p>
     <p> text: {{question.text}}</p>
     <p> tag: {{question.tag}}</p>
@@ -44,13 +45,21 @@ export default {
   },
 
   methods: {
+    share() {},
+
+    goToAnswersMode() {
+      bus.$emit('answers-mode', {
+        id: this.question._id,
+        title: this.question.title,
+      })
+    },
+
     addFavorite() {
       this.favorite
         ? this.removeFromFavorite(this.question._id)
         : this.addToFavorite(this.question._id)
       this.favorite = !this.favorite
     },
-    share() {},
 
     changeLevel(score) {
       const { question } = this
@@ -73,28 +82,5 @@ export default {
 </script>
 
 <style>
-/* .root {
-  margin-bottom: 8px;
-  background: #ffffff;
-  box-shadow: 0px 1px 7px -1px rgba(80, 80, 80, 0.37);
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-.title {
-  color: #6b6b6b;
-  font-size: 19px;
-  margin: 7px 0px 13px;
-}
-
-.req-text {
-  color: rgba(211, 18, 18, 0.514);
-  font-size: 14px;
-}
-
-.answer {
-  color: #6b6b6be8;
-  font-size: 15px;
-} */
 </style>
 
