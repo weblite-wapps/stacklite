@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       query: '',
-      searchFilter: '',
+      searchFilter: 'title',
       searchFilterTemp: '',
       searchFilters: ['title', 'tag', 'author', 'text', 'date', 'level'],
     }
@@ -96,10 +96,6 @@ export default {
     filteredQuestions() {
       return R.filter(this.searchTitle, R.reverse(this.questions))
     },
-  },
-
-  mounted: function() {
-    this.fetchRecentQuestions()
   },
 }
 </script>

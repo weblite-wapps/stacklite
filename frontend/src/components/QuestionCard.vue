@@ -1,6 +1,6 @@
 <template>
-  <div @click="goToAnswersMode()">
-    <p> type: {{question._id}}</P>
+  <div>
+    <p> id: {{question._id}}</P>
     <p> title: {{question.title}}</p>
     <p> text: {{question.text}}</p>
     <p> tag: {{question.tag}}</p>
@@ -10,7 +10,7 @@
     <button @click="share()" type="submit">
       share
     </button>
-    <button @click="addFavorite()" type="submit">
+    <button @click="changeFavorite()" type="submit">
       favorite
     </button>
     <button @click="changeLevel(1)" type="submit">
@@ -19,11 +19,16 @@
     <button @click="changeLevel(-1)" type="submit">
       downLevel
     </button>
+    <button @click="goToAnswersMode()" type="submit">
+      answers
+    </button>
     {{favorite}}
   </div>  
 </template>
 
 <script>
+//helper
+import bus from '../helper/function/bus'
 export default {
   name: 'QuestionCard',
 
@@ -37,7 +42,7 @@ export default {
 
   data() {
     return {
-      level: -100,
+      level: 0,
       favorite: false,
     }
   },
@@ -52,7 +57,7 @@ export default {
       })
     },
 
-    addFavorite() {
+    changeFavorite() {
       this.favorite
         ? this.removeFromFavorite(this.question._id)
         : this.addToFavorite(this.question._id)
@@ -71,7 +76,15 @@ export default {
     },
   },
 
-  mounted: function() {
+  watch: {
+    question: function() {
+      this.level = this.question.level
+      this.favorite =
+        R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
+    },
+  },
+
+  mounted() {
     this.level = this.question.level
     this.favorite =
       R.indexOf(this.userId, this.question.favorite) === -1 ? false : true

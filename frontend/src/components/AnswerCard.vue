@@ -39,6 +39,12 @@ export default {
     },
   },
 
+  watch: {
+    answer: function() {
+      this.level = this.answer.level
+    },
+  },
+
   mounted: function() {
     this.level = this.answer.level
   },

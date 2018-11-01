@@ -2,11 +2,12 @@
   <div>
     <button @click="switchState('questionsMode')" type="submit">
       back to questions
-    <button/>
+    </button>
     {{questionTitle}}
 
     <AnswerForm
       :storeAnswer="storeAnswer"
+      :switchState="switchState"
     />
 
     <AnswerCard

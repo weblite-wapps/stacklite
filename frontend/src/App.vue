@@ -8,7 +8,7 @@
     />
 
     <Questions 
-      v-if="state === 'questionsMode'" 
+      v-show="state === 'questionsMode'" 
       :questions="questions" 
       :userId="userId"
       :state="state"
@@ -22,7 +22,7 @@
     />
 
     <Answers
-      v-if="state === 'answersMode'"
+      v-show="state === 'answersMode'"
       :userId="userId"
       :questionTitle="questionTitle"
       :answers="answers"
@@ -40,13 +40,13 @@
 // components
 import QuestionForm from './components/QuestionForm'
 import Questions from './components/Questions'
+import Answers from './components/Answers'
 import SnackBar from './helper/components/SnackBar'
 
 // helper
 import webliteHandler from './helper/function/weblite.api'
 import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
-import { request } from 'http'
 
 // R && W
 const { R, W } = window
@@ -57,13 +57,14 @@ export default {
   components: {
     QuestionForm,
     Questions,
+    Answers,
     SnackBar,
   },
 
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '2',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -81,6 +82,10 @@ export default {
       this.fetchAnswers()
       this.switchState('answersMode')
     })
+  },
+
+  mounted: function() {
+    this.fetchRecentQuestions()
   },
 
   methods: {
@@ -124,7 +129,6 @@ export default {
           text,
         )
         .then(() => {
-          this.switchState('questionsMode')
           bus.$emit('show-message', 'answer added ...')
         })
     },
@@ -145,6 +149,7 @@ export default {
       requests
         .postQuestion(this.username, this.userId, this.wisId, form)
         .then(() => {
+          this.fetchRecentQuestions()
           this.switchState('questionsMode')
           bus.$emit('show-message', 'question added ...')
         })
