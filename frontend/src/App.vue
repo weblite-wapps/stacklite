@@ -28,10 +28,12 @@
       :answers="answers"
       :switchState="switchState"
       :storeAnswer="storeAnswer"
+      :storeReply="storeReply"
       :updateAnswerLevel="updateAnswerLevel"
     />
 
     <SnackBar/>  
+
   </div>
 </template>
 
@@ -131,6 +133,12 @@ export default {
         .then(() => {
           bus.$emit('show-message', 'answer added ...')
         })
+    },
+
+    storeReply(answerId, text) {
+      requests
+        .addReply(this.username, this.userId, this.wisId, answerId, text)
+        .then(() => bus.$emit('show-message', 'reply ...'))
     },
 
     updateLevel(score, questionId) {

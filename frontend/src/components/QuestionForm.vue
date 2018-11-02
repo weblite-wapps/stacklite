@@ -1,10 +1,18 @@
 <template>
-  <div>
+  <div align="center">
+    <br>
     <input v-model="title" placeholder="insert title">
+    <br>
     <textarea v-model="text" placeholder="text: ..."></textarea> 
+    <br>
     <input v-model="tag" placeholder="insert tag">
+    <br>
+    <br>
     <button @click="sendQuestionToDB()" type="submit">
       Done
+    </button>
+    <button @click="switchState('questionsMode')" type="submit">
+      back
     </button>
   </div>  
 </template>

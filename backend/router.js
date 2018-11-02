@@ -25,6 +25,13 @@ router.post('/storeAnswer', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/addReply', ({ body }, res) =>
+  database
+    .addReply(body.username, body.userId, body.wisId, body.answerId, body.text)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.post('/updateLevel', ({ body }, res) =>
   database
     .updateLevel(body.score, body.userId, body.wisId, body.questionId)

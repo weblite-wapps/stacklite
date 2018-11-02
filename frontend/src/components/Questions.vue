@@ -8,6 +8,7 @@
           :value="filter"
         > {{filter}} </option>
       </select>
+      
 
     <input
       v-model="query"
@@ -15,9 +16,26 @@
       placeholder="Search here"
     >
 
-    <button @click="switchState('askingMode')" type="sbmit">
-      ask question
-    </button>
+    <br>
+    <br>
+    <div align="right">
+      <button @click="switchState('askingMode')" type="sbmit">
+       ask question
+      </button>
+    </div>
+    <br>
+    <br>
+
+    <QuestionCard 
+      v-for="(question) in filteredQuestions"
+      :key="question._id"
+      :question="question"
+      :userId="userId"
+      :updateLevel="updateLevel"
+      :addToFavorite="addToFavorite"
+      :removeFromFavorite="removeFromFavorite"
+    />
+    <div align="center">
 
     <button @click="fetchRecentQuestions()" type="sbmit">
       recent
@@ -30,16 +48,7 @@
     <button @click="fetchUserFavoriteQuestions()" type="sbmit">
       favorites
     </button>
-
-    <QuestionCard 
-      v-for="(question) in filteredQuestions"
-      :key="question._id"
-      :question="question"
-      :userId="userId"
-      :updateLevel="updateLevel"
-      :addToFavorite="addToFavorite"
-      :removeFromFavorite="removeFromFavorite"
-    />
+    </div>
 
   </div>
 </template>

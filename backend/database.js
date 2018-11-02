@@ -96,3 +96,14 @@ exports.storeAnswer = (questionId, username, userId, wisId, text) =>
     date: new Date(),
     replys: [],
   }).save()
+
+exports.addReply = (username, userId, wisId, answerId, text) =>
+  models.Answer.findOneAndUpdate(
+    {
+      _id: answerId,
+      wisId,
+    },
+    {
+      $push: { replys: { authorName: username, authorId: userId, text } },
+    },
+  )

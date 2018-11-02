@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div align="center">
     <p> id: {{question._id}}</P>
     <p> title: {{question.title}}</p>
     <p> text: {{question.text}}</p>
@@ -23,6 +23,9 @@
       answers
     </button>
     {{favorite}}
+    <br>
+    <br>
+    <br>
   </div>  
 </template>
 

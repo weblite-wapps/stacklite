@@ -1,8 +1,7 @@
 <template>
-  <div align="center">
-    <br>
-    <textarea v-model="text" placeholder="your answer is ..."></textarea>
-    <button @click="checkAndSaveAnswer()" type='submit'>
+  <div>
+    <textarea v-model="text" placeholder="your reply is ..."></textarea>
+    <button @click="checkAndSaveReply()" type='submit'>
       submit
     </button>
   </div>
@@ -20,19 +19,20 @@ export default {
   },
 
   props: {
-    storeAnswer: Function,
-    switchState: Function,
+    answerId: String,
+    storeReply: Function,
+    toggleReplyPermission: Function,
   },
 
   methods: {
-    checkAndSaveAnswer() {
+    checkAndSaveReply() {
       const { text } = this
       if (text === '')
         bus.$emit('show-message', 'please fill all requirements ...')
       else {
-        this.storeAnswer(text)
-        this.switchState('questionsMode')
+        this.storeReply(this.answerId, text)
         this.clear()
+        this.toggleReplyPermission()
       }
     },
 

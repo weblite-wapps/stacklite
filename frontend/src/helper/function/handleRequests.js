@@ -114,4 +114,13 @@ export default {
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in storing answer...'),
       ),
+
+  addReply: (username, userId, wisId, answerId, text) =>
+    request
+      .post(config.server + '/addReply')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ username, userId, wisId, answerId, text })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in adding reply...'),
+      ),
 }

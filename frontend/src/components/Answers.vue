@@ -3,7 +3,9 @@
     <button @click="switchState('questionsMode')" type="submit">
       back to questions
     </button>
-    {{questionTitle}}
+    <br>
+    <br>
+    <p align="center">questionTitle: {{questionTitle}}<p/>
 
     <AnswerForm
       :storeAnswer="storeAnswer"
@@ -16,6 +18,7 @@
       :answer="answer"
       :userId="userId"
       :updateAnswerLevel="updateAnswerLevel"
+      :storeReply="storeReply"
     />
 
   </div>
@@ -38,6 +41,7 @@ export default {
     answers: Array,
     switchState: Function,
     storeAnswer: Function,
+    storeReply: Function,
     updateAnswerLevel: Function,
   },
 }
