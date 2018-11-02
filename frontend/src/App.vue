@@ -26,6 +26,7 @@
       :userId="userId"
       :questionTitle="questionTitle"
       :answers="answers"
+      :state="state"
       :switchState="switchState"
       :storeAnswer="storeAnswer"
       :storeReply="storeReply"

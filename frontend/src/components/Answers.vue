@@ -7,11 +7,6 @@
     <br>
     <p align="center">questionTitle: {{questionTitle}}<p/>
 
-    <AnswerForm
-      :storeAnswer="storeAnswer"
-      :switchState="switchState"
-    />
-
     <AnswerCard
       v-for="(answer, i) in answers"
       :key="i"
@@ -19,6 +14,16 @@
       :userId="userId"
       :updateAnswerLevel="updateAnswerLevel"
       :storeReply="storeReply"
+      :state="state"
+    />
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <AnswerForm
+      :storeAnswer="storeAnswer"
+      :switchState="switchState"
     />
 
   </div>
@@ -39,6 +44,7 @@ export default {
     userId: String,
     questionTitle: String,
     answers: Array,
+    state: String,
     switchState: Function,
     storeAnswer: Function,
     storeReply: Function,

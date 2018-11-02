@@ -1,6 +1,5 @@
 <template>
   <div align="center">
-    <p> id: {{question._id}}</P>
     <p> title: {{question.title}}</p>
     <p> text: {{question.text}}</p>
     <p> tag: {{question.tag}}</p>

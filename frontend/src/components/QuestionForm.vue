@@ -3,9 +3,12 @@
     <br>
     <input v-model="title" placeholder="insert title">
     <br>
+    <br>
     <textarea v-model="text" placeholder="text: ..."></textarea> 
     <br>
+    <br>
     <input v-model="tag" placeholder="insert tag">
+    <br>
     <br>
     <br>
     <button @click="sendQuestionToDB()" type="submit">

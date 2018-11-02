@@ -60,6 +60,7 @@ export default {
     userId: String,
     updateAnswerLevel: Function,
     storeReply: Function,
+    state: String,
   },
 
   methods: {
@@ -86,6 +87,11 @@ export default {
   watch: {
     answer: function() {
       this.level = this.answer.level
+    },
+
+    state: function() {
+      this.showReplysPermission = false
+      this.replyPermission = false
     },
   },
 
