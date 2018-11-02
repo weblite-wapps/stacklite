@@ -15,6 +15,15 @@ export default {
         bus.$emit('show-message', 'Error has occured in posting Question...'),
       ),
 
+  toggleChosen: (answerId, wisId) =>
+    request
+      .post(config.server + '/toggleChosen/')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ answerId, wisId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in toggling chosen...'),
+      ),
+
   updateLevel: (score, userId, wisId, questionId) =>
     request
       .post(config.server + '/updateLevel')

@@ -12,6 +12,13 @@ router.post('/postQuestion', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/toggleChosen', ({ body }, res) =>
+  database
+    .toggleChosen(body.answerId, body.wisId)
+    .then(() => res.send('submitted'))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.post('/storeAnswer', ({ body }, res) =>
   database
     .storeAnswer(

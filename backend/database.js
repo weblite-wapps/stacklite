@@ -39,6 +39,14 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     },
   )
 
+exports.toggleChosen = (answerId, wisId) => {
+  const answer = models.Answer.findOne({ _id: answerId, wisId })
+  return models.Answer.findOneAndUpdate(
+    { wisId, _id: answerId },
+    { $set: { chosen: !answer.chosen } },
+  )
+}
+
 exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
   models.Answer.findOneAndUpdate(
     {
@@ -95,6 +103,7 @@ exports.storeAnswer = (questionId, username, userId, wisId, text) =>
     voters: [],
     date: new Date(),
     replys: [],
+    chosen: false,
   }).save()
 
 exports.addReply = (username, userId, wisId, answerId, text) =>

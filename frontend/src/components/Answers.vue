@@ -12,9 +12,11 @@
       :key="i"
       :answer="answer"
       :userId="userId"
+      :questionWriter="questionWriter"
       :updateAnswerLevel="updateAnswerLevel"
       :storeReply="storeReply"
       :state="state"
+      :toggleChosen="toggleChosen"
     />
 
     <br>
@@ -43,12 +45,14 @@ export default {
   props: {
     userId: String,
     questionTitle: String,
+    questionWriter: String,
     answers: Array,
     state: String,
     switchState: Function,
     storeAnswer: Function,
     storeReply: Function,
     updateAnswerLevel: Function,
+    toggleChosen: Function,
   },
 }
 </script>

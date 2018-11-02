@@ -6,6 +6,13 @@
 
     <p> answer text: {{answer.text}} <p/>
     <p> author: {{answer.authorName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; level: {{level}}<p/>
+    
+    <CheckBox
+    v-if="isWriter"
+    @click="changeChosen()"
+    :selected="chosen"
+    />
+
     <button @click="changeLevel(1)" type="submit">
       upLevel
     </button>
@@ -27,8 +34,8 @@
     />
 
     <ReplyCard
-      v-if="showReplysPermission === true"
       v-for="(reply, i) in answer.replys"
+      v-if="showReplysPermission === true"
       :key="i"
       :reply="reply"
     />
@@ -40,11 +47,13 @@
 //components
 import ReplyForm from './ReplyForm'
 import ReplyCard from './ReplyCard'
+import CheckBox from '../helper/components/CheckBox'
 
 export default {
   components: {
     ReplyForm,
     ReplyCard,
+    CheckBox,
   },
 
   data() {
@@ -52,15 +61,18 @@ export default {
       level: -100,
       replyPermission: false,
       showReplysPermission: false,
+      chosen: false,
     }
   },
 
   props: {
     answer: Object,
     userId: String,
+    questionWriter: String,
     updateAnswerLevel: Function,
     storeReply: Function,
     state: String,
+    toggleChosen: Function,
   },
 
   methods: {
@@ -82,11 +94,23 @@ export default {
     showHideReplys() {
       this.showReplysPermission = !this.showReplysPermission
     },
+
+    changeChosen() {
+      //this.chosen = !this.chosen
+      this.toggleChosen(this.answer._id)
+    },
+  },
+
+  computed: {
+    isWriter() {
+      return this.userId === this.questionWriter ? true : false
+    },
   },
 
   watch: {
     answer: function() {
       this.level = this.answer.level
+      this.chosen = this.answer.chosen
     },
 
     state: function() {
@@ -97,6 +121,7 @@ export default {
 
   mounted: function() {
     this.level = this.answer.level
+    this.chosen = this.answer.chosen
   },
 }
 </script>

@@ -29,5 +29,6 @@ exports.Answer = mongoose.model(
     voters: Array,
     date: String,
     replys: Array,
+    chosen: Boolean,
   }),
 )

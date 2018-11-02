@@ -53,10 +53,7 @@ export default {
     share() {},
 
     goToAnswersMode() {
-      bus.$emit('answers-mode', {
-        id: this.question._id,
-        title: this.question.title,
-      })
+      bus.$emit('answers-mode', this.question)
     },
 
     changeFavorite() {

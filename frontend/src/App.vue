@@ -24,13 +24,15 @@
     <Answers
       v-show="state === 'answersMode'"
       :userId="userId"
-      :questionTitle="questionTitle"
+      :questionTitle="question.title"
+      :questionWriter="question.authorId"
       :answers="answers"
       :state="state"
       :switchState="switchState"
       :storeAnswer="storeAnswer"
       :storeReply="storeReply"
       :updateAnswerLevel="updateAnswerLevel"
+      :toggleChosen="toggleChosen"
     />
 
     <SnackBar/>  
@@ -72,16 +74,14 @@ export default {
       questions: [],
       state: 'questionsMode',
       answers: [],
-      questionId: '',
-      questionTitle: '',
+      question: {},
     }
   },
 
   created() {
     W && webliteHandler(this)
     bus.$on('answers-mode', question => {
-      this.questionId = question.id
-      this.questionTitle = question.title
+      this.question = question
       this.fetchAnswers()
       this.switchState('answersMode')
     })
@@ -116,7 +116,7 @@ export default {
     },
 
     fetchAnswers() {
-      requests.getAnswers(this.questionId, this.wisId).then(res => {
+      requests.getAnswers(this.question._id, this.wisId).then(res => {
         this.answers = res
         bus.$emit('show-message', 'fetch answers ...')
       })
@@ -125,7 +125,7 @@ export default {
     storeAnswer(text) {
       requests
         .storeAnswer(
-          this.questionId,
+          this.question._id,
           this.username,
           this.userId,
           this.wisId,
@@ -162,6 +162,12 @@ export default {
           this.switchState('questionsMode')
           bus.$emit('show-message', 'question added ...')
         })
+    },
+
+    toggleChosen(answerId) {
+      requests.toggleChosen(answerId, this.wisId).then(() => {
+        bus.$emit('show-message', 'chosen toggled ...')
+      })
     },
 
     addToFavorite(questionId) {
