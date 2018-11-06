@@ -15,11 +15,11 @@ export default {
         bus.$emit('show-message', 'Error has occured in posting Question...'),
       ),
 
-  toggleChosen: (answerId, wisId) =>
+  toggleChosen: (answerId, wisId, bool) =>
     request
       .post(config.server + '/toggleChosen/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ answerId, wisId })
+      .send({ answerId, wisId, bool })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in toggling chosen...'),
       ),

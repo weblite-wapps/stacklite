@@ -39,13 +39,12 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     },
   )
 
-exports.toggleChosen = (answerId, wisId) => {
-  const answer = models.Answer.findOne({ _id: answerId, wisId })
-  return models.Answer.findOneAndUpdate(
+exports.toggleChosen = (answerId, wisId, bool) =>
+  models.Answer.findOneAndUpdate(
     { wisId, _id: answerId },
-    { $set: { chosen: !answer.chosen } },
+    { $set: { chosen: bool } },
+    { overwrite: true },
   )
-}
 
 exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
   models.Answer.findOneAndUpdate(

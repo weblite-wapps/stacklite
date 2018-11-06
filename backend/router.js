@@ -14,7 +14,7 @@ router.post('/postQuestion', ({ body }, res) =>
 
 router.post('/toggleChosen', ({ body }, res) =>
   database
-    .toggleChosen(body.answerId, body.wisId)
+    .toggleChosen(body.answerId, body.wisId, body.bool)
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),
 )

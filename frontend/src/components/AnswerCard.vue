@@ -8,7 +8,7 @@
     <p> author: {{answer.authorName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; level: {{level}}<p/>
     
     <CheckBox
-    v-if="isWriter"
+    :isWriter="isWriter"
     @click="changeChosen()"
     :selected="chosen"
     />
@@ -96,8 +96,10 @@ export default {
     },
 
     changeChosen() {
-      //this.chosen = !this.chosen
-      this.toggleChosen(this.answer._id)
+      if (this.isWriter) {
+        this.chosen = !this.chosen
+        this.toggleChosen(this.answer._id, this.chosen)
+      }
     },
   },
 

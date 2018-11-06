@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '2',
+      userId: '1',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -164,8 +164,8 @@ export default {
         })
     },
 
-    toggleChosen(answerId) {
-      requests.toggleChosen(answerId, this.wisId).then(() => {
+    toggleChosen(answerId, bool) {
+      requests.toggleChosen(answerId, this.wisId, bool).then(() => {
         bus.$emit('show-message', 'chosen toggled ...')
       })
     },
