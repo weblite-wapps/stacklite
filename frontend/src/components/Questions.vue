@@ -1,53 +1,58 @@
 <template>
-  <div>
-    Search By :
-      <select v-model="searchFilter">
-        <option
-          v-for="(filter, i) in searchFilters"
-          :key="i"
-          :value="filter"
-        > {{filter}} </option>
-      </select>
+  <div class="wrapper">
+
+    <div class="header">
       
+      <div class="searchStuff">
 
-    <input
-      v-model="query"
-      type="textbox"
-      placeholder="Search here"
-    >
-
-    <br>
-    <br>
-    <div align="right">
-      <button @click="switchState('askingMode')" type="sbmit">
-       ask question
+        <div class="searchBy">
+          <p class="lable">Search By:</p>
+          <select v-model="searchFilter">
+            <option
+              v-for="(filter, i) in searchFilters"
+              :key="i"
+              :value="filter"
+            > {{filter}} </option>
+          </select>
+        </div>  
+      
+        <input
+          v-model="query"
+          type="textbox"
+          placeholder="Search here"
+          class="searchBar"
+        >
+      </div>  
+          
+      <button @click="switchState('askingMode')" type="sbmit" class="askButton">
+        ask question
       </button>
     </div>
-    <br>
-    <br>
 
-    <QuestionCard 
-      v-for="(question) in filteredQuestions"
-      :key="question._id"
-      :question="question"
-      :userId="userId"
-      :updateLevel="updateLevel"
-      :addToFavorite="addToFavorite"
-      :removeFromFavorite="removeFromFavorite"
-    />
-    <div align="center">
+    <div class="buttons">
+      <button @click="fetchRecentQuestions()" type="sbmit" class="button">
+        recent
+      </button> 
 
-    <button @click="fetchRecentQuestions()" type="sbmit">
-      recent
-    </button> 
+      <button @click="fetchUserQuestions()" type="sbmit" class="button">
+        yours
+      </button>
 
-    <button @click="fetchUserQuestions()" type="sbmit">
-      yours
-    </button>
+      <button @click="fetchUserFavoriteQuestions()" type="sbmit" class="button">
+        favorites
+      </button>
+    </div>
 
-    <button @click="fetchUserFavoriteQuestions()" type="sbmit">
-      favorites
-    </button>
+    <div class="cards">
+      <QuestionCard 
+        v-for="(question) in filteredQuestions"
+        :key="question._id"
+        :question="question"
+        :userId="userId"
+        :updateLevel="updateLevel"
+        :addToFavorite="addToFavorite"
+        :removeFromFavorite="removeFromFavorite"
+      />
     </div>
 
   </div>
@@ -109,7 +114,96 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.header {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  left: 30px;
+  margin-bottom: 50px;
+}
+
+.searchStuff {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchBy {
+  display: flex;
+  flex-direction: row;
+}
+
+.searchBar {
+  position: relative;
+  top: 10px;
+  right: 5px;
+  padding: 8px;
+  border-radius: 20px;
+  background-color: #e3e3e3;
+  border: 2px #191939 solid;
+}
+
+.askButton {
+  position: relative;
+  top: 10px;
+  left: 270px;
+  background-color: #e3e3e3;
+  border: 3px #191939 solid;
+  border-radius: 10px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.button {
+  background-color: #e3e3e3;
+  border: 2px #191939 solid;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-left: 20px;
+  width: 100px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  left: 120px;
+  top: 20px;
+  margin-bottom: 50px;
+}
+
+input::placeholder {
+  color: black;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+input:focus,
+button:focus {
+  outline: none;
+}
+
+.button:hover {
+  border: 2px #991933 solid;
+}
+
+.lable {
+  margin-right: 10px;
+}
+
+.wrapper {
+  width: 98%;
+  position: relative;
+  top: 20px;
+  align-self: center;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 300px;
+}
 </style>
 
 

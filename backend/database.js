@@ -12,7 +12,7 @@ exports.connect = function connect(name) {
   })
 }
 
-exports.addQuestion = (username, userId, wisId, form) =>
+exports.addQuestion = (username, userId, wisId, form, date) =>
   new models.Question({
     authorName: username,
     authorId: userId,
@@ -23,7 +23,7 @@ exports.addQuestion = (username, userId, wisId, form) =>
     level: 0,
     voters: [],
     answers: 0,
-    date: new Date(),
+    date,
     favorite: [],
   }).save()
 
@@ -36,6 +36,17 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     {
       $inc: { level: score },
       $push: { voters: userId },
+    },
+  )
+
+exports.increaseAnswer = (wisId, questionId) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    {
+      $inc: { answers: 1 },
     },
   )
 

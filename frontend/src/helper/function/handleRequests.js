@@ -6,11 +6,11 @@ import bus from './bus'
 import config from '../../config'
 
 export default {
-  postQuestion: (username, userId, wisId, form) =>
+  postQuestion: (username, userId, wisId, form, date) =>
     request
       .post(config.server + '/postQuestion/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ username, userId, wisId, form })
+      .send({ username, userId, wisId, form, date })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in posting Question...'),
       ),
@@ -31,6 +31,18 @@ export default {
       .send({ score, userId, wisId, questionId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in updating level...'),
+      ),
+
+  increaseAnswer: (wisId, questionId) =>
+    request
+      .post(config.server + '/increaseAnswer')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ wisId, questionId })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in increasing answer number...',
+        ),
       ),
 
   updateAnswerLevel: (score, userId, wisId, answerId) =>

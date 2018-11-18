@@ -7,7 +7,14 @@ router.use(bodyParser.json())
 
 router.post('/postQuestion', ({ body }, res) =>
   database
-    .addQuestion(body.username, body.userId, body.wisId, body.form)
+    .addQuestion(body.username, body.userId, body.wisId, body.form, body.date)
+    .then(() => res.send('submitted'))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.post('/increaseAnswer', ({ body }, res) =>
+  database
+    .increaseAnswer(body.wisId, body.questionId)
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),
 )

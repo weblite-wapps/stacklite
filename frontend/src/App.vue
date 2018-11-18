@@ -1,6 +1,8 @@
 <template>
   <div class="root">
-    
+
+    <Header appName="Stack Overflow"/>
+
     <QuestionForm 
       v-if="state === 'askingMode'" 
       :addQuestion="addQuestion" 
@@ -46,6 +48,7 @@
 import QuestionForm from './components/QuestionForm'
 import Questions from './components/Questions'
 import Answers from './components/Answers'
+import Header from './components/Header'
 import SnackBar from './helper/components/SnackBar'
 
 // helper
@@ -63,16 +66,18 @@ export default {
     QuestionForm,
     Questions,
     Answers,
+    Header,
     SnackBar,
   },
 
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '2',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
+      fetchedQuestions: 'recent',
       answers: [],
       question: {},
     }
@@ -99,18 +104,21 @@ export default {
     fetchRecentQuestions() {
       requests.getAllQuestions(this.wisId).then(res => {
         this.questions = res
+        this.fetchedQuestions = 'recent'
       })
     },
 
     fetchUserQuestions() {
       requests.getUserQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
+        this.fetchedQuestions = 'user'
       })
     },
 
     fetchUserFavoriteQuestions() {
       requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
+        this.fetchedQuestions = 'favorite'
         bus.$emit('show-message', 'fetch favorites ...')
       })
     },
@@ -131,9 +139,14 @@ export default {
           this.wisId,
           text,
         )
-        .then(() => {
-          bus.$emit('show-message', 'answer added ...')
-        })
+        .then(() =>
+          requests.increaseAnswer(this.wisId, this.question._id).then(() => {
+            if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
+            else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
+            else if (this.fetchedQuestions === 'favorite')
+              this.fetchUserFavoriteQuestions()
+          }),
+        )
     },
 
     storeReply(answerId, text) {
@@ -154,9 +167,9 @@ export default {
         .then(() => bus.$emit('show-message', 'answer level updated ...'))
     },
 
-    addQuestion(form) {
+    addQuestion(form, date) {
       requests
-        .postQuestion(this.username, this.userId, this.wisId, form)
+        .postQuestion(this.username, this.userId, this.wisId, form, date)
         .then(() => {
           this.fetchRecentQuestions()
           this.switchState('questionsMode')
@@ -189,14 +202,16 @@ export default {
 <style scoped>
 .root {
   position: relative;
-  width: 600px;
+  min-width: 650px;
+  max-width: 650px;
   min-height: 900px;
   max-height: 900px;
   display: flex;
   flex-direction: column;
-  border: 1px #e0e0e0 solid;
-  border-radius: 5px;
-  overflow: hidden;
-  background: #f0f0f098;
+  border: 2px #e0e0e0 solid;
+  border-radius: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #e3e3e3;
 }
 </style>

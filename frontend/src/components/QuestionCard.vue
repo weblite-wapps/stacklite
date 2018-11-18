@@ -1,30 +1,40 @@
 <template>
-  <div align="center">
-    <p> title: {{question.title}}</p>
-    <p> text: {{question.text}}</p>
-    <p> tag: {{question.tag}}</p>
-    <p> author: {{question.authorName}}</p>
-    <p> level: {{level}}</p>
-    <p> date: {{question.date}}</p>
-    <button @click="share()" type="submit">
-      share
-    </button>
-    <button @click="changeFavorite()" type="submit">
-      favorite
-    </button>
-    <button @click="changeLevel(1)" type="submit">
-      upLevel
-    </button>
-    <button @click="changeLevel(-1)" type="submit">
-      downLevel
-    </button>
-    <button @click="goToAnswersMode()" type="submit">
-      answers
-    </button>
-    {{favorite}}
-    <br>
-    <br>
-    <br>
+  <div class="card">
+    <h1>{{question.title}}</h1>
+
+    <div class="makeInRow">
+      <div class="makeIncolumn">
+        <button @click="share()" type="submit" class="share">
+          share
+        </button>
+        <i @click="changeLevel(1)" type="submit" class="upLevel">
+          arrow_drop_up
+        </i>
+        <h2>{{level}}</h2>
+        <i @click="changeLevel(-1)" type="submit" class="downLevel">
+          arrow_drop_down
+        </i>
+      </div>
+
+      <i v-if="favorite" @click="changeFavorite()" type="submit" class="favorite">
+        star_rate
+      </i>
+      <i v-if="!favorite" @click="changeFavorite()" type="submit" class="notFavorite">
+        star_rate
+      </i>
+    </div>
+    
+    <div class="text">{{question.text}}</div>
+
+    <div class="footer">
+      <p class="footerItem"> Tag: {{question.tag}}</p>
+      <p class="footerItem"> Author: {{question.authorName}}</p>
+      <p class="footerItem"> Date: {{question.date}}</p>  
+      <button @click="goToAnswersMode()" type="submit" class="answers">
+        answers
+      </button>
+      <p class="ansNumber">#{{numberOfAnswers}}</p>
+    </div>
   </div>  
 </template>
 
@@ -46,6 +56,7 @@ export default {
     return {
       level: 0,
       favorite: false,
+      numberOfAnswers: 0,
     }
   },
 
@@ -78,6 +89,7 @@ export default {
   watch: {
     question: function() {
       this.level = this.question.level
+      this.numberOfAnswers = this.question.answers
       this.favorite =
         R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
     },
@@ -85,6 +97,7 @@ export default {
 
   mounted() {
     this.level = this.question.level
+    this.numberOfAnswers = this.question.answers
     this.favorite =
       R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
   },
@@ -92,5 +105,122 @@ export default {
 </script>
 
 <style>
-</style>
+.card {
+  position: static;
+  background-color: #e3e3e3;
+  border: 2px black solid;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  width: 600px;
+  height: 270px;
+  align-self: center;
+}
 
+h1 {
+  position: relative;
+  text-align: center;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 1.3em;
+  top: 15px;
+}
+
+h2 {
+  position: relative;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 1.3em;
+  bottom: 15px;
+}
+
+.share {
+  background-color: #e3e3e3;
+  border: 2px #991939 solid;
+  border-radius: 25px;
+  font-size: 1.2em;
+  cursor: pointer;
+  width: 70px;
+}
+
+.makeIncolumn {
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  align-items: center;
+}
+
+.makeInRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.favorite {
+  font-size: 50px;
+  color: #ffff44;
+  position: relative;
+  left: 450px;
+}
+
+.notFavorite {
+  font-size: 50px;
+  color: #fff;
+  position: relative;
+  left: 450px;
+}
+
+.upLevel {
+  font-size: 50px;
+  position: relative;
+}
+
+.downLevel {
+  font-size: 50px;
+  position: relative;
+  bottom: 27px;
+}
+
+.text {
+  background: #eee;
+  width: 60%;
+  height: 140px;
+  margin: auto;
+  position: relative;
+  bottom: 105px;
+  font-size: 1.2em;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  bottom: 70px;
+  left: 20px;
+}
+
+.footerItem {
+  margin-right: 30px;
+  font-size: 1.1em;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.answers {
+  background-color: #e3e3e3;
+  border: 2px #991939 solid;
+  border-radius: 25px;
+  font-size: 1.2em;
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+  bottom: 15px;
+}
+
+.ansNumber {
+  font-size: 1.2em;
+  font-family: sans-serif;
+  font-weight: bold;
+  position: absolute;
+  right: 60px;
+  top: 10px;
+}
+</style>

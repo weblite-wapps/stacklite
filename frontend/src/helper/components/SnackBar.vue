@@ -8,43 +8,27 @@
 
 
 <script>
-
 import bus from '../function/bus'
 
 export default {
   name: 'SnackBar',
 
-  components: {
-    
-  },
-
-  props: {
-    
-  },
-
   data: () => ({
     show: false,
-    text: 'please answer all the required questions ...'
+    text: 'please answer all the required questions ...',
   }),
 
-  methods: {
-    
-  },
-
   created() {
-    bus.$on('show-message', (value) => {
+    bus.$on('show-message', value => {
       this.text = value
       this.show = true
-      setTimeout(() => this.show = false, 2000)
+      setTimeout(() => (this.show = false), 2000)
     })
-  }
+  },
 }
-
 </script>
 
-
 <style module>
-
 .root {
   padding: 12px;
   background-color: #ffffff;
@@ -58,5 +42,4 @@ export default {
   color: rgb(92, 92, 92);
   font-size: 15px;
 }
-
 </style>
