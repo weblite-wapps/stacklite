@@ -127,11 +127,11 @@ export default {
         bus.$emit('show-message', 'Error has occured getting answers ...'),
       ),
 
-  storeAnswer: (questionId, username, userId, wisId, text) =>
+  storeAnswer: (questionId, username, userId, wisId, text, date) =>
     request
       .post(config.server + '/storeAnswer/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, username, userId, wisId, text })
+      .send({ questionId, username, userId, wisId, text, date })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in storing answer...'),
       ),

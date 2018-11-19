@@ -34,6 +34,7 @@ router.post('/storeAnswer', ({ body }, res) =>
       body.userId,
       body.wisId,
       body.text,
+      body.date,
     )
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),

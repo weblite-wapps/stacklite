@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '2',
+      userId: '1',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -130,7 +130,7 @@ export default {
       })
     },
 
-    storeAnswer(text) {
+    storeAnswer(text, date) {
       requests
         .storeAnswer(
           this.question._id,
@@ -138,6 +138,7 @@ export default {
           this.userId,
           this.wisId,
           text,
+          date,
         )
         .then(() =>
           requests.increaseAnswer(this.wisId, this.question._id).then(() => {
@@ -210,6 +211,7 @@ export default {
   flex-direction: column;
   border: 2px #e0e0e0 solid;
   border-radius: 20px;
+  overflow: hidden;
   overflow-y: auto;
   overflow-x: hidden;
   background: #e3e3e3;

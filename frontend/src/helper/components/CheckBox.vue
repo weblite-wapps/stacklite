@@ -1,6 +1,6 @@
 <template>
   <div @click="$emit('click')">
-    <i>{{icon}}</i>
+    <i class="checkBox">{{icon}}</i>
   </div>
 </template>
 
@@ -14,10 +14,10 @@ export default {
   computed: {
     icon() {
       if (this.isWriter) {
-        if (this.selected) return 'done'
-        else return 'fingerprint'
+        if (this.selected) return 'check_box'
+        else return 'check_box_outline_blank'
       } else {
-        if (this.selected) return 'done'
+        if (this.selected) return 'check_box'
         else return ''
       }
     },
@@ -25,7 +25,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.checkBox {
+  position: absolute;
+  top: 30px;
+  left: -45px;
+  font-size: 40px;
+}
 </style>
 
 

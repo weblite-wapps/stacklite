@@ -202,7 +202,6 @@ button:focus {
 .cards {
   display: flex;
   flex-direction: column;
-  margin-bottom: 300px;
 }
 </style>
 

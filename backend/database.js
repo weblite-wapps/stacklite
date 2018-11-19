@@ -102,7 +102,7 @@ exports.getUserFavoriteQuestions = (userId, wisId) =>
 exports.getAnswers = (questionId, wisId) =>
   models.Answer.find({ questionId, wisId }).exec()
 
-exports.storeAnswer = (questionId, username, userId, wisId, text) =>
+exports.storeAnswer = (questionId, username, userId, wisId, text, date) =>
   new models.Answer({
     questionId,
     authorName: username,
@@ -111,7 +111,7 @@ exports.storeAnswer = (questionId, username, userId, wisId, text) =>
     text,
     level: 0,
     voters: [],
-    date: new Date(),
+    date,
     replys: [],
     chosen: false,
   }).save()

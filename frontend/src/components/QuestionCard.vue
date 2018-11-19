@@ -17,10 +17,10 @@
       </div>
 
       <i v-if="favorite" @click="changeFavorite()" type="submit" class="favorite">
-        star_rate
+        star_border
       </i>
       <i v-if="!favorite" @click="changeFavorite()" type="submit" class="notFavorite">
-        star_rate
+        star_border
       </i>
     </div>
     
@@ -222,5 +222,10 @@ h2 {
   position: absolute;
   right: 60px;
   top: 10px;
+}
+
+.share:focus,
+.answers:focus {
+  outline: none;
 }
 </style>

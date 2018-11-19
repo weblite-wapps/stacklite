@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <textarea v-model="text" placeholder="your reply is ..."></textarea>
-    <button @click="checkAndSaveReply()" type='submit'>
-      submit
-    </button>
+  <div class="replyForm">
+    <textarea v-model="text" placeholder="your reply is ..." class="textForm"></textarea>
+    <i @click="checkAndSaveReply()" type='submit' class="sub">
+      create
+    </i>
   </div>
 </template>
 
@@ -43,7 +43,30 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.replyForm {
+  margin-bottom: 10px;
+}
+
+.textForm {
+  width: 230px;
+  height: 40px;
+  background: #f3f3f3;
+  border: 1.5px black solid;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 20px;
+  padding: 3px;
+}
+.textForm:focus {
+  outline: none;
+}
+
+.sub {
+  position: relative;
+  bottom: 15px;
+  left: 10px;
+}
 </style>
 
 
