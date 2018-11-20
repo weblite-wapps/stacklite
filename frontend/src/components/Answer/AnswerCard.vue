@@ -1,7 +1,7 @@
 <template>
   <div class="ansCardRoot">
     <div class="row">
-      <p class="ansText"> {{answer.text}} </p>
+      <pre class="ansText"> {{answer.text}} </pre>
       
       <CheckBox
       :isWriter="isWriter"
@@ -51,9 +51,9 @@
 
 <script>
 //components
-import ReplyForm from './ReplyForm'
-import ReplyCard from './ReplyCard'
-import CheckBox from '../helper/components/CheckBox'
+import ReplyForm from '../Reply/ReplyForm'
+import ReplyCard from '../Reply/ReplyCard'
+import CheckBox from '../../helper/components/CheckBox'
 
 export default {
   components: {
@@ -154,6 +154,14 @@ export default {
   min-height: 100px;
   background: #c6c5c734;
   margin-bottom: 30px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  overflow-wrap: break-word;
+  line-height: 25px;
+  letter-spacing: 1px;
+  font-size: 1.2em;
+  font-family: sans-serif;
 }
 
 .row {

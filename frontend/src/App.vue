@@ -45,9 +45,9 @@
 
 <script>
 // components
-import QuestionForm from './components/QuestionForm'
-import Questions from './components/Questions'
-import Answers from './components/Answers'
+import QuestionForm from './components/Question/QuestionForm'
+import Questions from './components/Question/Questions'
+import Answers from './components/Answer/Answers'
 import Header from './components/Header'
 import SnackBar from './helper/components/SnackBar'
 
@@ -203,17 +203,15 @@ export default {
 <style scoped>
 .root {
   position: relative;
-  min-width: 650px;
-  max-width: 650px;
+  width: 650px;
   min-height: 900px;
   max-height: 900px;
   display: flex;
   flex-direction: column;
   border: 2px #e0e0e0 solid;
   border-radius: 20px;
-  overflow: hidden;
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
   background: #e3e3e3;
 }
 </style>

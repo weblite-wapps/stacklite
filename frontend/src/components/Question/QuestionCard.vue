@@ -24,7 +24,7 @@
       </i>
     </div>
     
-    <div class="text">{{question.text}}</div>
+    <pre class="text">{{question.text}}</pre>
 
     <div class="footer">
       <p class="footerItem"> Tag: {{question.tag}}</p>
@@ -40,7 +40,7 @@
 
 <script>
 //helper
-import bus from '../helper/function/bus'
+import bus from '../../helper/function/bus'
 export default {
   name: 'QuestionCard',
 
@@ -187,6 +187,13 @@ h2 {
   position: relative;
   bottom: 105px;
   font-size: 1.2em;
+  letter-spacing: 1.2px;
+  font-family: sans-serif;
+  line-height: 22px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .footer {

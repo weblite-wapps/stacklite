@@ -9,7 +9,7 @@
 
 <script>
 //helper
-import bus from '../helper/function/bus'
+import bus from '../../helper/function/bus'
 
 export default {
   data() {
