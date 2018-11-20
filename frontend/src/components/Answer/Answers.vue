@@ -7,9 +7,11 @@
     <p class="qTitle">{{questionTitle}}<p/>
 
     <AnswerForm
+      v-if="state === 'answersMode'"
       :storeAnswer="storeAnswer"
       :switchState="switchState"
     />
+    
     <div class="ansCards">
       <AnswerCard
         v-for="(answer, i) in answers"

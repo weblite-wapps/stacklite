@@ -29,21 +29,9 @@ export default {
       if (text === '')
         bus.$emit('show-message', 'please fill all requirements ...')
       else {
-        const newDate = new Date()
-        const date =
-          newDate.getFullYear() +
-          '/' +
-          (newDate.getMonth() + 1) +
-          '/' +
-          newDate.getDate()
-        this.storeAnswer(text, date)
+        this.storeAnswer(text)
         this.switchState('questionsMode')
-        this.clear()
       }
-    },
-
-    clear() {
-      this.text = ''
     },
   },
 }

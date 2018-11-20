@@ -30,7 +30,7 @@
     </div>
 
     <div class="buttons">
-      <button @click="fetchRecentQuestions()" type="sbmit" class="button">
+      <button @click="fetchRecentQuestions()" type="sbmit" class="recentButton">
         recent
       </button> 
 
@@ -164,11 +164,20 @@ export default {
   width: 100px;
 }
 
+.recentButton {
+  background-color: #e3e3e3;
+  border: 2px #191939 solid;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-left: 140px;
+  width: 100px;
+}
+
 .buttons {
   display: flex;
   flex-direction: row;
   position: relative;
-  left: 120px;
   top: 20px;
   margin-bottom: 50px;
 }
@@ -204,5 +213,3 @@ button:focus {
   flex-direction: column;
 }
 </style>
-
-

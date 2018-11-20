@@ -45,22 +45,11 @@ export default {
       const valid = this.title == '' || this.text == '' ? false : true
       if (!valid) bus.$emit('show-message', 'please fill all requirements ...')
       else {
-        const newDate = new Date()
-        const date =
-          newDate.getFullYear() +
-          '/' +
-          (newDate.getMonth() + 1) +
-          '/' +
-          newDate.getDate()
-
-        this.addQuestion(
-          {
-            title: this.title,
-            text: this.text,
-            tag: this.tag,
-          },
-          date,
-        )
+        this.addQuestion({
+          title: this.title,
+          text: this.text,
+          tag: this.tag,
+        })
         this.switchState('questionsMode')
       }
     },

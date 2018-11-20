@@ -101,6 +101,17 @@ export default {
       this.state = state
     },
 
+    getFormattedDate() {
+      const newDate = new Date()
+      return (
+        newDate.getFullYear() +
+        '/' +
+        (newDate.getMonth() + 1) +
+        '/' +
+        newDate.getDate()
+      )
+    },
+
     fetchRecentQuestions() {
       requests.getAllQuestions(this.wisId).then(res => {
         this.questions = res
@@ -130,7 +141,7 @@ export default {
       })
     },
 
-    storeAnswer(text, date) {
+    storeAnswer(text) {
       requests
         .storeAnswer(
           this.question._id,
@@ -138,7 +149,7 @@ export default {
           this.userId,
           this.wisId,
           text,
-          date,
+          this.getFormattedDate(),
         )
         .then(() =>
           requests.increaseAnswer(this.wisId, this.question._id).then(() => {
@@ -168,9 +179,15 @@ export default {
         .then(() => bus.$emit('show-message', 'answer level updated ...'))
     },
 
-    addQuestion(form, date) {
+    addQuestion(form) {
       requests
-        .postQuestion(this.username, this.userId, this.wisId, form, date)
+        .postQuestion(
+          this.username,
+          this.userId,
+          this.wisId,
+          form,
+          this.getFormattedDate(),
+        )
         .then(() => {
           this.fetchRecentQuestions()
           this.switchState('questionsMode')
@@ -210,6 +227,7 @@ export default {
   flex-direction: column;
   border: 2px #e0e0e0 solid;
   border-radius: 20px;
+  overflow: hidden;
   overflow-x: hidden;
   overflow-y: auto;
   background: #e3e3e3;
