@@ -1,16 +1,16 @@
 <template>
   <div class="ansRoot">
-    <button @click="switchState('questionsMode')" type="submit" class="backToQuestions">
-      Questions
-    </button>
+    <button
+      @click="switchStateWithFetch('questionsMode')"
+      type="submit"
+      class="backToQuestions"
+    >Questions</button>
 
-    <p class="qTitle">{{questionTitle}}<p/>
+    <p class="qTitle">{{questionTitle}}</p>
+    <p/>
 
-    <AnswerForm
-      v-if="state === 'answersMode'"
-      :storeAnswer="storeAnswer"
-    />
-    
+    <AnswerForm v-if="state === 'answersMode'" :storeAnswer="storeAnswer"/>
+
     <div class="ansCards">
       <AnswerCard
         v-for="(answer, i) in answers"
@@ -23,6 +23,7 @@
         :storeReply="storeReply"
         :state="state"
         :toggleChosen="toggleChosen"
+        :deleteAnswer="deleteAnswer"
       />
     </div>
   </div>
@@ -46,11 +47,12 @@ export default {
     questionWriter: String,
     answers: Array,
     state: String,
-    switchState: Function,
+    switchStateWithFetch: Function,
     storeAnswer: Function,
     storeReply: Function,
     updateAnswerLevel: Function,
     toggleChosen: Function,
+    deleteAnswer: Function,
   },
 }
 </script>

@@ -53,14 +53,14 @@ exports.updateLevelAgain = (score, userId, wisId, questionId) =>
     },
   )
 
-exports.increaseAnswer = (wisId, questionId) =>
+exports.changeAnswersNum = (wisId, questionId, change) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
       wisId,
     },
     {
-      $inc: { answers: 1 },
+      $inc: { answers: change },
     },
   )
 
@@ -109,6 +109,18 @@ exports.removeFromFavorite = (questionId, userId, wisId) =>
       $pull: { favorite: userId },
     },
   )
+
+exports.deleteQuestion = (questionId, wisId) =>
+  models.Question.deleteOne({
+    _id: questionId,
+    wisId,
+  })
+
+exports.deleteAnswer = (answerId, wisId) =>
+  models.Answer.deleteOne({
+    _id: answerId,
+    wisId,
+  })
 
 exports.getUserFavoriteQuestions = (userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()

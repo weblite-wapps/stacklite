@@ -1,20 +1,19 @@
 <template>
   <div class="root">
-
     <Header appName="Stack Overflow"/>
 
-    <QuestionForm 
-      v-if="state === 'askingMode'" 
-      :addQuestion="addQuestion" 
-      :switchState="switchState" 
+    <QuestionForm
+      v-if="state === 'askingMode'"
+      :addQuestion="addQuestion"
+      :switchState="switchState"
     />
 
-    <Questions 
-      v-show="state === 'questionsMode'" 
-      :questions="questions" 
+    <Questions
+      v-show="state === 'questionsMode'"
+      :questions="questions"
       :userId="userId"
       :state="state"
-      :fetchRecentQuestions="fetchRecentQuestions" 
+      :fetchRecentQuestions="fetchRecentQuestions"
       :fetchUserQuestions="fetchUserQuestions"
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :updateLevel="updateLevel"
@@ -22,6 +21,7 @@
       :addToFavorite="addToFavorite"
       :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
+      :deleteQuestion="deleteQuestion"
     />
 
     <Answers
@@ -32,16 +32,16 @@
       :questionWriter="question.authorId"
       :answers="answers"
       :state="state"
-      :switchState="switchState"
+      :switchStateWithFetch="switchStateWithFetch"
       :storeAnswer="storeAnswer"
       :storeReply="storeReply"
       :updateAnswerLevel="updateAnswerLevel"
       :toggleChosen="toggleChosen"
       :getFormattedDate="getFormattedDate"
+      :deleteAnswer="deleteAnswer"
     />
 
-    <SnackBar/>  
-
+    <SnackBar/>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ import SnackBar from './helper/components/SnackBar'
 import webliteHandler from './helper/function/weblite.api'
 import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
+import { request } from 'http'
 
 // R && W
 const { R, W } = window
@@ -102,6 +103,14 @@ export default {
   methods: {
     switchState(state) {
       this.state = state
+    },
+
+    switchStateWithFetch(state) {
+      this.switchState(state)
+      if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
+      else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
+      else if (this.fetchedQuestions === 'favorite')
+        this.fetchUserFavoriteQuestions()
     },
 
     getFormattedDate() {
@@ -155,13 +164,9 @@ export default {
           this.getFormattedDate(),
         )
         .then(() =>
-          requests.increaseAnswer(this.wisId, this.question._id).then(() => {
-            if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
-            else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
-            else if (this.fetchedQuestions === 'favorite')
-              this.fetchUserFavoriteQuestions()
-            this.fetchAnswers()
-          }),
+          requests
+            .changeAnswersNum(this.wisId, this.question._id, 1)
+            .then(() => this.fetchAnswers()),
         )
     },
 
@@ -221,6 +226,26 @@ export default {
       requests
         .removeFromFavorite(questionId, this.userId, this.wisId)
         .then(() => bus.$emit('show-message', 'removed from favorite ...'))
+    },
+
+    deleteQuestion(questionId) {
+      requests.deleteQuestion(questionId, this.wisId).then(() => {
+        if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
+        else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
+        else if (this.fetchedQuestions === 'favorite')
+          this.fetchUserFavoriteQuestions()
+        this.fetchAnswers()
+      })
+    },
+
+    deleteAnswer(answerId) {
+      requests
+        .deleteAnswer(answerId, this.wisId)
+        .then(() =>
+          requests
+            .changeAnswersNum(this.wisId, this.question._id, -1)
+            .then(() => this.fetchAnswers()),
+        )
     },
   },
 }

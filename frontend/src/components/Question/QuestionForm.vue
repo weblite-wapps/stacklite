@@ -1,13 +1,13 @@
 <template>
   <div class="form">
       <p for="title">insert title:</p>
-      <input v-model="title" class="title">
+      <input v-model="title" class="title" maxlength="20">
 
       <p>insert text:</p>
-      <textarea v-model="text" rows="12" class="texty"></textarea> 
+      <textarea v-model="text" rows="12" class="texty" maxlength="700"></textarea> 
 
       <p>insert tag:</p>
-      <input v-model="tag" class="tag">
+      <textarea v-model="tag" class="tag" maxlength="25"></textarea>
 
     <div class="button">
       <button @click="sendQuestionToDB()" type="submit" class="done">

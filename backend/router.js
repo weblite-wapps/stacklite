@@ -12,9 +12,9 @@ router.post('/postQuestion', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
-router.post('/increaseAnswer', ({ body }, res) =>
+router.post('/changeAnswersNum', ({ body }, res) =>
   database
-    .increaseAnswer(body.wisId, body.questionId)
+    .changeAnswersNum(body.wisId, body.questionId, body.change)
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),
 )
@@ -78,6 +78,20 @@ router.post('/addToFavorite', ({ body }, res) =>
 router.post('/removeFromFavorite', ({ body }, res) =>
   database
     .removeFromFavorite(body.questionId, body.userId, body.wisId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.post('/deleteQuestion', ({ body }, res) =>
+  database
+    .deleteQuestion(body.questionId, body.wisId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.post('/deleteAnswer', ({ body }, res) =>
+  database
+    .deleteAnswer(body.answerId, body.wisId)
     .then(() => res.send(body))
     .catch(err => res.status(500).send(err)),
 )

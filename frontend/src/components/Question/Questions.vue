@@ -53,6 +53,7 @@
         :updateLevelAgain="updateLevelAgain"
         :addToFavorite="addToFavorite"
         :removeFromFavorite="removeFromFavorite"
+        :deleteQuestion="deleteQuestion"
       />
     </div>
 
@@ -91,6 +92,7 @@ export default {
     updateLevelAgain: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,
+    deleteQuestion: Function,
   },
 
   methods: {

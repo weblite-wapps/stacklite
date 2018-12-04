@@ -4,38 +4,33 @@
 
     <div class="makeInRow">
       <div class="makeIncolumn">
-        <button @click="share()" type="submit" class="share">
-          share
-        </button>
-        <i @click="changeLevel(1)" type="submit" class="upLevel">
-          arrow_drop_up
-        </i>
+        <button @click="share()" type="submit" class="share">share</button>
+        <i @click="changeLevel(1)" type="submit" class="upLevel">arrow_drop_up</i>
         <h2>{{level}}</h2>
-        <i @click="changeLevel(-1)" type="submit" class="downLevel">
-          arrow_drop_down
-        </i>
+        <i @click="changeLevel(-1)" type="submit" class="downLevel">arrow_drop_down</i>
       </div>
 
-      <i v-if="favorite" @click="changeFavorite()" type="submit" class="favorite">
-        star_border
-      </i>
-      <i v-if="!favorite" @click="changeFavorite()" type="submit" class="notFavorite">
-        star_border
-      </i>
+      <i v-if="favorite" @click="changeFavorite()" type="submit" class="favorite">star_border</i>
+      <i v-if="!favorite" @click="changeFavorite()" type="submit" class="notFavorite">star_border</i>
+      
+      <i
+        v-if="userId === question.authorId"
+        @click="deleteQuestion(question._id)"
+        type="submit"
+        class="delete"
+      >delete</i>
     </div>
-    
+
     <pre class="text">{{question.text}}</pre>
 
     <div class="footer">
-      <p class="footerItem"> Tag: {{question.tag}}</p>
-      <p class="footerItem"> Author: {{question.authorName}}</p>
-      <p class="footerItem"> Date: {{question.date}}</p>  
-      <button @click="goToAnswersMode()" type="submit" class="answers">
-        answers
-      </button>
+      <p class="footerItem">Tag: {{question.tag}}</p>
+      <p class="footerItem">Author: {{question.authorName}}</p>
+      <p class="footerItem">Date: {{question.date}}</p>
+      <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
       <p class="ansNumber">#{{numberOfAnswers}}</p>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -51,6 +46,7 @@ export default {
     updateLevelAgain: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,
+    deleteQuestion: Function,
   },
 
   data() {
@@ -138,6 +134,12 @@ export default {
 </script>
 
 <style>
+.delete {
+  position: relative;
+  left: 415px;
+  top: 80px;
+}
+
 .card {
   position: static;
   background-color: #e3e3e3;

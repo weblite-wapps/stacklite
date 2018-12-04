@@ -2,42 +2,33 @@
   <div class="ansCardRoot">
     <div class="row">
       <pre class="ansText"> {{answer.text}} </pre>
-      
-      <CheckBox
-      :isWriter="isWriter"
-      @click="changeChosen()"
-      :selected="chosen"
-      />
-      <i @click="changeLevel(1)" type="submit" class="upLevelAns">
-        arrow_drop_up
-      </i>
+
+      <i
+        v-if="userId === answer.authorId"
+        @click="deleteAnswer(answer._id)"
+        type="submit"
+        class="deleteAns"
+      >delete_forever</i>
+      <CheckBox :isWriter="isWriter" @click="changeChosen()" :selected="chosen"/>
+      <i @click="changeLevel(1)" type="submit" class="upLevelAns">arrow_drop_up</i>
       <h2>{{level}}</h2>
-      <i @click="changeLevel(-1)" type="submit" class="downLevelAns">
-        arrow_drop_down
-      </i>
+      <i @click="changeLevel(-1)" type="submit" class="downLevelAns">arrow_drop_down</i>
     </div>
 
-  
     <div class="ansCardFooter">
-      <p class="writer"> Author: {{answer.authorName}} </p>
-      <p class="datee"> date: {{answer.date}} </p>
-
-
-      <button @click="showHideReplys()" type="submit" class="reply">
-        all replys
-      </button>
-      <button @click="toggleReplyPermission()" type="submit" class="reply">
-        reply
-      </button>
+      <p class="writer">Author: {{answer.authorName}}</p>
+      <p class="datee">date: {{answer.date}}</p>
+      <button @click="showHideReplys()" type="submit" class="reply">all replys</button>
+      <button @click="toggleReplyPermission()" type="submit" class="reply">reply</button>
     </div>
 
     <div class="replyCards">
       <ReplyForm
-      v-show="replyPermission === true"
-      :answerId="answer._id"
-      :storeReply="storeReply"
-      :toggleReplyPermission="toggleReplyPermission"
-      :addReply="addReply"
+        v-show="replyPermission === true"
+        :answerId="answer._id"
+        :storeReply="storeReply"
+        :toggleReplyPermission="toggleReplyPermission"
+        :addReply="addReply"
       />
 
       <ReplyCard
@@ -82,6 +73,7 @@ export default {
     storeReply: Function,
     state: String,
     toggleChosen: Function,
+    deleteAnswer: Function,
   },
 
   methods: {
@@ -146,6 +138,11 @@ export default {
 </script>
 
 <style scoped>
+.deleteAns {
+  position: relative;
+  left: 80px;
+  top: 80px;
+}
 .ansCardRoot {
   position: relative;
   left: 20px;

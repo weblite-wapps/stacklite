@@ -45,15 +45,15 @@ export default {
         ),
       ),
 
-  increaseAnswer: (wisId, questionId) =>
+  changeAnswersNum: (wisId, questionId, change) =>
     request
-      .post(config.server + '/increaseAnswer')
+      .post(config.server + '/changeAnswersNum')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ wisId, questionId })
+      .send({ wisId, questionId, change })
       .catch(() =>
         bus.$emit(
           'show-message',
-          'Error has occured in increasing answer number...',
+          'Error has occured in changing answer number...',
         ),
       ),
 
@@ -88,6 +88,24 @@ export default {
           'show-message',
           'Error has occured in removing from favorite...',
         ),
+      ),
+
+  deleteQuestion: (questionId, wisId) =>
+    request
+      .post(config.server + '/deleteQuestion')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ questionId, wisId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in deleting question...'),
+      ),
+
+  deleteAnswer: (answerId, wisId) =>
+    request
+      .post(config.server + '/deleteAnswer')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ answerId, wisId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in deleting answer...'),
       ),
 
   getUserQuestions: (userId, wisId) =>
