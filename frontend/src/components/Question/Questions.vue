@@ -50,6 +50,7 @@
         :question="question"
         :userId="userId"
         :updateLevel="updateLevel"
+        :updateLevelAgain="updateLevelAgain"
         :addToFavorite="addToFavorite"
         :removeFromFavorite="removeFromFavorite"
       />
@@ -87,6 +88,7 @@ export default {
     fetchUserQuestions: Function,
     fetchUserFavoriteQuestions: Function,
     updateLevel: Function,
+    updateLevelAgain: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,
   },
@@ -119,7 +121,7 @@ export default {
   display: flex;
   flex-direction: row;
   position: relative;
-  left: 30px;
+  /* left: 30px; */
   margin-bottom: 50px;
 }
 

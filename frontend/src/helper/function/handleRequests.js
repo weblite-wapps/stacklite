@@ -33,6 +33,18 @@ export default {
         bus.$emit('show-message', 'Error has occured in updating level...'),
       ),
 
+  updateLevelAgain: (score, userId, wisId, questionId) =>
+    request
+      .post(config.server + '/updateLevelAgain')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ score, userId, wisId, questionId })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in updating level Again...',
+        ),
+      ),
+
   increaseAnswer: (wisId, questionId) =>
     request
       .post(config.server + '/increaseAnswer')

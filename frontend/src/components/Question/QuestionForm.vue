@@ -73,16 +73,22 @@ export default {
   padding: 8px;
   width: 50%;
   box-sizing: border-box;
+  font-size: 20px;
+  font-family: sans-serif;
 }
 
 .tag {
   margin-bottom: 50px;
   padding: 8px;
   width: 50%;
+  font-size: 20px;
+  font-family: sans-serif;
 }
 
 .texty {
   margin-bottom: 20px;
+  font-size: 20px;
+  font-family: sans-serif;
 }
 
 .button {

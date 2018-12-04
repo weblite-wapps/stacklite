@@ -48,6 +48,7 @@ export default {
     question: Object,
     userId: String,
     updateLevel: Function,
+    updateLevelAgain: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,
   },
@@ -77,6 +78,7 @@ export default {
     changeLevel(score) {
       const { question } = this
       if (
+        this.userId !== question.authorId &&
         R.indexOf(this.userId, question.voters) === -1 &&
         this.level === question.level
       ) {
@@ -84,22 +86,53 @@ export default {
         this.level += score
       }
     },
+
+    // changeLevel(score) {
+    //   const { question } = this
+    //   const voteObject = R.find(R.propEq('userId', this.userId))(
+    //     question.voters,
+    //   )
+    //   if (
+    //     this.userId !== question.authorId &&
+    //     (this.level === question.level ||
+    //       (this.level === question.level + 1 && score === -1) ||
+    //       (this.level === question.level - 1 && score === 1))
+    //   ) {
+    //     console.log('salam')
+    //     if (!voteObject) {
+    //       console.log('updateLevel')
+    //       this.updateLevel(score, question._id)
+    //       this.level += score
+    //     } else if (
+    //       voteObject.vote === 0 ||
+    //       (voteObject.vote === 1 && score === -1) ||
+    //       (voteObject.vote === -1 && score === 1)
+    //     ) {
+    //       console.log(voteObject)
+    //       console.log('Again!')
+    //       this.updateLevelAgain(score, question._id)
+    //       this.level += score
+    //     }
+    //   }
+    // },
   },
 
   watch: {
     question: function() {
-      this.level = this.question.level
-      this.numberOfAnswers = this.question.answers
+      const { question } = this
+      this.level = question.level
+      this.numberOfAnswers = question.answers
       this.favorite =
-        R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
+        R.indexOf(this.userId, question.favorite) === -1 ? false : true
     },
   },
 
   mounted() {
-    this.level = this.question.level
-    this.numberOfAnswers = this.question.answers
+    const { question } = this
+    this.level = question.level
+    this.numberOfAnswers = question.answers
     this.favorite =
-      R.indexOf(this.userId, this.question.favorite) === -1 ? false : true
+      R.indexOf(this.userId, question.favorite) === -1 ? false : true
   },
 }
 </script>
@@ -201,7 +234,7 @@ h2 {
   flex-direction: row;
   position: relative;
   bottom: 70px;
-  left: 20px;
+  margin-left: 1 5px;
 }
 
 .footerItem {

@@ -20,7 +20,6 @@ export default {
 
   props: {
     storeAnswer: Function,
-    switchState: Function,
   },
 
   methods: {
@@ -30,8 +29,12 @@ export default {
         bus.$emit('show-message', 'please fill all requirements ...')
       else {
         this.storeAnswer(text)
-        this.switchState('questionsMode')
+        this.clean()
       }
+    },
+
+    clean() {
+      this.text = ''
     },
   },
 }
@@ -51,12 +54,14 @@ export default {
 .ansForm {
   width: 250px;
   height: 80px;
-  border: 8px #2e2333de solid;
+  border: 8px #221d24de solid;
   border-radius: 15px;
-  background: #9875a3;
+  background: #9c9aa5;
   position: relative;
   left: 200px;
   bottom: 30px;
+  font-size: 20px;
+  font-family: sans-serif;
 }
 
 .submitAns {

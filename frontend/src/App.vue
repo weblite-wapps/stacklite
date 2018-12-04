@@ -18,6 +18,7 @@
       :fetchUserQuestions="fetchUserQuestions"
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :updateLevel="updateLevel"
+      :updateLevelAgain="updateLevelAgain"
       :addToFavorite="addToFavorite"
       :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
@@ -26,6 +27,7 @@
     <Answers
       v-show="state === 'answersMode'"
       :userId="userId"
+      :userName="username"
       :questionTitle="question.title"
       :questionWriter="question.authorId"
       :answers="answers"
@@ -35,6 +37,7 @@
       :storeReply="storeReply"
       :updateAnswerLevel="updateAnswerLevel"
       :toggleChosen="toggleChosen"
+      :getFormattedDate="getFormattedDate"
     />
 
     <SnackBar/>  
@@ -157,6 +160,7 @@ export default {
             else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
             else if (this.fetchedQuestions === 'favorite')
               this.fetchUserFavoriteQuestions()
+            this.fetchAnswers()
           }),
         )
     },
@@ -171,6 +175,12 @@ export default {
       requests
         .updateLevel(score, this.userId, this.wisId, questionId)
         .then(() => bus.$emit('show-message', 'level updated ...'))
+    },
+
+    updateLevelAgain(score, questionId) {
+      requests
+        .updateLevelAgain(score, this.userId, this.wisId, questionId)
+        .then(() => bus.$emit('show-message', 'level updated Again! ...'))
     },
 
     updateAnswerLevel(score, answerId) {

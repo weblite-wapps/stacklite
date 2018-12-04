@@ -9,7 +9,6 @@
     <AnswerForm
       v-if="state === 'answersMode'"
       :storeAnswer="storeAnswer"
-      :switchState="switchState"
     />
     
     <div class="ansCards">
@@ -18,6 +17,7 @@
         :key="i"
         :answer="answer"
         :userId="userId"
+        :userName="userName"
         :questionWriter="questionWriter"
         :updateAnswerLevel="updateAnswerLevel"
         :storeReply="storeReply"
@@ -41,6 +41,7 @@ export default {
 
   props: {
     userId: String,
+    userName: String,
     questionTitle: String,
     questionWriter: String,
     answers: Array,

@@ -22,15 +22,17 @@ export default {
     answerId: String,
     storeReply: Function,
     toggleReplyPermission: Function,
+    addReply: Function,
   },
 
   methods: {
     checkAndSaveReply() {
       const { text } = this
       if (text === '')
-        bus.$emit('show-message', 'please fill all requirements ...')
+        bus.$emit('show-message', 'empty reply does not allowed ...')
       else {
         this.storeReply(this.answerId, text)
+        this.addReply(text)
         this.clear()
         this.toggleReplyPermission()
       }
@@ -57,6 +59,8 @@ export default {
   text-align: center;
   line-height: 20px;
   padding: 3px;
+  font-size: 19px;
+  font-family: sans-serif;
 }
 .textForm:focus {
   outline: none;

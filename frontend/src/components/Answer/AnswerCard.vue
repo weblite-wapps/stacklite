@@ -37,10 +37,11 @@
       :answerId="answer._id"
       :storeReply="storeReply"
       :toggleReplyPermission="toggleReplyPermission"
+      :addReply="addReply"
       />
 
       <ReplyCard
-        v-for="(reply, i) in answer.replys"
+        v-for="(reply, i) in showReplys"
         v-if="showReplysPermission === true"
         :key="i"
         :reply="reply"
@@ -68,12 +69,14 @@ export default {
       replyPermission: false,
       showReplysPermission: false,
       chosen: false,
+      showReplys: [],
     }
   },
 
   props: {
     answer: Object,
     userId: String,
+    userName: String,
     questionWriter: String,
     updateAnswerLevel: Function,
     storeReply: Function,
@@ -86,7 +89,8 @@ export default {
       const { answer } = this
       if (
         R.indexOf(this.userId, answer.voters) === -1 &&
-        this.level === answer.level
+        this.level === answer.level &&
+        this.userId !== answer.authorId
       ) {
         this.updateAnswerLevel(score, answer._id)
         this.level += score
@@ -107,6 +111,11 @@ export default {
         this.toggleChosen(this.answer._id, this.chosen)
       }
     },
+
+    addReply(text) {
+      const reply = { text: text, authorName: this.userName }
+      this.showReplys = R.append(reply, this.showReplys)
+    },
   },
 
   computed: {
@@ -119,6 +128,7 @@ export default {
     answer: function() {
       this.level = this.answer.level
       this.chosen = this.answer.chosen
+      this.showReplys = R.concat([], this.answer.replys)
     },
 
     state: function() {
@@ -130,6 +140,7 @@ export default {
   mounted: function() {
     this.level = this.answer.level
     this.chosen = this.answer.chosen
+    this.showReplys = R.concat([], this.answer.replys)
   },
 }
 </script>
@@ -226,5 +237,3 @@ h2 {
   margin-top: 10px;
 }
 </style>
-
-

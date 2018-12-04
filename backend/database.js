@@ -39,6 +39,20 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     },
   )
 
+exports.updateLevelAgain = (score, userId, wisId, questionId) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    {
+      $inc: { 'voters.$[elem].vote': score, level: score },
+    },
+    {
+      arrayFilters: [{ 'elem.userId': { $eq: userId } }],
+    },
+  )
+
 exports.increaseAnswer = (wisId, questionId) =>
   models.Question.findOneAndUpdate(
     {
