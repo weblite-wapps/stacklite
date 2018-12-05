@@ -13,7 +13,7 @@
       :questions="questions"
       :userId="userId"
       :state="state"
-      :fetchRecentQuestions="fetchRecentQuestions"
+      :fetchAllQuestions="fetchAllQuestions"
       :fetchUserQuestions="fetchUserQuestions"
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :updateLevel="updateLevel"
@@ -78,11 +78,11 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '2',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
-      fetchedQuestions: 'recent',
+      fetchQuestionState: 'all',
       answers: [],
       question: {},
     }
@@ -98,7 +98,7 @@ export default {
   },
 
   mounted: function() {
-    this.fetchRecentQuestions()
+    this.fetchAllQuestions()
   },
 
   methods: {
@@ -108,9 +108,9 @@ export default {
 
     switchStateWithFetch(state) {
       this.switchState(state)
-      if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
-      else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
-      else if (this.fetchedQuestions === 'favorite')
+      if (this.fetchQuestionState === 'all') this.fetchAllQuestions()
+      else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
+      else if (this.fetchQuestionState === 'favorite')
         this.fetchUserFavoriteQuestions()
     },
 
@@ -125,24 +125,31 @@ export default {
       )
     },
 
-    fetchRecentQuestions() {
+    fetchAllQuestions() {
       requests.getAllQuestions(this.wisId).then(res => {
         this.questions = res
-        this.fetchedQuestions = 'recent'
+        this.fetchQuestionState = 'all'
+      })
+    },
+
+    fetchUnsolvedQuestions() {
+      requests.getUnsolvedQuestions(this.wisId).then(res => {
+        this.questions = res
+        this.fetchQuestionState = 'unsolved'
       })
     },
 
     fetchUserQuestions() {
       requests.getUserQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
-        this.fetchedQuestions = 'user'
+        this.fetchQuestionState = 'user'
       })
     },
 
     fetchUserFavoriteQuestions() {
       requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
         this.questions = res
-        this.fetchedQuestions = 'favorite'
+        this.fetchQuestionState = 'favorite'
         bus.$emit('show-message', 'fetch favorites ...')
       })
     },
@@ -205,7 +212,7 @@ export default {
           this.getFormattedDate(),
         )
         .then(() => {
-          this.fetchRecentQuestions()
+          this.fetchAllQuestions()
           this.switchState('questionsMode')
           bus.$emit('show-message', 'question added ...')
         })
@@ -213,7 +220,13 @@ export default {
 
     toggleChosen(answerId, bool) {
       requests.toggleChosen(answerId, this.wisId, bool).then(() => {
-        bus.$emit('show-message', 'chosen toggled ...')
+        const chosens = R.map(answer => answer.chosen, this.answers)
+        const bool = R.reduce(R.or, false, chosens)
+        requests
+          .changeSolve(this.wisId, this.question._id, bool)
+          .then(() =>
+            bus.$emit('show-message', 'toggle and change solved happend ...'),
+          )
       })
     },
 
@@ -231,9 +244,9 @@ export default {
 
     deleteQuestion(questionId) {
       requests.deleteQuestion(questionId, this.wisId).then(() => {
-        if (this.fetchedQuestions === 'recent') this.fetchRecentQuestions()
-        else if (this.fetchedQuestions === 'user') this.fetchUserQuestions()
-        else if (this.fetchedQuestions === 'favorite')
+        if (this.fetchQuestionState === 'all') this.fetchAllQuestions()
+        else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
+        else if (this.fetchQuestionState === 'favorite')
           this.fetchUserFavoriteQuestions()
         this.fetchAnswers()
       })

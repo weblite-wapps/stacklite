@@ -121,6 +121,7 @@ export default {
     changeChosen() {
       if (this.isWriter) {
         this.chosen = !this.chosen
+        this.answer.chosen = this.chosen
         this.toggleChosen(this.answer._id, this.chosen)
       }
     },

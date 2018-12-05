@@ -25,6 +25,7 @@ exports.addQuestion = (username, userId, wisId, form, date) =>
     answers: 0,
     date,
     favorite: [],
+    solved: false,
   }).save()
 
 exports.updateLevel = (score, userId, wisId, questionId) =>
@@ -64,6 +65,16 @@ exports.changeAnswersNum = (wisId, questionId, change) =>
     },
   )
 
+exports.changeSolve = (wisId, questionId, bool) =>
+  models.Question.findOneAndUpdate(
+    {
+      _id: questionId,
+      wisId,
+    },
+    { $set: { solved: bool } },
+    { overwrite: true },
+  )
+
 exports.toggleChosen = (answerId, wisId, bool) =>
   models.Answer.findOneAndUpdate(
     { wisId, _id: answerId },
@@ -87,6 +98,8 @@ exports.getUserQuestions = (userId, wisId) =>
   models.Question.find({ authorId: userId, wisId }).exec()
 
 exports.getAllQuestions = wisId => models.Question.find({ wisId }).exec()
+
+exports.getUnsolvedQuestions = wisId => models.Question.find({ wisId }).exec()
 
 exports.addToFavorite = (questionId, userId, wisId) =>
   models.Question.findOneAndUpdate(

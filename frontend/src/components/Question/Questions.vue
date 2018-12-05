@@ -1,50 +1,30 @@
 <template>
   <div class="wrapper">
-
     <div class="header">
-      
       <div class="searchStuff">
-
         <div class="searchBy">
           <p class="lable">Search By:</p>
           <select v-model="searchFilter">
-            <option
-              v-for="(filter, i) in searchFilters"
-              :key="i"
-              :value="filter"
-            > {{filter}} </option>
+            <option v-for="(filter, i) in searchFilters" :key="i" :value="filter">{{filter}}</option>
           </select>
-        </div>  
-      
-        <input
-          v-model="query"
-          type="textbox"
-          placeholder="Search here"
-          class="searchBar"
-        >
-      </div>  
-          
-      <button @click="switchState('askingMode')" type="sbmit" class="askButton">
-        ask question
-      </button>
+        </div>
+
+        <input v-model="query" type="textbox" placeholder="Search here" class="searchBar">
+      </div>
+
+      <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
     </div>
 
     <div class="buttons">
-      <button @click="fetchRecentQuestions()" type="sbmit" class="recentButton">
-        recent
-      </button> 
-
-      <button @click="fetchUserQuestions()" type="sbmit" class="button">
-        yours
-      </button>
-
-      <button @click="fetchUserFavoriteQuestions()" type="sbmit" class="button">
-        favorites
-      </button>
+      <button @click="fetchAllQuestions()" type="sbmit" class="allButton">All</button>
+      
+      <button @click="fetchUserQuestions()" type="sbmit" class="button">Yours</button>
+      
+      <button @click="fetchUserFavoriteQuestions()" type="sbmit" class="button">Favorites</button>
     </div>
 
     <div class="cards">
-      <QuestionCard 
+      <QuestionCard
         v-for="(question) in filteredQuestions"
         :key="question._id"
         :question="question"
@@ -56,7 +36,6 @@
         :deleteQuestion="deleteQuestion"
       />
     </div>
-
   </div>
 </template>
 
@@ -85,7 +64,7 @@ export default {
     userId: String,
     state: String,
     switchState: Function,
-    fetchRecentQuestions: Function,
+    fetchAllQuestions: Function,
     fetchUserQuestions: Function,
     fetchUserFavoriteQuestions: Function,
     updateLevel: Function,
@@ -123,7 +102,6 @@ export default {
   display: flex;
   flex-direction: row;
   position: relative;
-  /* left: 30px; */
   margin-bottom: 50px;
 }
 
@@ -168,7 +146,7 @@ export default {
   width: 100px;
 }
 
-.recentButton {
+.allButton {
   background-color: #e3e3e3;
   border: 2px #191939 solid;
   border-radius: 5px;
@@ -197,7 +175,8 @@ button:focus {
   outline: none;
 }
 
-.button:hover {
+.button:hover,
+.allButton:hover {
   border: 2px #991933 solid;
 }
 

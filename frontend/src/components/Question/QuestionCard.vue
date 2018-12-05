@@ -19,6 +19,8 @@
         type="submit"
         class="delete"
       >delete</i>
+      
+      <i v-if="question.solved" class="Done">done_outline</i>
     </div>
 
     <pre class="text">{{question.text}}</pre>
@@ -134,6 +136,15 @@ export default {
 </script>
 
 <style>
+.Done {
+  position: absolute;
+  left: 40px;
+  bottom: 115px;
+  font-size: 42px;
+  font-weight: bold;
+  color: rgb(65, 97, 65);
+  max-width: 0px;
+}
 .delete {
   position: relative;
   max-height: 0px;

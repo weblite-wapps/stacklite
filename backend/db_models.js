@@ -14,6 +14,7 @@ exports.Question = mongoose.model(
     answers: Number,
     date: String,
     favorite: Array,
+    solved: Boolean,
   }),
 )
 

@@ -19,6 +19,13 @@ router.post('/changeAnswersNum', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/changeSolve', ({ body }, res) =>
+  database
+    .changeSolve(body.wisId, body.questionId, body.bool)
+    .then(() => res.send('submitted'))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.post('/toggleChosen', ({ body }, res) =>
   database
     .toggleChosen(body.answerId, body.wisId, body.bool)
@@ -127,6 +134,13 @@ router.get('/getUserFavoriteQuestions', ({ query }, res) =>
 router.get('/getAllQuestions', (req, res) =>
   database
     .getAllQuestions(req.query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUnsolvedQuestions', (req, res) =>
+  database
+    .getUnsolvedQuestions(req.query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )

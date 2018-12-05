@@ -57,6 +57,18 @@ export default {
         ),
       ),
 
+  changeSolve: (wisId, questionId, bool) =>
+    request
+      .post(config.server + '/changeSolve')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ wisId, questionId, bool })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in changing question solve...',
+        ),
+      ),
+
   updateAnswerLevel: (score, userId, wisId, answerId) =>
     request
       .post(config.server + '/updateAnswerLevel')
@@ -153,6 +165,19 @@ export default {
         bus.$emit(
           'show-message',
           'Error has occured in getting all questions...',
+        ),
+      ),
+
+  getUnsolvedQuestions: wisId =>
+    request
+      .get(config.server + '/getUnsolvedQuestions/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting unsolved questions...',
         ),
       ),
 
