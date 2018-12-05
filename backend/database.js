@@ -122,6 +122,18 @@ exports.deleteAnswer = (answerId, wisId) =>
     wisId,
   })
 
+exports.editAnswer = (answerId, editedText, wisId) =>
+  models.Answer.findOneAndUpdate(
+    {
+      _id: answerId,
+      wisId,
+    },
+    {
+      $set: { text: editedText },
+    },
+    { overwrite: true },
+  )
+
 exports.getUserFavoriteQuestions = (userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
 

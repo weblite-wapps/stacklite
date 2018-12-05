@@ -1,9 +1,7 @@
 <template>
   <div>
     <textarea v-model="text" placeholder="your answer is ..." maxlength="800" class="ansForm"></textarea>
-    <i @click="checkAndSaveAnswer()" class="submitAns">
-      add_circle_outline
-    </i>
+    <i @click="checkAndSaveAnswer()" class="submitAns">add_circle_outline</i>
   </div>
 </template>
 

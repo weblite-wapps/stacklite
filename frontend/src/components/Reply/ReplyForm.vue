@@ -1,9 +1,7 @@
 <template>
   <div class="replyForm">
     <textarea v-model="text" placeholder="your reply is ..." maxlength="300" class="textForm"></textarea>
-    <i @click="checkAndSaveReply()" type='submit' class="sub">
-      create
-    </i>
+    <i @click="checkAndSaveReply()" type="submit" class="sub">note_add</i>
   </div>
 </template>
 

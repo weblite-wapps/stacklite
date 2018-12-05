@@ -108,6 +108,15 @@ export default {
         bus.$emit('show-message', 'Error has occured in deleting answer...'),
       ),
 
+  editAnswer: (answerId, editedText, wisId) =>
+    request
+      .post(config.server + '/editAnswer')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ answerId, editedText, wisId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in editing answer...'),
+      ),
+
   getUserQuestions: (userId, wisId) =>
     request
       .get(config.server + '/getUserQuestions/')

@@ -24,6 +24,7 @@
         :state="state"
         :toggleChosen="toggleChosen"
         :deleteAnswer="deleteAnswer"
+        :editAnswer="editAnswer"
       />
     </div>
   </div>
@@ -53,6 +54,7 @@ export default {
     updateAnswerLevel: Function,
     toggleChosen: Function,
     deleteAnswer: Function,
+    editAnswer: Function,
   },
 }
 </script>

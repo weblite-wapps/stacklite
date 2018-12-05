@@ -136,6 +136,7 @@ export default {
 <style>
 .delete {
   position: relative;
+  max-height: 0px;
   left: 415px;
   top: 80px;
 }
@@ -191,6 +192,7 @@ h2 {
 
 .favorite {
   font-size: 50px;
+  max-height: 0px;
   color: #ffff44;
   position: relative;
   left: 450px;
@@ -198,6 +200,7 @@ h2 {
 
 .notFavorite {
   font-size: 50px;
+  max-height: 0px;
   color: #fff;
   position: relative;
   left: 450px;

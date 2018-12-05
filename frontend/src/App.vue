@@ -39,6 +39,7 @@
       :toggleChosen="toggleChosen"
       :getFormattedDate="getFormattedDate"
       :deleteAnswer="deleteAnswer"
+      :editAnswer="editAnswer"
     />
 
     <SnackBar/>
@@ -246,6 +247,12 @@ export default {
             .changeAnswersNum(this.wisId, this.question._id, -1)
             .then(() => this.fetchAnswers()),
         )
+    },
+
+    editAnswer(answerId, editedText) {
+      requests
+        .editAnswer(answerId, editedText, this.wisId)
+        .then(() => bus.$emit('show-message', 'answer edited ...'))
     },
   },
 }

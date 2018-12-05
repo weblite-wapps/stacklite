@@ -9,6 +9,19 @@
         type="submit"
         class="deleteAns"
       >delete_forever</i>
+      <i
+        v-if="userId === answer.authorId && !isEditState"
+        @click="toggleEditState()"
+        type="submit"
+        class="editAns"
+      >border_color</i>
+      <AnswerEditForm
+        v-if="isEditState"
+        :answer="answer"
+        :toggleEditState="toggleEditState"
+        :editAnswer="editAnswer"
+      />
+
       <CheckBox :isWriter="isWriter" @click="changeChosen()" :selected="chosen"/>
       <i @click="changeLevel(1)" type="submit" class="upLevelAns">arrow_drop_up</i>
       <h2>{{level}}</h2>
@@ -46,12 +59,14 @@
 import ReplyForm from '../Reply/ReplyForm'
 import ReplyCard from '../Reply/ReplyCard'
 import CheckBox from '../../helper/components/CheckBox'
+import AnswerEditForm from './AnswerEditForm'
 
 export default {
   components: {
     ReplyForm,
     ReplyCard,
     CheckBox,
+    AnswerEditForm,
   },
 
   data() {
@@ -61,6 +76,7 @@ export default {
       showReplysPermission: false,
       chosen: false,
       showReplys: [],
+      isEditState: false,
     }
   },
 
@@ -74,9 +90,14 @@ export default {
     state: String,
     toggleChosen: Function,
     deleteAnswer: Function,
+    editAnswer: Function,
   },
 
   methods: {
+    toggleEditState() {
+      this.isEditState = !this.isEditState
+    },
+
     changeLevel(score) {
       const { answer } = this
       if (
@@ -139,10 +160,18 @@ export default {
 
 <style scoped>
 .deleteAns {
-  position: relative;
-  left: 80px;
-  top: 80px;
+  position: absolute;
+  right: -31px;
+  top: 52px;
 }
+
+.editAns {
+  position: absolute;
+  right: -29px;
+  top: 20px;
+  font-size: 20px;
+}
+
 .ansCardRoot {
   position: relative;
   left: 20px;

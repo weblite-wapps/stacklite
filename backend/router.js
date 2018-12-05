@@ -96,6 +96,13 @@ router.post('/deleteAnswer', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.post('/editAnswer', ({ body }, res) =>
+  database
+    .editAnswer(body.answerId, body.editedText, body.wisId)
+    .then(() => res.send(body))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.get('/getUserQuestions', ({ query }, res) =>
   database
     .getUserQuestions(query.userId, query.wisId)
