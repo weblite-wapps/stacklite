@@ -15,12 +15,10 @@
       <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
     </div>
 
-    <div class="buttons">
-      <button @click="fetchAllQuestions()" type="sbmit" class="allButton">All</button>
-      
-      <button @click="fetchUserQuestions()" type="sbmit" class="button">Yours</button>
-      
-      <button @click="fetchUserFavoriteQuestions()" type="sbmit" class="button">Favorites</button>
+    <div class="inRow">
+      <i @click="movePointerAndFetch(-1)" class="chevronLeft">chevron_left</i>
+      <p class="fetchLable">{{fetchLable[pointer]}}</p>
+      <i @click="movePointerAndFetch(1)" class="chevronRight">chevron_right</i>
     </div>
 
     <div class="cards">
@@ -52,6 +50,8 @@ export default {
 
   data() {
     return {
+      fetchLable: ['All', 'Yours', 'Favorite', 'Unsolved'],
+      pointer: 0,
       query: '',
       searchFilter: 'title',
       searchFilterTemp: '',
@@ -67,6 +67,7 @@ export default {
     fetchAllQuestions: Function,
     fetchUserQuestions: Function,
     fetchUserFavoriteQuestions: Function,
+    fetchUnsolvedQuestions: Function,
     updateLevel: Function,
     updateLevelAgain: Function,
     addToFavorite: Function,
@@ -87,6 +88,25 @@ export default {
         .search(this.query.toLowerCase())
       return position < 0 ? false : true
     },
+
+    movePointerAndFetch(direction) {
+      this.pointer = R.add(this.pointer, direction)
+      this.pointer = R.mathMod(this.pointer, R.length(this.fetchLable))
+      switch (this.pointer) {
+        case 0:
+          this.fetchAllQuestions()
+          break
+        case 1:
+          this.fetchUserQuestions()
+          break
+        case 2:
+          this.fetchUserFavoriteQuestions()
+          break
+        case 3:
+          this.fetchUnsolvedQuestions()
+          break
+      }
+    },
   },
 
   computed: {
@@ -98,6 +118,31 @@ export default {
 </script>
 
 <style scoped>
+.chevronLeft {
+  font-size: 35px;
+  top: -5px;
+}
+
+.chevronRight {
+  font-size: 35px;
+  top: -5px;
+}
+
+.fetchLable {
+  font-size: 20px;
+  font-family: sans-serif;
+  left: 285px;
+  padding: 5px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  border-radius: 5px;
+  background-color: #e3e3e3;
+  border: 2px #515155 solid;
+  min-width: 50px;
+  text-align: center;
+  align-self: center;
+}
+
 .header {
   display: flex;
   flex-direction: row;
@@ -136,32 +181,12 @@ export default {
   cursor: pointer;
 }
 
-.button {
-  background-color: #e3e3e3;
-  border: 2px #191939 solid;
-  border-radius: 5px;
-  font-size: 1em;
-  cursor: pointer;
-  margin-left: 20px;
-  width: 100px;
-}
-
-.allButton {
-  background-color: #e3e3e3;
-  border: 2px #191939 solid;
-  border-radius: 5px;
-  font-size: 1em;
-  cursor: pointer;
-  margin-left: 140px;
-  width: 100px;
-}
-
-.buttons {
+.inRow {
   display: flex;
   flex-direction: row;
-  position: relative;
+  justify-content: center;
   top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 input::placeholder {
@@ -173,11 +198,6 @@ input::placeholder {
 input:focus,
 button:focus {
   outline: none;
-}
-
-.button:hover,
-.allButton:hover {
-  border: 2px #991933 solid;
 }
 
 .lable {

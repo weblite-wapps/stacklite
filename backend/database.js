@@ -97,9 +97,21 @@ exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
 exports.getUserQuestions = (userId, wisId) =>
   models.Question.find({ authorId: userId, wisId }).exec()
 
-exports.getAllQuestions = wisId => models.Question.find({ wisId }).exec()
+exports.getAllQuestions = wisId =>
+  models.Question.find({ wisId })
+    .sort({ level: 1 })
+    .exec()
 
-exports.getUnsolvedQuestions = wisId => models.Question.find({ wisId }).exec()
+exports.getUserFavoriteQuestions = (userId, wisId) =>
+  models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
+
+exports.getUnsolvedQuestions = wisId =>
+  models.Question.find({
+    solved: false,
+    wisId,
+  })
+    .sort({ level: 1 })
+    .exec()
 
 exports.addToFavorite = (questionId, userId, wisId) =>
   models.Question.findOneAndUpdate(
@@ -146,9 +158,6 @@ exports.editAnswer = (answerId, editedText, wisId) =>
     },
     { overwrite: true },
   )
-
-exports.getUserFavoriteQuestions = (userId, wisId) =>
-  models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
 
 exports.getAnswers = (questionId, wisId) =>
   models.Answer.find({ questionId, wisId }).exec()

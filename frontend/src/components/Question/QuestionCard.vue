@@ -137,13 +137,14 @@ export default {
 
 <style>
 .Done {
-  position: absolute;
-  left: 40px;
-  bottom: 115px;
+  position: relative;
+  right: 115px;
+  top: 125px;
   font-size: 42px;
   font-weight: bold;
   color: rgb(65, 97, 65);
   max-width: 0px;
+  cursor: default;
 }
 .delete {
   position: relative;

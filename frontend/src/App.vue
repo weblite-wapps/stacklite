@@ -16,6 +16,7 @@
       :fetchAllQuestions="fetchAllQuestions"
       :fetchUserQuestions="fetchUserQuestions"
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
+      :fetchUnsolvedQuestions="fetchUnsolvedQuestions"
       :updateLevel="updateLevel"
       :updateLevelAgain="updateLevelAgain"
       :addToFavorite="addToFavorite"
@@ -78,7 +79,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '2',
+      userId: '1',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
@@ -112,6 +113,8 @@ export default {
       else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
       else if (this.fetchQuestionState === 'favorite')
         this.fetchUserFavoriteQuestions()
+      else if (this.fetchQuestionState === 'unsolved')
+        this.fetchUnsolvedQuestions()
     },
 
     getFormattedDate() {
@@ -248,6 +251,8 @@ export default {
         else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
         else if (this.fetchQuestionState === 'favorite')
           this.fetchUserFavoriteQuestions()
+        else if (this.fetchQuestionState === 'unsolved')
+          this.fetchUnsolvedQuestions()
         this.fetchAnswers()
       })
     },
