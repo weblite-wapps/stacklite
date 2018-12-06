@@ -76,7 +76,7 @@ export default {
   },
 
   methods: {
-    searchTitle(question) {
+    search(question) {
       if (!this.query.length) return true
       this.searchFilter === 'author'
         ? (this.searchFilterTemp = 'authorName')
@@ -111,7 +111,7 @@ export default {
 
   computed: {
     filteredQuestions() {
-      return R.filter(this.searchTitle, R.reverse(this.questions))
+      return R.filter(this.search, R.reverse(this.questions))
     },
   },
 }

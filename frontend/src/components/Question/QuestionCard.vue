@@ -230,7 +230,7 @@ h2 {
 }
 
 .text {
-  background: #eee;
+  background: #e3e3e3;
   width: 60%;
   height: 140px;
   margin: auto;

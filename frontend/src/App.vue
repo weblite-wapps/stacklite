@@ -60,7 +60,6 @@ import SnackBar from './helper/components/SnackBar'
 import webliteHandler from './helper/function/weblite.api'
 import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
-import { request } from 'http'
 
 // R && W
 const { R, W } = window
