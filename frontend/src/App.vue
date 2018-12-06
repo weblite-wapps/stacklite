@@ -23,6 +23,8 @@
       :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
       :deleteQuestion="deleteQuestion"
+      :properFetch="properFetch"
+      :updateSearchQuery="updateSearchQuery"
     />
 
     <Answers
@@ -78,13 +80,14 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '2',
       wisId: '123',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
       answers: [],
       question: {},
+      searchQuery: '',
     }
   },
 
@@ -106,8 +109,7 @@ export default {
       this.state = state
     },
 
-    switchStateWithFetch(state) {
-      this.switchState(state)
+    properFetch() {
       if (this.fetchQuestionState === 'all') this.fetchAllQuestions()
       else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
       else if (this.fetchQuestionState === 'favorite')
@@ -116,44 +118,100 @@ export default {
         this.fetchUnsolvedQuestions()
     },
 
+    switchStateWithFetch(state) {
+      this.switchState(state)
+      this.properFetch()
+    },
+
+    updateSearchQuery(searchString) {
+      this.searchQuery = searchString
+    },
+
     getFormattedDate() {
       const newDate = new Date()
+      const month = newDate.getMonth() + 1
+      const day = newDate.getDate()
+      const showMonth = month < 10 ? '0' + month : month
+      const showDay = day < 10 ? '0' + day : day
       return (
         newDate.getFullYear() +
         '/' +
-        (newDate.getMonth() + 1) +
+        showMonth +
         '/' +
-        newDate.getDate()
+        showDay +
+        '|' +
+        newDate.getUTCHours() +
+        '/' +
+        newDate.getUTCMinutes() +
+        '/' +
+        newDate.getUTCSeconds()
       )
     },
 
     fetchAllQuestions() {
-      requests.getAllQuestions(this.wisId).then(res => {
-        this.questions = res
-        this.fetchQuestionState = 'all'
-      })
-    },
-
-    fetchUnsolvedQuestions() {
-      requests.getUnsolvedQuestions(this.wisId).then(res => {
-        this.questions = res
-        this.fetchQuestionState = 'unsolved'
-      })
+      if (this.searchQuery)
+        requests
+          .getAllQuestionsSearch(this.searchQuery, this.wisId)
+          .then(res => {
+            this.questions = res
+            this.fetchQuestionState = 'all'
+          })
+      else
+        requests.getAllQuestions(this.wisId).then(res => {
+          this.questions = res
+          this.fetchQuestionState = 'all'
+        })
     },
 
     fetchUserQuestions() {
-      requests.getUserQuestions(this.userId, this.wisId).then(res => {
-        this.questions = res
-        this.fetchQuestionState = 'user'
-      })
+      if (this.searchQuery)
+        requests
+          .getUserQuestionsSearch(this.searchQuery, this.userId, this.wisId)
+          .then(res => {
+            this.questions = res
+            this.fetchQuestionState = 'user'
+          })
+      else
+        requests.getUserQuestions(this.userId, this.wisId).then(res => {
+          this.questions = res
+          this.fetchQuestionState = 'user'
+        })
     },
 
     fetchUserFavoriteQuestions() {
-      requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
-        this.questions = res
-        this.fetchQuestionState = 'favorite'
-        bus.$emit('show-message', 'fetch favorites ...')
-      })
+      if (this.searchQuery)
+        requests
+          .getUserFavoriteQuestionsSearch(
+            this.searchQuery,
+            this.userId,
+            this.wisId,
+          )
+          .then(res => {
+            this.questions = res
+            this.fetchQuestionState = 'favorite'
+            bus.$emit('show-message', 'fetch favorites ...')
+          })
+      else
+        requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
+          this.questions = res
+          this.fetchQuestionState = 'favorite'
+          bus.$emit('show-message', 'fetch favorites ...')
+        })
+    },
+
+    fetchUnsolvedQuestions() {
+      if (this.searchQuery)
+        requests
+          .getUnsolvedQuestionsSearch(this.searchQuery, this.wisId)
+          .then(res => {
+            this.questions = res
+            this.fetchQuestionState = 'unsolved'
+          })
+      else
+        requests.getUnsolvedQuestions(this.wisId).then(res => {
+          this.questions = res
+          this.fetchQuestionState = 'unsolved'
+        })
     },
 
     fetchAnswers() {
@@ -214,7 +272,7 @@ export default {
           this.getFormattedDate(),
         )
         .then(() => {
-          this.fetchAllQuestions()
+          this.properFetch()
           this.switchState('questionsMode')
           bus.$emit('show-message', 'question added ...')
         })

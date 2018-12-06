@@ -28,7 +28,7 @@
     <div class="footer">
       <p class="footerItem">Tag: {{question.tag}}</p>
       <p class="footerItem">Author: {{question.authorName}}</p>
-      <p class="footerItem">Date: {{question.date}}</p>
+      <p class="footerItem">Date: {{formattedDate}}</p>
       <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
       <p class="ansNumber">#{{numberOfAnswers}}</p>
     </div>
@@ -56,6 +56,7 @@ export default {
       level: 0,
       favorite: false,
       numberOfAnswers: 0,
+      formattedDate: '',
     }
   },
 
@@ -131,6 +132,7 @@ export default {
     this.numberOfAnswers = question.answers
     this.favorite =
       R.indexOf(this.userId, question.favorite) === -1 ? false : true
+    this.formattedDate = R.split('|', this.question.date)[0]
   },
 }
 </script>

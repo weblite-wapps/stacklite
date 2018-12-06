@@ -23,7 +23,7 @@ export default {
   methods: {
     checkAndSaveAnswer() {
       const { text } = this
-      if (text === '')
+      if (R.trim(text) === '')
         bus.$emit('show-message', 'please fill all requirements ...')
       else {
         this.storeAnswer(text)

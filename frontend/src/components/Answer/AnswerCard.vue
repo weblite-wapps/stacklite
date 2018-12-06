@@ -30,7 +30,7 @@
 
     <div class="ansCardFooter">
       <p class="writer">Author: {{answer.authorName}}</p>
-      <p class="datee">date: {{answer.date}}</p>
+      <p class="datee">date: {{formattedDate}}</p>
       <button @click="showHideReplys()" type="submit" class="reply">all replys</button>
       <button @click="toggleReplyPermission()" type="submit" class="reply">reply</button>
     </div>
@@ -77,6 +77,7 @@ export default {
       chosen: false,
       showReplys: [],
       isEditState: false,
+      formattedDate: '',
     }
   },
 
@@ -155,6 +156,7 @@ export default {
     this.level = this.answer.level
     this.chosen = this.answer.chosen
     this.showReplys = R.concat([], this.answer.replys)
+    this.formattedDate = R.split('|', this.answer.date)[0]
   },
 }
 </script>

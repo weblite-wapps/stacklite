@@ -1,23 +1,19 @@
 <template>
   <div class="form">
-      <p for="title">insert title:</p>
-      <input v-model="title" class="title" maxlength="20">
+    <p for="title">insert title:</p>
+    <input v-model="title" class="title" maxlength="20">
 
-      <p>insert text:</p>
-      <textarea v-model="text" rows="12" class="texty" maxlength="700"></textarea> 
+    <p>insert text:</p>
+    <textarea v-model="text" rows="12" class="texty" maxlength="700"></textarea>
 
-      <p>insert tag:</p>
-      <textarea v-model="tag" class="tag" maxlength="25"></textarea>
+    <p>insert tag:</p>
+    <textarea v-model="tag" class="tag" maxlength="25"></textarea>
 
     <div class="button">
-      <button @click="sendQuestionToDB()" type="submit" class="done">
-        Done
-      </button>
-      <button @click="switchState('questionsMode')" type="submit" class="back">
-        back
-      </button>
-    </div>  
-  </div>  
+      <button @click="sendQuestionToDB()" type="submit" class="done">Done</button>
+      <button @click="switchState('questionsMode')" type="submit" class="back">back</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -42,7 +38,8 @@ export default {
 
   methods: {
     sendQuestionToDB() {
-      const valid = this.title == '' || this.text == '' ? false : true
+      const valid =
+        R.trim(this.title) === '' || R.trim(this.text) === '' ? false : true
       if (!valid) bus.$emit('show-message', 'please fill all requirements ...')
       else {
         this.addQuestion({

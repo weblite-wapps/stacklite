@@ -1,17 +1,15 @@
 <template>
   <div class="wrapper">
     <div class="header">
-      <div class="searchStuff">
-        <div class="searchBy">
-          <p class="lable">Search By:</p>
-          <select v-model="searchFilter">
-            <option v-for="(filter, i) in searchFilters" :key="i" :value="filter">{{filter}}</option>
-          </select>
-        </div>
-
-        <input v-model="query" type="textbox" placeholder="Search here" class="searchBar">
-      </div>
-
+      <input
+        v-model="searchString"
+        type="textbox"
+        placeholder="Search here . . ."
+        maxlength="50"
+        class="searchBar"
+      >
+      <i @click="searchAndFetch()" class="searchButton">search</i>
+      
       <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
     </div>
 
@@ -23,7 +21,7 @@
 
     <div class="cards">
       <QuestionCard
-        v-for="(question) in filteredQuestions"
+        v-for="(question) in questions"
         :key="question._id"
         :question="question"
         :userId="userId"
@@ -52,10 +50,7 @@ export default {
     return {
       fetchLable: ['All', 'Yours', 'Favorite', 'Unsolved'],
       pointer: 0,
-      query: '',
-      searchFilter: 'title',
-      searchFilterTemp: '',
-      searchFilters: ['title', 'tag', 'author', 'text', 'date', 'level'],
+      searchString: '',
     }
   },
 
@@ -73,20 +68,14 @@ export default {
     addToFavorite: Function,
     removeFromFavorite: Function,
     deleteQuestion: Function,
+    properFetch: Function,
+    updateSearchQuery: Function,
   },
 
   methods: {
-    search(question) {
-      if (!this.query.length) return true
-      this.searchFilter === 'author'
-        ? (this.searchFilterTemp = 'authorName')
-        : (this.searchFilterTemp = this.searchFilter)
-
-      const position = R.prop(this.searchFilterTemp, question)
-        .toString()
-        .toLowerCase()
-        .search(this.query.toLowerCase())
-      return position < 0 ? false : true
+    searchAndFetch() {
+      this.updateSearchQuery(this.searchString)
+      this.properFetch()
     },
 
     movePointerAndFetch(direction) {
@@ -109,9 +98,10 @@ export default {
     },
   },
 
-  computed: {
-    filteredQuestions() {
-      return R.filter(this.search, R.reverse(this.questions))
+  watch: {
+    searchString: function() {
+      this.updateSearchQuery(this.searchString)
+      if (!this.searchString) this.properFetch()
     },
   },
 }
@@ -150,30 +140,28 @@ export default {
   margin-bottom: 50px;
 }
 
-.searchStuff {
-  display: flex;
-  flex-direction: column;
-}
-
-.searchBy {
-  display: flex;
-  flex-direction: row;
-}
-
 .searchBar {
   position: relative;
   top: 10px;
-  right: 5px;
+  left: 15px;
   padding: 8px;
   border-radius: 20px;
   background-color: #e3e3e3;
   border: 2px #191939 solid;
+  font-size: 15px;
+}
+
+.searchButton {
+  position: relative;
+  left: 15px;
+  top: 13px;
+  font-size: 30px;
 }
 
 .askButton {
   position: relative;
   top: 10px;
-  left: 270px;
+  left: 250px;
   background-color: #e3e3e3;
   border: 3px #191939 solid;
   border-radius: 10px;

@@ -94,23 +94,59 @@ exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
     },
   )
 
-exports.getUserQuestions = (userId, wisId) =>
-  models.Question.find({ authorId: userId, wisId }).exec()
-
 exports.getAllQuestions = wisId =>
   models.Question.find({ wisId })
-    .sort({ level: 1 })
+    .sort({ level: -1 })
+    .exec()
+
+exports.getAllQuestionsSearch = (searchQuery, wisId) =>
+  models.Question.find(
+    { wisId, $text: { $search: searchQuery } },
+    { score: { $meta: 'textScore' } },
+  )
+    .sort({ score: { $meta: 'textScore' } })
+    .exec()
+
+exports.getUserQuestions = (userId, wisId) =>
+  models.Question.find({ authorId: userId, wisId })
+    .sort({ date: -1 })
+    .exec()
+
+exports.getUserQuestionsSearch = (searchQuery, userId, wisId) =>
+  models.Question.find(
+    { wisId, userId, $text: { $search: searchQuery } },
+    { score: { $meta: 'textScore' } },
+  )
+    .sort({ score: { $meta: 'textScore' } })
     .exec()
 
 exports.getUserFavoriteQuestions = (userId, wisId) =>
-  models.Question.find({ favorite: { $all: [userId] }, wisId }).exec()
+  models.Question.find({ favorite: { $all: [userId] }, wisId })
+    .sort({ date: -1 })
+    .exec()
+
+exports.getUserFavoriteQuestionsSearch = (searchQuery, userId, wisId) =>
+  models.Question.find(
+    { favorite: { $all: [userId] }, wisId, $text: { $search: searchQuery } },
+    { score: { $meta: 'textScore' } },
+  )
+    .sort({ score: { $meta: 'textScore' } })
+    .exec()
 
 exports.getUnsolvedQuestions = wisId =>
   models.Question.find({
     solved: false,
     wisId,
   })
-    .sort({ level: 1 })
+    .sort({ level: -1 })
+    .exec()
+
+exports.getUnsolvedQuestionsSearch = (searchQuery, wisId) =>
+  models.Question.find(
+    { solved: false, wisId, $text: { $search: searchQuery } },
+    { score: { $meta: 'textScore' } },
+  )
+    .sort({ score: { $meta: 'textScore' } })
     .exec()
 
 exports.addToFavorite = (questionId, userId, wisId) =>

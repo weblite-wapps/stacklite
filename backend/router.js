@@ -110,23 +110,9 @@ router.post('/editAnswer', ({ body }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
-router.get('/getUserQuestions', ({ query }, res) =>
-  database
-    .getUserQuestions(query.userId, query.wisId)
-    .then(data => res.send(data))
-    .catch(err => res.status(500).send(err)),
-)
-
 router.get('/getAnswers', ({ query }, res) =>
   database
     .getAnswers(query.questionId, query.wisId)
-    .then(data => res.send(data))
-    .catch(err => res.status(500).send(err)),
-)
-
-router.get('/getUserFavoriteQuestions', ({ query }, res) =>
-  database
-    .getUserFavoriteQuestions(query.userId, query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )
@@ -138,9 +124,55 @@ router.get('/getAllQuestions', (req, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
+router.get('/getAllQuestionsSearch', ({ query }, res) =>
+  database
+    .getAllQuestionsSearch(query.searchQuery, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserQuestions', ({ query }, res) =>
+  database
+    .getUserQuestions(query.userId, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserQuestionsSearch', ({ query }, res) =>
+  database
+    .getUserQuestionsSearch(query.searchQuery, query.userId, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserFavoriteQuestions', ({ query }, res) =>
+  database
+    .getUserFavoriteQuestions(query.userId, query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUserFavoriteQuestionsSearch', ({ query }, res) =>
+  database
+    .getUserFavoriteQuestionsSearch(
+      query.searchQuery,
+      query.userId,
+      query.wisId,
+    )
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
 router.get('/getUnsolvedQuestions', (req, res) =>
   database
     .getUnsolvedQuestions(req.query.wisId)
+    .then(data => res.send(data))
+    .catch(err => res.status(500).send(err)),
+)
+
+router.get('/getUnsolvedQuestionsSearch', ({ query }, res) =>
+  database
+    .getUnsolvedQuestionsSearch(query.searchQuery, query.wisId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
 )

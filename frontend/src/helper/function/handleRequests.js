@@ -129,11 +129,50 @@ export default {
         bus.$emit('show-message', 'Error has occured in editing answer...'),
       ),
 
+  getAllQuestions: wisId =>
+    request
+      .get(config.server + '/getAllQuestions/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting all questions...',
+        ),
+      ),
+
+  getAllQuestionsSearch: (searchQuery, wisId) =>
+    request
+      .get(config.server + '/getAllQuestionsSearch/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ searchQuery, wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting all questions...',
+        ),
+      ),
+
   getUserQuestions: (userId, wisId) =>
     request
       .get(config.server + '/getUserQuestions/')
       .set('Access-Control-Allow-Origin', '*')
       .query({ userId, wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured getting user questions ...',
+        ),
+      ),
+
+  getUserQuestionsSearch: (searchQuery, userId, wisId) =>
+    request
+      .get(config.server + '/getUserQuestionsSearch/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ searchQuery, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -155,16 +194,16 @@ export default {
         ),
       ),
 
-  getAllQuestions: wisId =>
+  getUserFavoriteQuestionsSearch: (searchQuery, userId, wisId) =>
     request
-      .get(config.server + '/getAllQuestions/')
+      .get(config.server + '/getUserFavoriteQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ wisId })
+      .query({ searchQuery, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
           'show-message',
-          'Error has occured in getting all questions...',
+          'Error has occured getting user favorite questions ...',
         ),
       ),
 
@@ -173,6 +212,19 @@ export default {
       .get(config.server + '/getUnsolvedQuestions/')
       .set('Access-Control-Allow-Origin', '*')
       .query({ wisId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting unsolved questions...',
+        ),
+      ),
+
+  getUnsolvedQuestionsSearch: (searchQuery, wisId) =>
+    request
+      .get(config.server + '/getUnsolvedQuestionsSearch/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ searchQuery, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
