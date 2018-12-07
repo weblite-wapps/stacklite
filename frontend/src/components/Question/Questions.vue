@@ -32,6 +32,10 @@
         :deleteQuestion="deleteQuestion"
       />
     </div>
+    <div class="inRow">
+      <p v-if="pageNumber !== 1" @click="goPrevious()" class="page">prev</p>
+      <p v-if="nextValid" @click="goNext()" class="page">next</p>
+    </div>
   </div>
 </template>
 
@@ -70,11 +74,15 @@ export default {
     deleteQuestion: Function,
     properFetch: Function,
     updateSearchQuery: Function,
+    changePage: Function,
+    pageNumber: Number,
+    nextValid: Boolean,
   },
 
   methods: {
     searchAndFetch() {
       this.updateSearchQuery(this.searchString)
+      this.changePage(1 - this.pageNumber)
       this.properFetch()
     },
 
@@ -96,18 +104,43 @@ export default {
           break
       }
     },
+
+    goPrevious() {
+      this.changePage(-1)
+      this.properFetch()
+    },
+
+    goNext() {
+      this.changePage(1)
+      this.properFetch()
+    },
   },
 
   watch: {
     searchString: function() {
       this.updateSearchQuery(this.searchString)
-      if (!this.searchString) this.properFetch()
+      if (!this.searchString) {
+        this.changePage(1 - this.pageNumber)
+        this.properFetch()
+      }
     },
   },
 }
 </script>
 
 <style scoped>
+.page {
+  margin-right: 20px;
+  margin-left: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+  border: 2px black solid;
+  border-radius: 5px;
+  padding: 2px;
+  cursor: pointer;
+}
+
 .chevronLeft {
   font-size: 35px;
   top: -5px;

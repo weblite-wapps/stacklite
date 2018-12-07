@@ -8,7 +8,7 @@ exports.connect = function connect(name) {
   db.on('error', console.error.bind(console, 'connection error:'))
   db.once('open', () => {
     console.log('connected to database successfully ...')
-    db.db.dropDatabase()
+    // db.db.dropDatabase()
   })
 }
 
@@ -94,59 +94,81 @@ exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
     },
   )
 
-exports.getAllQuestions = wisId =>
+exports.getAllQuestions = (skip, limit, wisId) =>
   models.Question.find({ wisId })
     .sort({ level: -1 })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getAllQuestionsSearch = (searchQuery, wisId) =>
+exports.getAllQuestionsSearch = (searchQuery, skip, limit, wisId) =>
   models.Question.find(
     { wisId, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUserQuestions = (userId, wisId) =>
+exports.getUserQuestions = (skip, limit, userId, wisId) =>
   models.Question.find({ authorId: userId, wisId })
     .sort({ date: -1 })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUserQuestionsSearch = (searchQuery, userId, wisId) =>
+exports.getUserQuestionsSearch = (searchQuery, skip, limit, userId, wisId) =>
   models.Question.find(
-    { wisId, userId, $text: { $search: searchQuery } },
+    { wisId, authorId: userId, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUserFavoriteQuestions = (userId, wisId) =>
+exports.getUserFavoriteQuestions = (skip, limit, userId, wisId) =>
   models.Question.find({ favorite: { $all: [userId] }, wisId })
     .sort({ date: -1 })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUserFavoriteQuestionsSearch = (searchQuery, userId, wisId) =>
+exports.getUserFavoriteQuestionsSearch = (
+  searchQuery,
+  skip,
+  limit,
+  userId,
+  wisId,
+) =>
   models.Question.find(
     { favorite: { $all: [userId] }, wisId, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUnsolvedQuestions = wisId =>
+exports.getUnsolvedQuestions = (skip, limit, wisId) =>
   models.Question.find({
     solved: false,
     wisId,
   })
     .sort({ level: -1 })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
-exports.getUnsolvedQuestionsSearch = (searchQuery, wisId) =>
+exports.getUnsolvedQuestionsSearch = (searchQuery, skip, limit, wisId) =>
   models.Question.find(
     { solved: false, wisId, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
+    .skip(skip)
+    .limit(limit)
     .exec()
 
 exports.addToFavorite = (questionId, userId, wisId) =>

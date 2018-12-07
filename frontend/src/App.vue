@@ -25,6 +25,9 @@
       :deleteQuestion="deleteQuestion"
       :properFetch="properFetch"
       :updateSearchQuery="updateSearchQuery"
+      :changePage="changePage"
+      :pageNumber="pageNumber"
+      :nextValid="nextValid"
     />
 
     <Answers
@@ -88,6 +91,9 @@ export default {
       answers: [],
       question: {},
       searchQuery: '',
+      pageNumber: 1,
+      nextValid: true,
+      fetchAmount: 3, /// set to more than 1
     }
   },
 
@@ -127,6 +133,10 @@ export default {
       this.searchQuery = searchString
     },
 
+    changePage(amount) {
+      this.pageNumber = R.add(this.pageNumber, amount)
+    },
+
     getFormattedDate() {
       const newDate = new Date()
       const month = newDate.getMonth() + 1
@@ -148,34 +158,64 @@ export default {
       )
     },
 
+    setQuestions(res) {
+      if (typeof res === Object || R.length(res) <= this.fetchAmount) {
+        this.questions = res
+        this.nextValid = false
+      } else {
+        this.questions = R.dropLast(1, res)
+        this.nextValid = true
+      }
+    },
+
     fetchAllQuestions() {
       if (this.searchQuery)
         requests
-          .getAllQuestionsSearch(this.searchQuery, this.wisId)
+          .getAllQuestionsSearch(
+            this.searchQuery,
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.wisId,
+          )
           .then(res => {
-            this.questions = res
+            this.setQuestions(res)
             this.fetchQuestionState = 'all'
           })
       else
-        requests.getAllQuestions(this.wisId).then(res => {
-          this.questions = res
-          this.fetchQuestionState = 'all'
-        })
+        requests
+          .getAllQuestions(this.skip, R.add(this.fetchAmount, 1), this.wisId)
+          .then(res => {
+            this.setQuestions(res)
+            this.fetchQuestionState = 'all'
+          })
     },
 
     fetchUserQuestions() {
       if (this.searchQuery)
         requests
-          .getUserQuestionsSearch(this.searchQuery, this.userId, this.wisId)
+          .getUserQuestionsSearch(
+            this.searchQuery,
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.userId,
+            this.wisId,
+          )
           .then(res => {
-            this.questions = res
+            this.setQuestions(res)
             this.fetchQuestionState = 'user'
           })
       else
-        requests.getUserQuestions(this.userId, this.wisId).then(res => {
-          this.questions = res
-          this.fetchQuestionState = 'user'
-        })
+        requests
+          .getUserQuestions(
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.userId,
+            this.wisId,
+          )
+          .then(res => {
+            this.setQuestions(res)
+            this.fetchQuestionState = 'user'
+          })
     },
 
     fetchUserFavoriteQuestions() {
@@ -183,41 +223,58 @@ export default {
         requests
           .getUserFavoriteQuestionsSearch(
             this.searchQuery,
+            this.skip,
+            R.add(this.fetchAmount, 1),
             this.userId,
             this.wisId,
           )
           .then(res => {
-            this.questions = res
+            this.setQuestions(res)
             this.fetchQuestionState = 'favorite'
-            bus.$emit('show-message', 'fetch favorites ...')
           })
       else
-        requests.getUserFavoriteQuestions(this.userId, this.wisId).then(res => {
-          this.questions = res
-          this.fetchQuestionState = 'favorite'
-          bus.$emit('show-message', 'fetch favorites ...')
-        })
+        requests
+          .getUserFavoriteQuestions(
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.userId,
+            this.wisId,
+          )
+          .then(res => {
+            this.setQuestions(res)
+            this.fetchQuestionState = 'favorite'
+          })
     },
 
     fetchUnsolvedQuestions() {
       if (this.searchQuery)
         requests
-          .getUnsolvedQuestionsSearch(this.searchQuery, this.wisId)
+          .getUnsolvedQuestionsSearch(
+            this.searchQuery,
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.wisId,
+          )
           .then(res => {
-            this.questions = res
+            this.setQuestions(res)
             this.fetchQuestionState = 'unsolved'
           })
       else
-        requests.getUnsolvedQuestions(this.wisId).then(res => {
-          this.questions = res
-          this.fetchQuestionState = 'unsolved'
-        })
+        requests
+          .getUnsolvedQuestions(
+            this.skip,
+            R.add(this.fetchAmount, 1),
+            this.wisId,
+          )
+          .then(res => {
+            this.setQuestions(res)
+            this.fetchQuestionState = 'unsolved'
+          })
     },
 
     fetchAnswers() {
       requests.getAnswers(this.question._id, this.wisId).then(res => {
         this.answers = res
-        bus.$emit('show-message', 'fetch answers ...')
       })
     },
 
@@ -274,7 +331,6 @@ export default {
         .then(() => {
           this.properFetch()
           this.switchState('questionsMode')
-          bus.$emit('show-message', 'question added ...')
         })
     },
 
@@ -328,6 +384,18 @@ export default {
       requests
         .editAnswer(answerId, editedText, this.wisId)
         .then(() => bus.$emit('show-message', 'answer edited ...'))
+    },
+  },
+
+  watch: {
+    fetchQuestionState: function() {
+      this.pageNumber = 1
+    },
+  },
+
+  computed: {
+    skip() {
+      return R.multiply(R.subtract(this.pageNumber, 1), this.fetchAmount)
     },
   },
 }

@@ -129,11 +129,11 @@ export default {
         bus.$emit('show-message', 'Error has occured in editing answer...'),
       ),
 
-  getAllQuestions: wisId =>
+  getAllQuestions: (skip, limit, wisId) =>
     request
       .get(config.server + '/getAllQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ wisId })
+      .query({ skip, limit, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -142,11 +142,11 @@ export default {
         ),
       ),
 
-  getAllQuestionsSearch: (searchQuery, wisId) =>
+  getAllQuestionsSearch: (searchQuery, skip, limit, wisId) =>
     request
       .get(config.server + '/getAllQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, wisId })
+      .query({ searchQuery, skip, limit, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -155,11 +155,11 @@ export default {
         ),
       ),
 
-  getUserQuestions: (userId, wisId) =>
+  getUserQuestions: (skip, limit, userId, wisId) =>
     request
       .get(config.server + '/getUserQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ userId, wisId })
+      .query({ skip, limit, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -168,11 +168,11 @@ export default {
         ),
       ),
 
-  getUserQuestionsSearch: (searchQuery, userId, wisId) =>
+  getUserQuestionsSearch: (searchQuery, skip, limit, userId, wisId) =>
     request
       .get(config.server + '/getUserQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, userId, wisId })
+      .query({ searchQuery, skip, limit, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -181,11 +181,11 @@ export default {
         ),
       ),
 
-  getUserFavoriteQuestions: (userId, wisId) =>
+  getUserFavoriteQuestions: (skip, limit, userId, wisId) =>
     request
       .get(config.server + '/getUserFavoriteQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ userId, wisId })
+      .query({ skip, limit, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -194,11 +194,11 @@ export default {
         ),
       ),
 
-  getUserFavoriteQuestionsSearch: (searchQuery, userId, wisId) =>
+  getUserFavoriteQuestionsSearch: (searchQuery, skip, limit, userId, wisId) =>
     request
       .get(config.server + '/getUserFavoriteQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, userId, wisId })
+      .query({ searchQuery, skip, limit, userId, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -207,11 +207,11 @@ export default {
         ),
       ),
 
-  getUnsolvedQuestions: wisId =>
+  getUnsolvedQuestions: (skip, limit, wisId) =>
     request
       .get(config.server + '/getUnsolvedQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ wisId })
+      .query({ skip, limit, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -220,11 +220,11 @@ export default {
         ),
       ),
 
-  getUnsolvedQuestionsSearch: (searchQuery, wisId) =>
+  getUnsolvedQuestionsSearch: (searchQuery, skip, limit, wisId) =>
     request
       .get(config.server + '/getUnsolvedQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, wisId })
+      .query({ searchQuery, skip, limit, wisId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
