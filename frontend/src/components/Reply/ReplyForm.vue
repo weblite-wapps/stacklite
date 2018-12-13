@@ -21,6 +21,7 @@ export default {
     storeReply: Function,
     toggleReplyPermission: Function,
     addReply: Function,
+    allReplys: Function,
   },
 
   methods: {
@@ -33,6 +34,7 @@ export default {
         this.addReply(text)
         this.clear()
         this.toggleReplyPermission()
+        this.allReplys()
       }
     },
 

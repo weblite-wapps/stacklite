@@ -41,6 +41,7 @@
         :answerId="answer._id"
         :storeReply="storeReply"
         :toggleReplyPermission="toggleReplyPermission"
+        :allReplys="allReplys"
         :addReply="addReply"
       />
 
@@ -109,6 +110,10 @@ export default {
         this.updateAnswerLevel(score, answer._id)
         this.level += score
       }
+    },
+
+    allReplys() {
+      this.showReplysPermission = true
     },
 
     toggleReplyPermission() {
