@@ -26,7 +26,9 @@
     <pre class="text">{{question.text}}</pre>
 
     <div class="footer">
-      <p class="footerItem">Tag: {{question.tag}}</p>
+      <div class="tags">
+        <TagShow v-for="(tag) in tags" :key="tag._id" :tag="tag"/>
+      </div>
       <p class="footerItem">Author: {{question.authorName}}</p>
       <p class="footerItem">Date: {{formattedDate}}</p>
       <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
@@ -38,8 +40,12 @@
 <script>
 //helper
 import bus from '../../helper/function/bus'
+import TagShow from '../../helper/components/TagShow'
+
 export default {
   name: 'QuestionCard',
+
+  components: { TagShow },
 
   props: {
     question: Object,
@@ -57,6 +63,7 @@ export default {
       favorite: false,
       numberOfAnswers: 0,
       formattedDate: '',
+      tags: [],
     }
   },
 
@@ -123,6 +130,7 @@ export default {
       this.numberOfAnswers = question.answers
       this.favorite =
         R.indexOf(this.userId, question.favorite) === -1 ? false : true
+      this.tags = R.split(' ', R.replace(/\n/g, ' ', this.question.tag))
     },
   },
 
@@ -133,6 +141,7 @@ export default {
     this.favorite =
       R.indexOf(this.userId, question.favorite) === -1 ? false : true
     this.formattedDate = R.split('|', this.question.date)[0]
+    this.tags = R.split(' ', R.replace(/\n/g, ' ', this.question.tag))
   },
 }
 </script>
@@ -261,6 +270,15 @@ h2 {
   font-size: 1.1em;
   font-family: sans-serif;
   font-weight: bold;
+}
+
+.tags {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 10px;
+  bottom: 25px;
+  margin-right: 25px;
 }
 
 .answers {

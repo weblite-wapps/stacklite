@@ -1,9 +1,7 @@
 <template>
   <div :class="$style.root">
-    <span :class="$style.title">
-      {{ appName }}
-    </span>
-    <i :class="$style['form-icon']"> description </i>
+    <span :class="$style.title">{{ appName }}</span>
+    <i :class="$style['form-icon']">description</i>
   </div>
 </template>
 
@@ -37,6 +35,7 @@ export default {
 }
 
 .form-icon {
+  cursor: default;
   margin-right: 20px;
   color: white;
 }
