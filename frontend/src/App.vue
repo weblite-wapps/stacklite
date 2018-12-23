@@ -18,7 +18,6 @@
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :fetchUnsolvedQuestions="fetchUnsolvedQuestions"
       :updateLevel="updateLevel"
-      :updateLevelAgain="updateLevelAgain"
       :addToFavorite="addToFavorite"
       :removeFromFavorite="removeFromFavorite"
       :switchState="switchState"
@@ -43,7 +42,6 @@
       :storeReply="storeReply"
       :updateAnswerLevel="updateAnswerLevel"
       :toggleChosen="toggleChosen"
-      :getFormattedDate="getFormattedDate"
       :deleteAnswer="deleteAnswer"
       :editAnswer="editAnswer"
     />
@@ -83,8 +81,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '2',
-      wisId: '123',
+      userId: '1',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
@@ -116,12 +113,20 @@ export default {
     },
 
     properFetch() {
-      if (this.fetchQuestionState === 'all') this.fetchAllQuestions()
-      else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
-      else if (this.fetchQuestionState === 'favorite')
-        this.fetchUserFavoriteQuestions()
-      else if (this.fetchQuestionState === 'unsolved')
-        this.fetchUnsolvedQuestions()
+      switch (this.fetchQuestionState) {
+        case 'all':
+          this.fetchAllQuestions()
+          break
+        case 'user':
+          this.fetchUserQuestions()
+          break
+        case 'favorite':
+          this.fetchUserFavoriteQuestions()
+          break
+        case 'unsolved':
+          this.fetchUnsolvedQuestions()
+          break
+      }
     },
 
     switchStateWithFetch(state) {
@@ -135,27 +140,6 @@ export default {
 
     changePage(amount) {
       this.pageNumber = R.add(this.pageNumber, amount)
-    },
-
-    getFormattedDate() {
-      const newDate = new Date()
-      const month = newDate.getMonth() + 1
-      const day = newDate.getDate()
-      const showMonth = month < 10 ? '0' + month : month
-      const showDay = day < 10 ? '0' + day : day
-      return (
-        newDate.getFullYear() +
-        '/' +
-        showMonth +
-        '/' +
-        showDay +
-        '|' +
-        newDate.getUTCHours() +
-        '/' +
-        newDate.getUTCMinutes() +
-        '/' +
-        newDate.getUTCSeconds()
-      )
     },
 
     setQuestions(res) {
@@ -175,7 +159,6 @@ export default {
             this.searchQuery,
             this.skip,
             R.add(this.fetchAmount, 1),
-            this.wisId,
           )
           .then(res => {
             this.setQuestions(res)
@@ -183,7 +166,7 @@ export default {
           })
       else
         requests
-          .getAllQuestions(this.skip, R.add(this.fetchAmount, 1), this.wisId)
+          .getAllQuestions(this.skip, R.add(this.fetchAmount, 1))
           .then(res => {
             this.setQuestions(res)
             this.fetchQuestionState = 'all'
@@ -198,7 +181,6 @@ export default {
             this.skip,
             R.add(this.fetchAmount, 1),
             this.userId,
-            this.wisId,
           )
           .then(res => {
             this.setQuestions(res)
@@ -206,12 +188,7 @@ export default {
           })
       else
         requests
-          .getUserQuestions(
-            this.skip,
-            R.add(this.fetchAmount, 1),
-            this.userId,
-            this.wisId,
-          )
+          .getUserQuestions(this.skip, R.add(this.fetchAmount, 1), this.userId)
           .then(res => {
             this.setQuestions(res)
             this.fetchQuestionState = 'user'
@@ -226,7 +203,6 @@ export default {
             this.skip,
             R.add(this.fetchAmount, 1),
             this.userId,
-            this.wisId,
           )
           .then(res => {
             this.setQuestions(res)
@@ -238,7 +214,6 @@ export default {
             this.skip,
             R.add(this.fetchAmount, 1),
             this.userId,
-            this.wisId,
           )
           .then(res => {
             this.setQuestions(res)
@@ -253,93 +228,68 @@ export default {
             this.searchQuery,
             this.skip,
             R.add(this.fetchAmount, 1),
-            this.wisId,
           )
           .then(res => {
             this.setQuestions(res)
             this.fetchQuestionState = 'unsolved'
           })
-      else
+      else {
         requests
-          .getUnsolvedQuestions(
-            this.skip,
-            R.add(this.fetchAmount, 1),
-            this.wisId,
-          )
+          .getUnsolvedQuestions(this.skip, R.add(this.fetchAmount, 1))
           .then(res => {
             this.setQuestions(res)
             this.fetchQuestionState = 'unsolved'
           })
+      }
     },
 
     fetchAnswers() {
-      requests.getAnswers(this.question._id, this.wisId).then(res => {
+      requests.getAnswers(this.question._id).then(res => {
         this.answers = res
       })
     },
 
     storeAnswer(text) {
       requests
-        .storeAnswer(
-          this.question._id,
-          this.username,
-          this.userId,
-          this.wisId,
-          text,
-          this.getFormattedDate(),
-        )
+        .storeAnswer(this.question._id, this.username, this.userId, text)
         .then(() =>
           requests
-            .changeAnswersNum(this.wisId, this.question._id, 1)
+            .changeAnswersNum(this.question._id, 1)
             .then(() => this.fetchAnswers()),
         )
     },
 
     storeReply(answerId, text) {
       requests
-        .addReply(this.username, this.userId, this.wisId, answerId, text)
+        .addReply(this.username, this.userId, answerId, text)
         .then(() => bus.$emit('show-message', 'reply ...'))
     },
 
     updateLevel(score, questionId) {
       requests
-        .updateLevel(score, this.userId, this.wisId, questionId)
+        .updateLevel(score, this.userId, questionId)
         .then(() => bus.$emit('show-message', 'level updated ...'))
-    },
-
-    updateLevelAgain(score, questionId) {
-      requests
-        .updateLevelAgain(score, this.userId, this.wisId, questionId)
-        .then(() => bus.$emit('show-message', 'level updated Again! ...'))
     },
 
     updateAnswerLevel(score, answerId) {
       requests
-        .updateAnswerLevel(score, this.userId, this.wisId, answerId)
+        .updateAnswerLevel(score, this.userId, answerId)
         .then(() => bus.$emit('show-message', 'answer level updated ...'))
     },
 
     addQuestion(form) {
-      requests
-        .postQuestion(
-          this.username,
-          this.userId,
-          this.wisId,
-          form,
-          this.getFormattedDate(),
-        )
-        .then(() => {
-          this.properFetch()
-          this.switchState('questionsMode')
-        })
+      requests.postQuestion(this.username, this.userId, form).then(() => {
+        this.properFetch()
+        this.switchState('questionsMode')
+      })
     },
 
     toggleChosen(answerId, bool) {
-      requests.toggleChosen(answerId, this.wisId, bool).then(() => {
+      requests.toggleChosen(answerId, bool).then(() => {
         const chosens = R.map(answer => answer.chosen, this.answers)
         const bool = R.reduce(R.or, false, chosens)
         requests
-          .changeSolve(this.wisId, this.question._id, bool)
+          .changeSolve(this.question._id, bool)
           .then(() =>
             bus.$emit('show-message', 'toggle and change solved happend ...'),
           )
@@ -348,41 +298,36 @@ export default {
 
     addToFavorite(questionId) {
       requests
-        .addToFavorite(questionId, this.userId, this.wisId)
+        .addToFavorite(questionId, this.userId)
         .then(() => bus.$emit('show-message', 'added to favorite ...'))
     },
 
     removeFromFavorite(questionId) {
       requests
-        .removeFromFavorite(questionId, this.userId, this.wisId)
+        .removeFromFavorite(questionId, this.userId)
         .then(() => bus.$emit('show-message', 'removed from favorite ...'))
     },
 
     deleteQuestion(questionId) {
-      requests.deleteQuestion(questionId, this.wisId).then(() => {
-        if (this.fetchQuestionState === 'all') this.fetchAllQuestions()
-        else if (this.fetchQuestionState === 'user') this.fetchUserQuestions()
-        else if (this.fetchQuestionState === 'favorite')
-          this.fetchUserFavoriteQuestions()
-        else if (this.fetchQuestionState === 'unsolved')
-          this.fetchUnsolvedQuestions()
+      requests.deleteQuestion(questionId).then(() => {
+        this.properFetch()
         this.fetchAnswers()
       })
     },
 
     deleteAnswer(answerId) {
       requests
-        .deleteAnswer(answerId, this.wisId)
+        .deleteAnswer(answerId)
         .then(() =>
           requests
-            .changeAnswersNum(this.wisId, this.question._id, -1)
+            .changeAnswersNum(this.question._id, -1)
             .then(() => this.fetchAnswers()),
         )
     },
 
     editAnswer(answerId, editedText) {
       requests
-        .editAnswer(answerId, editedText, this.wisId)
+        .editAnswer(answerId, editedText)
         .then(() => bus.$emit('show-message', 'answer edited ...'))
     },
   },

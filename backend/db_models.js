@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const questionSchema = new mongoose.Schema({
   authorName: String,
   authorId: String,
-  wisId: String,
   title: String,
   text: String,
   tag: String,
@@ -31,7 +30,6 @@ exports.Answer = mongoose.model(
     questionId: { type: String, index: true },
     authorName: String,
     authorId: String,
-    wisId: String,
     text: String,
     level: Number,
     voters: Array,

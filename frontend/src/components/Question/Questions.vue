@@ -13,17 +13,13 @@
       <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
     </div>
 
-    <!-- <div class="inRow">
-      <i @click="movePointerAndFetch(-1)" class="chevronLeft">chevron_left</i>
-      <p class="fetchLable">{{fetchLable[pointer]}}</p>
-      <i @click="movePointerAndFetch(1)" class="chevronRight">chevron_right</i>
-    </div>-->
     <div class="inRow">
-      <p @click="buttonForFetch(0)" class="fetchLableButton">{{fetchLable[0]}}</p>
-      <p @click="buttonForFetch(1)" class="fetchLableButton">{{fetchLable[1]}}</p>
-      <p @click="buttonForFetch(2)" class="fetchLableButton">{{fetchLable[2]}}</p>
-      <p @click="buttonForFetch(3)" class="fetchLableButton">{{fetchLable[3]}}</p>
+      <p @click="fetchAllQuestions()" class="fetchLableButton">All</p>
+      <p @click="fetchUserQuestions()" class="fetchLableButton">Yours</p>
+      <p @click="fetchUserFavoriteQuestions()" class="fetchLableButton">Favorite</p>
+      <p @click="fetchUnsolvedQuestions()" class="fetchLableButton">Unsolved</p>
     </div>
+
     <div class="cards">
       <QuestionCard
         v-for="(question) in questions"
@@ -31,7 +27,6 @@
         :question="question"
         :userId="userId"
         :updateLevel="updateLevel"
-        :updateLevelAgain="updateLevelAgain"
         :addToFavorite="addToFavorite"
         :removeFromFavorite="removeFromFavorite"
         :deleteQuestion="deleteQuestion"
@@ -60,8 +55,6 @@ export default {
 
   data() {
     return {
-      fetchLable: ['All', 'Yours', 'Favorite', 'Unsolved'],
-      pointer: 0,
       searchString: '',
     }
   },
@@ -76,7 +69,6 @@ export default {
     fetchUserFavoriteQuestions: Function,
     fetchUnsolvedQuestions: Function,
     updateLevel: Function,
-    updateLevelAgain: Function,
     addToFavorite: Function,
     removeFromFavorite: Function,
     deleteQuestion: Function,
@@ -103,30 +95,6 @@ export default {
       this.updateSearchQuery(this.searchString)
       this.changePage(1 - this.pageNumber)
       this.properFetch()
-    },
-
-    buttonForFetch(pointer) {
-      this.pointer = pointer
-      this.movePointerAndFetch(0)
-    },
-
-    movePointerAndFetch(direction) {
-      this.pointer = R.add(this.pointer, direction)
-      this.pointer = R.mathMod(this.pointer, R.length(this.fetchLable))
-      switch (this.pointer) {
-        case 0:
-          this.fetchAllQuestions()
-          break
-        case 1:
-          this.fetchUserQuestions()
-          break
-        case 2:
-          this.fetchUserFavoriteQuestions()
-          break
-        case 3:
-          this.fetchUnsolvedQuestions()
-          break
-      }
     },
 
     goPrevious() {
@@ -177,16 +145,6 @@ export default {
   cursor: pointer;
 }
 
-.chevronLeft {
-  font-size: 35px;
-  top: -5px;
-}
-
-.chevronRight {
-  font-size: 35px;
-  top: -5px;
-}
-
 .fetchLableButton {
   font-size: 20px;
   font-family: sans-serif;
@@ -202,22 +160,6 @@ export default {
   align-self: center;
   margin-right: 20px;
   cursor: pointer;
-}
-
-.fetchLable {
-  font-size: 20px;
-  font-family: sans-serif;
-  left: 285px;
-  padding: 5px;
-  padding-bottom: 0px;
-  padding-top: 0px;
-  border-radius: 5px;
-  background-color: #e3e3e3;
-  border: 2px #515155 solid;
-  min-width: 50px;
-  text-align: center;
-  align-self: center;
-  margin-right: 20px;
 }
 
 .header {

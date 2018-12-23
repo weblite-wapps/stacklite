@@ -32,7 +32,7 @@
       <p class="footerItem">Author: {{question.authorName}}</p>
       <p class="footerItem">Date: {{formattedDate}}</p>
       <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
-      <p class="ansNumber">#{{numberOfAnswers}}</p>
+      <p class="ansNumber">{{numberOfAnswers}}</p>
     </div>
   </div>
 </template>
@@ -92,35 +92,6 @@ export default {
         this.level += score
       }
     },
-
-    // changeLevel(score) {
-    //   const { question } = this
-    //   const voteObject = R.find(R.propEq('userId', this.userId))(
-    //     question.voters,
-    //   )
-    //   if (
-    //     this.userId !== question.authorId &&
-    //     (this.level === question.level ||
-    //       (this.level === question.level + 1 && score === -1) ||
-    //       (this.level === question.level - 1 && score === 1))
-    //   ) {
-    //     console.log('salam')
-    //     if (!voteObject) {
-    //       console.log('updateLevel')
-    //       this.updateLevel(score, question._id)
-    //       this.level += score
-    //     } else if (
-    //       voteObject.vote === 0 ||
-    //       (voteObject.vote === 1 && score === -1) ||
-    //       (voteObject.vote === -1 && score === 1)
-    //     ) {
-    //       console.log(voteObject)
-    //       console.log('Again!')
-    //       this.updateLevelAgain(score, question._id)
-    //       this.level += score
-    //     }
-    //   }
-    // },
   },
 
   watch: {

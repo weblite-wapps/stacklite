@@ -12,11 +12,10 @@ exports.connect = function connect(name) {
   })
 }
 
-exports.addQuestion = (username, userId, wisId, form, date) =>
+exports.addQuestion = (username, userId, form, date) =>
   new models.Question({
     authorName: username,
     authorId: userId,
-    wisId,
     title: form.title,
     text: form.text,
     tag: form.tag,
@@ -28,11 +27,10 @@ exports.addQuestion = (username, userId, wisId, form, date) =>
     solved: false,
   }).save()
 
-exports.updateLevel = (score, userId, wisId, questionId) =>
+exports.updateLevel = (score, userId, questionId) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
-      wisId,
     },
     {
       $inc: { level: score },
@@ -40,53 +38,36 @@ exports.updateLevel = (score, userId, wisId, questionId) =>
     },
   )
 
-exports.updateLevelAgain = (score, userId, wisId, questionId) =>
+exports.changeAnswersNum = (questionId, change) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
-      wisId,
-    },
-    {
-      $inc: { 'voters.$[elem].vote': score, level: score },
-    },
-    {
-      arrayFilters: [{ 'elem.userId': { $eq: userId } }],
-    },
-  )
-
-exports.changeAnswersNum = (wisId, questionId, change) =>
-  models.Question.findOneAndUpdate(
-    {
-      _id: questionId,
-      wisId,
     },
     {
       $inc: { answers: change },
     },
   )
 
-exports.changeSolve = (wisId, questionId, bool) =>
+exports.toggleSolve = (questionId, bool) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
-      wisId,
     },
     { $set: { solved: bool } },
     { overwrite: true },
   )
 
-exports.toggleChosen = (answerId, wisId, bool) =>
+exports.toggleChosen = (answerId, bool) =>
   models.Answer.findOneAndUpdate(
-    { wisId, _id: answerId },
+    { _id: answerId },
     { $set: { chosen: bool } },
     { overwrite: true },
   )
 
-exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
+exports.updateAnswerLevel = (score, userId, answerId) =>
   models.Answer.findOneAndUpdate(
     {
       _id: answerId,
-      wisId,
     },
     {
       $inc: { level: score },
@@ -94,16 +75,16 @@ exports.updateAnswerLevel = (score, userId, wisId, answerId) =>
     },
   )
 
-exports.getAllQuestions = (skip, limit, wisId) =>
-  models.Question.find({ wisId })
+exports.getAllQuestions = (skip, limit) =>
+  models.Question.find({})
     .sort({ level: -1 })
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getAllQuestionsSearch = (searchQuery, skip, limit, wisId) =>
+exports.getAllQuestionsSearch = (searchQuery, skip, limit) =>
   models.Question.find(
-    { wisId, $text: { $search: searchQuery } },
+    { $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
@@ -111,16 +92,16 @@ exports.getAllQuestionsSearch = (searchQuery, skip, limit, wisId) =>
     .limit(limit)
     .exec()
 
-exports.getUserQuestions = (skip, limit, userId, wisId) =>
-  models.Question.find({ authorId: userId, wisId })
+exports.getUserQuestions = (skip, limit, userId) =>
+  models.Question.find({ authorId: userId })
     .sort({ date: -1 })
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getUserQuestionsSearch = (searchQuery, skip, limit, userId, wisId) =>
+exports.getUserQuestionsSearch = (searchQuery, skip, limit, userId) =>
   models.Question.find(
-    { wisId, authorId: userId, $text: { $search: searchQuery } },
+    { authorId: userId, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
@@ -128,22 +109,16 @@ exports.getUserQuestionsSearch = (searchQuery, skip, limit, userId, wisId) =>
     .limit(limit)
     .exec()
 
-exports.getUserFavoriteQuestions = (skip, limit, userId, wisId) =>
-  models.Question.find({ favorite: { $all: [userId] }, wisId })
+exports.getUserFavoriteQuestions = (skip, limit, userId) =>
+  models.Question.find({ favorite: { $all: [userId] } })
     .sort({ date: -1 })
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getUserFavoriteQuestionsSearch = (
-  searchQuery,
-  skip,
-  limit,
-  userId,
-  wisId,
-) =>
+exports.getUserFavoriteQuestionsSearch = (searchQuery, skip, limit, userId) =>
   models.Question.find(
-    { favorite: { $all: [userId] }, wisId, $text: { $search: searchQuery } },
+    { favorite: { $all: [userId] }, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
@@ -151,19 +126,18 @@ exports.getUserFavoriteQuestionsSearch = (
     .limit(limit)
     .exec()
 
-exports.getUnsolvedQuestions = (skip, limit, wisId) =>
+exports.getUnsolvedQuestions = (skip, limit) =>
   models.Question.find({
     solved: false,
-    wisId,
   })
     .sort({ level: -1 })
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getUnsolvedQuestionsSearch = (searchQuery, skip, limit, wisId) =>
+exports.getUnsolvedQuestionsSearch = (searchQuery, skip, limit) =>
   models.Question.find(
-    { solved: false, wisId, $text: { $search: searchQuery } },
+    { solved: false, $text: { $search: searchQuery } },
     { score: { $meta: 'textScore' } },
   )
     .sort({ score: { $meta: 'textScore' } })
@@ -171,45 +145,40 @@ exports.getUnsolvedQuestionsSearch = (searchQuery, skip, limit, wisId) =>
     .limit(limit)
     .exec()
 
-exports.addToFavorite = (questionId, userId, wisId) =>
+exports.addToFavorite = (questionId, userId) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
-      wisId,
     },
     {
       $push: { favorite: userId },
     },
   )
 
-exports.removeFromFavorite = (questionId, userId, wisId) =>
+exports.removeFromFavorite = (questionId, userId) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
-      wisId,
     },
     {
       $pull: { favorite: userId },
     },
   )
 
-exports.deleteQuestion = (questionId, wisId) =>
+exports.deleteQuestion = questionId =>
   models.Question.deleteOne({
     _id: questionId,
-    wisId,
   })
 
-exports.deleteAnswer = (answerId, wisId) =>
+exports.deleteAnswer = answerId =>
   models.Answer.deleteOne({
     _id: answerId,
-    wisId,
   })
 
-exports.editAnswer = (answerId, editedText, wisId) =>
+exports.editAnswer = (answerId, editedText) =>
   models.Answer.findOneAndUpdate(
     {
       _id: answerId,
-      wisId,
     },
     {
       $set: { text: editedText },
@@ -217,15 +186,13 @@ exports.editAnswer = (answerId, editedText, wisId) =>
     { overwrite: true },
   )
 
-exports.getAnswers = (questionId, wisId) =>
-  models.Answer.find({ questionId, wisId }).exec()
+exports.getAnswers = questionId => models.Answer.find({ questionId }).exec()
 
-exports.storeAnswer = (questionId, username, userId, wisId, text, date) =>
+exports.storeAnswer = (questionId, username, userId, text, date) =>
   new models.Answer({
     questionId,
     authorName: username,
     authorId: userId,
-    wisId,
     text,
     level: 0,
     voters: [],
@@ -234,11 +201,10 @@ exports.storeAnswer = (questionId, username, userId, wisId, text, date) =>
     chosen: false,
   }).save()
 
-exports.addReply = (username, userId, wisId, answerId, text) =>
+exports.addReply = (username, userId, answerId, text) =>
   models.Answer.findOneAndUpdate(
     {
       _id: answerId,
-      wisId,
     },
     {
       $push: { replys: { authorName: username, authorId: userId, text } },

@@ -6,50 +6,38 @@ import bus from './bus'
 import config from '../../config'
 
 export default {
-  postQuestion: (username, userId, wisId, form, date) =>
+  postQuestion: (username, userId, form) =>
     request
       .post(config.server + '/postQuestion/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ username, userId, wisId, form, date })
+      .send({ username, userId, form })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in posting Question...'),
       ),
 
-  toggleChosen: (answerId, wisId, bool) =>
+  toggleChosen: (answerId, bool) =>
     request
       .post(config.server + '/toggleChosen/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ answerId, wisId, bool })
+      .send({ answerId, bool })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in toggling chosen...'),
       ),
 
-  updateLevel: (score, userId, wisId, questionId) =>
+  updateLevel: (score, userId, questionId) =>
     request
       .post(config.server + '/updateLevel')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ score, userId, wisId, questionId })
+      .send({ score, userId, questionId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in updating level...'),
       ),
 
-  updateLevelAgain: (score, userId, wisId, questionId) =>
-    request
-      .post(config.server + '/updateLevelAgain')
-      .set('Access-Control-Allow-Origin', '*')
-      .send({ score, userId, wisId, questionId })
-      .catch(() =>
-        bus.$emit(
-          'show-message',
-          'Error has occured in updating level Again...',
-        ),
-      ),
-
-  changeAnswersNum: (wisId, questionId, change) =>
+  changeAnswersNum: (questionId, change) =>
     request
       .post(config.server + '/changeAnswersNum')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ wisId, questionId, change })
+      .send({ questionId, change })
       .catch(() =>
         bus.$emit(
           'show-message',
@@ -57,11 +45,11 @@ export default {
         ),
       ),
 
-  changeSolve: (wisId, questionId, bool) =>
+  changeSolve: (questionId, bool) =>
     request
       .post(config.server + '/changeSolve')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ wisId, questionId, bool })
+      .send({ questionId, bool })
       .catch(() =>
         bus.$emit(
           'show-message',
@@ -69,11 +57,11 @@ export default {
         ),
       ),
 
-  updateAnswerLevel: (score, userId, wisId, answerId) =>
+  updateAnswerLevel: (score, userId, answerId) =>
     request
       .post(config.server + '/updateAnswerLevel')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ score, userId, wisId, answerId })
+      .send({ score, userId, answerId })
       .catch(() =>
         bus.$emit(
           'show-message',
@@ -81,20 +69,20 @@ export default {
         ),
       ),
 
-  addToFavorite: (questionId, userId, wisId) =>
+  addToFavorite: (questionId, userId) =>
     request
       .post(config.server + '/addToFavorite')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, userId, wisId })
+      .send({ questionId, userId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in adding to favorite...'),
       ),
 
-  removeFromFavorite: (questionId, userId, wisId) =>
+  removeFromFavorite: (questionId, userId) =>
     request
       .post(config.server + '/removeFromFavorite')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, userId, wisId })
+      .send({ questionId, userId })
       .catch(() =>
         bus.$emit(
           'show-message',
@@ -102,38 +90,38 @@ export default {
         ),
       ),
 
-  deleteQuestion: (questionId, wisId) =>
+  deleteQuestion: questionId =>
     request
       .post(config.server + '/deleteQuestion')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, wisId })
+      .send({ questionId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in deleting question...'),
       ),
 
-  deleteAnswer: (answerId, wisId) =>
+  deleteAnswer: answerId =>
     request
       .post(config.server + '/deleteAnswer')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ answerId, wisId })
+      .send({ answerId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in deleting answer...'),
       ),
 
-  editAnswer: (answerId, editedText, wisId) =>
+  editAnswer: (answerId, editedText) =>
     request
       .post(config.server + '/editAnswer')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ answerId, editedText, wisId })
+      .send({ answerId, editedText })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in editing answer...'),
       ),
 
-  getAllQuestions: (skip, limit, wisId) =>
+  getAllQuestions: (skip, limit) =>
     request
       .get(config.server + '/getAllQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ skip, limit, wisId })
+      .query({ skip, limit })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -142,11 +130,11 @@ export default {
         ),
       ),
 
-  getAllQuestionsSearch: (searchQuery, skip, limit, wisId) =>
+  getAllQuestionsSearch: (searchQuery, skip, limit) =>
     request
       .get(config.server + '/getAllQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, skip, limit, wisId })
+      .query({ searchQuery, skip, limit })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -155,11 +143,11 @@ export default {
         ),
       ),
 
-  getUserQuestions: (skip, limit, userId, wisId) =>
+  getUserQuestions: (skip, limit, userId) =>
     request
       .get(config.server + '/getUserQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ skip, limit, userId, wisId })
+      .query({ skip, limit, userId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -168,11 +156,11 @@ export default {
         ),
       ),
 
-  getUserQuestionsSearch: (searchQuery, skip, limit, userId, wisId) =>
+  getUserQuestionsSearch: (searchQuery, skip, limit, userId) =>
     request
       .get(config.server + '/getUserQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, skip, limit, userId, wisId })
+      .query({ searchQuery, skip, limit, userId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -181,11 +169,11 @@ export default {
         ),
       ),
 
-  getUserFavoriteQuestions: (skip, limit, userId, wisId) =>
+  getUserFavoriteQuestions: (skip, limit, userId) =>
     request
       .get(config.server + '/getUserFavoriteQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ skip, limit, userId, wisId })
+      .query({ skip, limit, userId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -194,11 +182,11 @@ export default {
         ),
       ),
 
-  getUserFavoriteQuestionsSearch: (searchQuery, skip, limit, userId, wisId) =>
+  getUserFavoriteQuestionsSearch: (searchQuery, skip, limit, userId) =>
     request
       .get(config.server + '/getUserFavoriteQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, skip, limit, userId, wisId })
+      .query({ searchQuery, skip, limit, userId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -207,11 +195,11 @@ export default {
         ),
       ),
 
-  getUnsolvedQuestions: (skip, limit, wisId) =>
+  getUnsolvedQuestions: (skip, limit) =>
     request
       .get(config.server + '/getUnsolvedQuestions/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ skip, limit, wisId })
+      .query({ skip, limit })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -220,11 +208,11 @@ export default {
         ),
       ),
 
-  getUnsolvedQuestionsSearch: (searchQuery, skip, limit, wisId) =>
+  getUnsolvedQuestionsSearch: (searchQuery, skip, limit) =>
     request
       .get(config.server + '/getUnsolvedQuestionsSearch/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, skip, limit, wisId })
+      .query({ searchQuery, skip, limit })
       .then(res => res.body)
       .catch(() =>
         bus.$emit(
@@ -233,30 +221,30 @@ export default {
         ),
       ),
 
-  getAnswers: (questionId, wisId) =>
+  getAnswers: questionId =>
     request
       .get(config.server + '/getAnswers/')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ questionId, wisId })
+      .query({ questionId })
       .then(res => res.body)
       .catch(() =>
         bus.$emit('show-message', 'Error has occured getting answers ...'),
       ),
 
-  storeAnswer: (questionId, username, userId, wisId, text, date) =>
+  storeAnswer: (questionId, username, userId, text) =>
     request
       .post(config.server + '/storeAnswer/')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, username, userId, wisId, text, date })
+      .send({ questionId, username, userId, text })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in storing answer...'),
       ),
 
-  addReply: (username, userId, wisId, answerId, text) =>
+  addReply: (username, userId, answerId, text) =>
     request
       .post(config.server + '/addReply')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ username, userId, wisId, answerId, text })
+      .send({ username, userId, answerId, text })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in adding reply...'),
       ),

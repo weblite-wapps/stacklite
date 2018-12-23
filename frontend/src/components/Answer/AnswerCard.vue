@@ -148,7 +148,7 @@ export default {
     answer: function() {
       this.level = this.answer.level
       this.chosen = this.answer.chosen
-      this.showReplys = R.concat([], this.answer.replys)
+      this.showReplys = [...this.answer.replys]
     },
 
     state: function() {

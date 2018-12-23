@@ -13,13 +13,10 @@ export default {
 
   computed: {
     icon() {
-      if (this.isWriter) {
-        if (this.selected) return 'check_box'
-        else return 'check_box_outline_blank'
-      } else {
-        if (this.selected) return 'check_box'
-        else return ''
-      }
+      if (this.isWriter && this.selected) return 'check_box'
+      if (this.isWriter && !this.selected) return 'check_box_outline_blank'
+      if (!this.isWriter && this.selected) return 'check_box'
+      if (!this.isWriter && !this.selected) return ''
     },
   },
 }
