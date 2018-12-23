@@ -122,75 +122,66 @@ router.get('/getAnswers', ({ query: { questionId } }, res) =>
     .catch(err => res.status(500).send(err)),
 )
 
-router.get('/getAllQuestions', ({ query: { skip, limit } }, res) =>
-  database
-    .getAllQuestions(Number(skip), Number(limit))
-    .then(data => res.send(data))
-    .catch(err => res.status(500).send(err)),
+router.get(
+  '/getAllQuestions',
+  ({ query: { searchQuery, skip, limit } }, res) => {
+    const filter = searchQuery ? { $text: { $search: searchQuery } } : {}
+    const sortRule = searchQuery
+      ? { score: { $meta: 'textScore' } }
+      : { level: -1 }
+    return database
+      .getAllQuestions(Number(skip), Number(limit), filter, sortRule)
+      .then(data => res.send(data))
+      .catch(err => res.status(500).send(err))
+  },
 )
 
 router.get(
-  '/getAllQuestionsSearch',
-  ({ query: { searchQuery, skip, limit } }, res) =>
-    database
-      .getAllQuestionsSearch(searchQuery, Number(skip), Number(limit))
+  '/getUserQuestions',
+  ({ query: { searchQuery, skip, limit, userId } }, res) => {
+    const filter = searchQuery
+      ? { authorId: userId, $text: { $search: searchQuery } }
+      : { authorId: userId }
+    const sortRule = searchQuery
+      ? { score: { $meta: 'textScore' } }
+      : { date: -1 }
+    return database
+      .getUserQuestions(Number(skip), Number(limit), filter, sortRule, userId)
       .then(data => res.send(data))
-      .catch(err => res.status(500).send(err)),
-)
-
-router.get('/getUserQuestions', ({ query: { skip, limit, userId } }, res) =>
-  database
-    .getUserQuestions(Number(skip), Number(limit), userId)
-    .then(data => res.send(data))
-    .catch(err => res.status(500).send(err)),
-)
-
-router.get(
-  '/getUserQuestionsSearch',
-  ({ query: { searchQuery, skip, limit, userId } }, res) =>
-    database
-      .getUserQuestionsSearch(searchQuery, Number(skip), Number(limit), userId)
-      .then(data => res.send(data))
-      .catch(err => res.status(500).send(err)),
+      .catch(err => res.status(500).send(err))
+  },
 )
 
 router.get(
   '/getUserFavoriteQuestions',
-  ({ query: { skip, limit, userId } }, res) =>
-    database
-      .getUserFavoriteQuestions(Number(skip), Number(limit), userId)
+  ({ query: { searchQuery, skip, limit, userId } }, res) => {
+    const filter = searchQuery
+      ? { favorite: { $all: [userId] }, $text: { $search: searchQuery } }
+      : { favorite: { $all: [userId] } }
+    const sortRule = searchQuery
+      ? { score: { $meta: 'textScore' } }
+      : { date: -1 }
+    return database
+      .getUserFavoriteQuestions(Number(skip), Number(limit), filter, sortRule)
       .then(data => res.send(data))
-      .catch(err => res.status(500).send(err)),
+      .catch(err => res.status(500).send(err))
+  },
 )
 
 router.get(
-  '/getUserFavoriteQuestionsSearch',
-  ({ query: { searchQuery, skip, limit, userId } }, res) =>
-    database
-      .getUserFavoriteQuestionsSearch(
-        searchQuery,
-        Number(skip),
-        Number(limit),
-        userId,
-      )
+  '/getUnsolvedQuestions',
+  ({ query: { searchQuery, skip, limit } }, res) => {
+    const filter = searchQuery
+      ? { solved: false, $text: { $search: searchQuery } }
+      : { solved: false }
+    const sortRule = searchQuery
+      ? { score: { $meta: 'textScore' } }
+      : { level: -1 }
+    return database
+      .getUnsolvedQuestions(Number(skip), Number(limit), filter, sortRule)
       .then(data => res.send(data))
-      .catch(err => res.status(500).send(err)),
-)
-
-router.get('/getUnsolvedQuestions', ({ query: { skip, limit } }, res) =>
-  database
-    .getUnsolvedQuestions(Number(skip), Number(limit))
-    .then(data => res.send(data))
-    .catch(err => res.status(500).send(err)),
-)
-
-router.get(
-  '/getUnsolvedQuestionsSearch',
-  ({ query: { searchQuery, skip, limit } }, res) =>
-    database
-      .getUnsolvedQuestionsSearch(searchQuery, Number(skip), Number(limit))
-      .then(data => res.send(data))
-      .catch(err => res.status(500).send(err)),
+      .catch(err => res.status(500).send(err))
+  },
 )
 
 exports.Router = router

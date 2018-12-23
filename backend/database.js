@@ -75,72 +75,30 @@ exports.updateAnswerLevel = (score, userId, answerId) =>
     },
   )
 
-exports.getAllQuestions = (skip, limit) =>
-  models.Question.find({})
-    .sort({ level: -1 })
+exports.getAllQuestions = (skip, limit, filter, sortRule) =>
+  models.Question.find(filter, { score: { $meta: 'textScore' } })
+    .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getAllQuestionsSearch = (searchQuery, skip, limit) =>
-  models.Question.find(
-    { $text: { $search: searchQuery } },
-    { score: { $meta: 'textScore' } },
-  )
-    .sort({ score: { $meta: 'textScore' } })
+exports.getUserQuestions = (skip, limit, filter, sortRule) =>
+  models.Question.find(filter, { score: { $meta: 'textScore' } })
+    .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getUserQuestions = (skip, limit, userId) =>
-  models.Question.find({ authorId: userId })
-    .sort({ date: -1 })
+exports.getUserFavoriteQuestions = (skip, limit, filter, sortRule) =>
+  models.Question.find(filter, { score: { $meta: 'textScore' } })
+    .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
-exports.getUserQuestionsSearch = (searchQuery, skip, limit, userId) =>
-  models.Question.find(
-    { authorId: userId, $text: { $search: searchQuery } },
-    { score: { $meta: 'textScore' } },
-  )
-    .sort({ score: { $meta: 'textScore' } })
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUserFavoriteQuestions = (skip, limit, userId) =>
-  models.Question.find({ favorite: { $all: [userId] } })
-    .sort({ date: -1 })
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUserFavoriteQuestionsSearch = (searchQuery, skip, limit, userId) =>
-  models.Question.find(
-    { favorite: { $all: [userId] }, $text: { $search: searchQuery } },
-    { score: { $meta: 'textScore' } },
-  )
-    .sort({ score: { $meta: 'textScore' } })
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUnsolvedQuestions = (skip, limit) =>
-  models.Question.find({
-    solved: false,
-  })
-    .sort({ level: -1 })
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUnsolvedQuestionsSearch = (searchQuery, skip, limit) =>
-  models.Question.find(
-    { solved: false, $text: { $search: searchQuery } },
-    { score: { $meta: 'textScore' } },
-  )
-    .sort({ score: { $meta: 'textScore' } })
+exports.getUnsolvedQuestions = (skip, limit, filter, sortRule) =>
+  models.Question.find(filter, { score: { $meta: 'textScore' } })
+    .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()

@@ -153,94 +153,57 @@ export default {
     },
 
     fetchAllQuestions() {
-      if (this.searchQuery)
-        requests
-          .getAllQuestionsSearch(
-            this.searchQuery,
-            this.skip,
-            R.add(this.fetchAmount, 1),
-          )
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'all'
-          })
-      else
-        requests
-          .getAllQuestions(this.skip, R.add(this.fetchAmount, 1))
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'all'
-          })
+      requests
+        .getAllQuestions(
+          this.searchQuery,
+          this.skip,
+          R.add(this.fetchAmount, 1),
+        )
+        .then(res => {
+          this.setQuestions(res)
+          this.fetchQuestionState = 'all'
+        })
     },
 
     fetchUserQuestions() {
-      if (this.searchQuery)
-        requests
-          .getUserQuestionsSearch(
-            this.searchQuery,
-            this.skip,
-            R.add(this.fetchAmount, 1),
-            this.userId,
-          )
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'user'
-          })
-      else
-        requests
-          .getUserQuestions(this.skip, R.add(this.fetchAmount, 1), this.userId)
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'user'
-          })
+      requests
+        .getUserQuestions(
+          this.searchQuery,
+          this.skip,
+          R.add(this.fetchAmount, 1),
+          this.userId,
+        )
+        .then(res => {
+          this.setQuestions(res)
+          this.fetchQuestionState = 'user'
+        })
     },
 
     fetchUserFavoriteQuestions() {
-      if (this.searchQuery)
-        requests
-          .getUserFavoriteQuestionsSearch(
-            this.searchQuery,
-            this.skip,
-            R.add(this.fetchAmount, 1),
-            this.userId,
-          )
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'favorite'
-          })
-      else
-        requests
-          .getUserFavoriteQuestions(
-            this.skip,
-            R.add(this.fetchAmount, 1),
-            this.userId,
-          )
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'favorite'
-          })
+      requests
+        .getUserFavoriteQuestions(
+          this.searchQuery,
+          this.skip,
+          R.add(this.fetchAmount, 1),
+          this.userId,
+        )
+        .then(res => {
+          this.setQuestions(res)
+          this.fetchQuestionState = 'favorite'
+        })
     },
 
     fetchUnsolvedQuestions() {
-      if (this.searchQuery)
-        requests
-          .getUnsolvedQuestionsSearch(
-            this.searchQuery,
-            this.skip,
-            R.add(this.fetchAmount, 1),
-          )
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'unsolved'
-          })
-      else {
-        requests
-          .getUnsolvedQuestions(this.skip, R.add(this.fetchAmount, 1))
-          .then(res => {
-            this.setQuestions(res)
-            this.fetchQuestionState = 'unsolved'
-          })
-      }
+      requests
+        .getUnsolvedQuestions(
+          this.searchQuery,
+          this.skip,
+          R.add(this.fetchAmount, 1),
+        )
+        .then(res => {
+          this.setQuestions(res)
+          this.fetchQuestionState = 'unsolved'
+        })
     },
 
     fetchAnswers() {
