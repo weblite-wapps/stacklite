@@ -69,24 +69,15 @@ export default {
         ),
       ),
 
-  addToFavorite: (questionId, userId) =>
+  changeUserFavorite: (questionId, userId, action) =>
     request
-      .post(config.server + '/addToFavorite')
+      .post(config.server + '/changeUserFavorite')
       .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, userId })
-      .catch(() =>
-        bus.$emit('show-message', 'Error has occured in adding to favorite...'),
-      ),
-
-  removeFromFavorite: (questionId, userId) =>
-    request
-      .post(config.server + '/removeFromFavorite')
-      .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, userId })
+      .send({ questionId, userId, action })
       .catch(() =>
         bus.$emit(
           'show-message',
-          'Error has occured in removing from favorite...',
+          'Error has occured in changing user favorite...',
         ),
       ),
 

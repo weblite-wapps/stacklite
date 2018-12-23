@@ -161,7 +161,9 @@ export default {
     this.level = this.answer.level
     this.chosen = this.answer.chosen
     this.showReplys = R.concat([], this.answer.replys)
-    this.formattedDate = R.split('|', this.answer.date)[0]
+    const date = new Date(this.answer.date)
+    this.formattedDate =
+      date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
   },
 }
 </script>

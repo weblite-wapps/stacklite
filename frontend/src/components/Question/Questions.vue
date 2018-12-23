@@ -27,8 +27,7 @@
         :question="question"
         :userId="userId"
         :updateLevel="updateLevel"
-        :addToFavorite="addToFavorite"
-        :removeFromFavorite="removeFromFavorite"
+        :changeUserFavorite="changeUserFavorite"
         :deleteQuestion="deleteQuestion"
       />
     </div>
@@ -69,8 +68,7 @@ export default {
     fetchUserFavoriteQuestions: Function,
     fetchUnsolvedQuestions: Function,
     updateLevel: Function,
-    addToFavorite: Function,
-    removeFromFavorite: Function,
+    changeUserFavorite: Function,
     deleteQuestion: Function,
     properFetch: Function,
     updateSearchQuery: Function,

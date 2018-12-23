@@ -5,18 +5,9 @@ const database = require('./database')
 const router = express.Router()
 router.use(bodyParser.json())
 
-const getFormattedDate = () => {
-  const newDate = new Date()
-  const month = newDate.getMonth() + 1
-  const day = newDate.getDate()
-  const showMonth = month < 10 ? `0${month}` : month
-  const showDay = day < 10 ? `0${day}` : day
-  return `${newDate.getFullYear()}/${showMonth}/${showDay}|${newDate.getUTCHours()}/${newDate.getUTCMinutes()}/${newDate.getUTCSeconds()}`
-}
-
 router.post('/postQuestion', ({ body: { username, userId, form } }, res) =>
   database
-    .addQuestion(username, userId, form, getFormattedDate())
+    .addQuestion(username, userId, form, Date.now())
     .then(() => res.send('submitted'))
     .catch(err => res.status(500).send(err)),
 )
@@ -46,7 +37,7 @@ router.post(
   '/storeAnswer',
   ({ body: { questionId, username, userId, text } }, res) =>
     database
-      .storeAnswer(questionId, username, userId, text, getFormattedDate())
+      .storeAnswer(questionId, username, userId, text, Date.now())
       .then(() => res.send('submitted'))
       .catch(err => res.status(500).send(err)),
 )
@@ -78,20 +69,19 @@ router.post(
       .catch(err => res.status(500).send(err)),
 )
 
-router.post('/addToFavorite', ({ body, body: { questionId, userId } }, res) =>
-  database
-    .addToFavorite(questionId, userId)
-    .then(() => res.send(body))
-    .catch(err => res.status(500).send(err)),
-)
-
 router.post(
-  '/removeFromFavorite',
-  ({ body, body: { questionId, userId } }, res) =>
-    database
-      .removeFromFavorite(questionId, userId)
+  '/changeUserFavorite',
+  ({ body, body: { questionId, userId, action } }, res) => {
+    if (action === 'remove')
+      return database
+        .removeFromFavorite(questionId, userId)
+        .then(() => res.send(body))
+        .catch(err => res.status(500).send(err))
+    return database
+      .addToFavorite(questionId, userId)
       .then(() => res.send(body))
-      .catch(err => res.status(500).send(err)),
+      .catch(err => res.status(500).send(err))
+  },
 )
 
 router.post('/deleteQuestion', ({ body, body: { questionId } }, res) =>

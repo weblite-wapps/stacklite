@@ -52,8 +52,7 @@ export default {
     userId: String,
     updateLevel: Function,
     updateLevelAgain: Function,
-    addToFavorite: Function,
-    removeFromFavorite: Function,
+    changeUserFavorite: Function,
     deleteQuestion: Function,
   },
 
@@ -76,8 +75,8 @@ export default {
 
     changeFavorite() {
       this.favorite
-        ? this.removeFromFavorite(this.question._id)
-        : this.addToFavorite(this.question._id)
+        ? this.changeUserFavorite(this.question._id, 'remove')
+        : this.changeUserFavorite(this.question._id, 'add')
       this.favorite = !this.favorite
     },
 
@@ -101,7 +100,6 @@ export default {
       this.numberOfAnswers = question.answers
       this.favorite =
         R.indexOf(this.userId, question.favorite) === -1 ? false : true
-      this.tags = R.split(' ', R.replace(/\n/g, ' ', this.question.tag))
     },
   },
 
@@ -111,7 +109,9 @@ export default {
     this.numberOfAnswers = question.answers
     this.favorite =
       R.indexOf(this.userId, question.favorite) === -1 ? false : true
-    this.formattedDate = R.split('|', this.question.date)[0]
+    const date = new Date(this.question.date)
+    this.formattedDate =
+      date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
     this.tags = R.split(' ', R.replace(/\n/g, ' ', this.question.tag))
   },
 }

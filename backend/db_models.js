@@ -9,7 +9,7 @@ const questionSchema = new mongoose.Schema({
   level: Number,
   voters: Array,
   answers: Number,
-  date: String,
+  date: Number,
   favorite: Array,
   solved: Boolean,
 })
@@ -33,7 +33,7 @@ exports.Answer = mongoose.model(
     text: String,
     level: Number,
     voters: Array,
-    date: String,
+    date: Number,
     replys: Array,
     chosen: Boolean,
   }),

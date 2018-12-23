@@ -18,8 +18,7 @@
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :fetchUnsolvedQuestions="fetchUnsolvedQuestions"
       :updateLevel="updateLevel"
-      :addToFavorite="addToFavorite"
-      :removeFromFavorite="removeFromFavorite"
+      :changeUserFavorite="changeUserFavorite"
       :switchState="switchState"
       :deleteQuestion="deleteQuestion"
       :properFetch="properFetch"
@@ -265,16 +264,10 @@ export default {
       })
     },
 
-    addToFavorite(questionId) {
+    changeUserFavorite(questionId, action) {
       requests
-        .addToFavorite(questionId, this.userId)
-        .then(() => bus.$emit('show-message', 'added to favorite ...'))
-    },
-
-    removeFromFavorite(questionId) {
-      requests
-        .removeFromFavorite(questionId, this.userId)
-        .then(() => bus.$emit('show-message', 'removed from favorite ...'))
+        .changeUserFavorite(questionId, this.userId, action)
+        .then(() => bus.$emit('show-message', 'user favorite changed...'))
     },
 
     deleteQuestion(questionId) {
