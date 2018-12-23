@@ -50,8 +50,7 @@ export default {
   props: {
     question: Object,
     userId: String,
-    updateLevel: Function,
-    updateLevelAgain: Function,
+    updateQuestionLevel: Function,
     changeUserFavorite: Function,
     deleteQuestion: Function,
   },
@@ -82,13 +81,10 @@ export default {
 
     changeLevel(score) {
       const { question } = this
-      if (
-        this.userId !== question.authorId &&
-        R.indexOf(this.userId, question.voters) === -1 &&
-        this.level === question.level
-      ) {
-        this.updateLevel(score, question._id)
-        this.level += score
+      if (this.userId !== question.authorId && this.level === question.level) {
+        this.updateQuestionLevel(score, question._id)
+          .then(() => (this.level += score))
+          .catch(() => (this.level += 0))
       }
     },
   },

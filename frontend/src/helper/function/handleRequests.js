@@ -24,9 +24,9 @@ export default {
         bus.$emit('show-message', 'Error has occured in toggling chosen...'),
       ),
 
-  updateLevel: (score, userId, questionId) =>
+  updateQuestionLevel: (score, userId, questionId) =>
     request
-      .post(config.server + '/updateLevel')
+      .post(config.server + '/updateQuestionLevel')
       .set('Access-Control-Allow-Origin', '*')
       .send({ score, userId, questionId })
       .catch(() =>
@@ -107,6 +107,34 @@ export default {
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in editing answer...'),
       ),
+
+  checkIfVotedAlreadyForAnswer: (userId, answerId) => {
+    return request
+      .get(config.server + '/checkIfVotedAlreadyForAnswer/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ userId, answerId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting answer voters...',
+        ),
+      )
+  },
+
+  checkIfVotedAlreadyForQuestion: (userId, questionId) => {
+    return request
+      .get(config.server + '/checkIfVotedAlreadyForQuestion/')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ userId, questionId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in getting question voters...',
+        ),
+      )
+  },
 
   getAllQuestions: (searchQuery, skip, limit) => {
     return request

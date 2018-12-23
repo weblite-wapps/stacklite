@@ -27,7 +27,7 @@ exports.addQuestion = (username, userId, form, date) =>
     solved: false,
   }).save()
 
-exports.updateLevel = (score, userId, questionId) =>
+exports.updateQuestionLevel = (score, userId, questionId) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
@@ -75,29 +75,45 @@ exports.updateAnswerLevel = (score, userId, answerId) =>
     },
   )
 
+exports.checkIfVotedAlreadyForAnswer = (userId, answerId) =>
+  models.Answer.findOne({
+    _id: answerId,
+    voters: { $in: [userId] },
+  })
+    .select('_id')
+    .exec()
+
+exports.checkIfVotedAlreadyForQuestion = (userId, questionId) =>
+  models.Question.findOne({
+    _id: questionId,
+    voters: { $in: [userId] },
+  })
+    .select('_id')
+    .exec()
+
 exports.getAllQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { score: { $meta: 'textScore' } })
+  models.Question.find(filter, { voters: 0 }, { score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
 exports.getUserQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { score: { $meta: 'textScore' } })
+  models.Question.find(filter, { voters: 0 }, { score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
 exports.getUserFavoriteQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { score: { $meta: 'textScore' } })
+  models.Question.find(filter, { voters: 0 }, { score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)
     .limit(limit)
     .exec()
 
 exports.getUnsolvedQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { score: { $meta: 'textScore' } })
+  models.Question.find(filter, { voters: 0 }, { score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)
     .limit(limit)
@@ -144,7 +160,8 @@ exports.editAnswer = (answerId, editedText) =>
     { overwrite: true },
   )
 
-exports.getAnswers = questionId => models.Answer.find({ questionId }).exec()
+exports.getAnswers = questionId =>
+  models.Answer.find({ questionId }, { voters: 0 }).exec()
 
 exports.storeAnswer = (questionId, username, userId, text, date) =>
   new models.Answer({

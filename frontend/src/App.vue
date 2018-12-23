@@ -17,7 +17,7 @@
       :fetchUserQuestions="fetchUserQuestions"
       :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
       :fetchUnsolvedQuestions="fetchUnsolvedQuestions"
-      :updateLevel="updateLevel"
+      :updateQuestionLevel="updateQuestionLevel"
       :changeUserFavorite="changeUserFavorite"
       :switchState="switchState"
       :deleteQuestion="deleteQuestion"
@@ -212,9 +212,7 @@ export default {
     },
 
     fetchAnswers() {
-      requests.getAnswers(this.question._id).then(res => {
-        this.answers = res
-      })
+      requests.getAnswers(this.question._id).then(res => (this.answers = res))
     },
 
     storeAnswer(text) {
@@ -233,16 +231,30 @@ export default {
         .then(() => bus.$emit('show-message', 'reply ...'))
     },
 
-    updateLevel(score, questionId) {
-      requests
-        .updateLevel(score, this.userId, questionId)
-        .then(() => bus.$emit('show-message', 'level updated ...'))
+    updateQuestionLevel(score, questionId) {
+      return requests
+        .checkIfVotedAlreadyForQuestion(this.userId, questionId)
+        .then(res => {
+          if (res === null)
+            requests
+              .updateQuestionLevel(score, this.userId, questionId)
+              .then(() =>
+                bus.$emit('show-message', 'question level updated ...'),
+              )
+          else return Promise.reject()
+        })
     },
 
     updateAnswerLevel(score, answerId) {
-      requests
-        .updateAnswerLevel(score, this.userId, answerId)
-        .then(() => bus.$emit('show-message', 'answer level updated ...'))
+      return requests
+        .checkIfVotedAlreadyForAnswer(this.userId, answerId)
+        .then(res => {
+          if (res === null)
+            requests
+              .updateAnswerLevel(score, this.userId, answerId)
+              .then(() => bus.$emit('show-message', 'answer level updated ...'))
+          else return Promise.reject()
+        })
     },
 
     addQuestion(form) {

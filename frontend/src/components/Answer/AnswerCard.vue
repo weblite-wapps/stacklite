@@ -102,14 +102,10 @@ export default {
 
     changeLevel(score) {
       const { answer } = this
-      if (
-        R.indexOf(this.userId, answer.voters) === -1 &&
-        this.level === answer.level &&
-        this.userId !== answer.authorId
-      ) {
+      if (this.level === answer.level && this.userId !== answer.authorId)
         this.updateAnswerLevel(score, answer._id)
-        this.level += score
-      }
+          .then(() => (this.level += score))
+          .catch(() => (this.level += 0))
     },
 
     allReplys() {

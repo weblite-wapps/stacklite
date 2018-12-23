@@ -26,7 +26,7 @@
         :key="question._id"
         :question="question"
         :userId="userId"
-        :updateLevel="updateLevel"
+        :updateQuestionLevel="updateQuestionLevel"
         :changeUserFavorite="changeUserFavorite"
         :deleteQuestion="deleteQuestion"
       />
@@ -67,7 +67,7 @@ export default {
     fetchUserQuestions: Function,
     fetchUserFavoriteQuestions: Function,
     fetchUnsolvedQuestions: Function,
-    updateLevel: Function,
+    updateQuestionLevel: Function,
     changeUserFavorite: Function,
     deleteQuestion: Function,
     properFetch: Function,

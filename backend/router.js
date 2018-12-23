@@ -52,10 +52,10 @@ router.post(
 )
 
 router.post(
-  '/updateLevel',
+  '/updateQuestionLevel',
   ({ body, body: { score, userId, questionId } }, res) =>
     database
-      .updateLevel(score, userId, questionId)
+      .updateQuestionLevel(score, userId, questionId)
       .then(() => res.send(body))
       .catch(err => res.status(500).send(err)),
 )
@@ -110,6 +110,24 @@ router.get('/getAnswers', ({ query: { questionId } }, res) =>
     .getAnswers(questionId)
     .then(data => res.send(data))
     .catch(err => res.status(500).send(err)),
+)
+
+router.get(
+  '/checkIfVotedAlreadyForAnswer',
+  ({ query: { userId, answerId } }, res) =>
+    database
+      .checkIfVotedAlreadyForAnswer(userId, answerId)
+      .then(data => res.send(data))
+      .catch(err => res.status(500).send(err)),
+)
+
+router.get(
+  '/checkIfVotedAlreadyForQuestion',
+  ({ query: { userId, questionId } }, res) =>
+    database
+      .checkIfVotedAlreadyForQuestion(userId, questionId)
+      .then(data => res.send(data))
+      .catch(err => res.status(500).send(err)),
 )
 
 router.get(
