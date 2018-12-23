@@ -130,8 +130,8 @@ export default {
     },
 
     switchStateWithFetch(state) {
-      this.switchState(state)
       this.properFetch()
+      this.switchState(state)
     },
 
     updateSearchQuery(searchString) {
@@ -153,6 +153,7 @@ export default {
     },
 
     fetchAllQuestions() {
+      this.pageNumber = this.fetchQuestionState === 'all' ? this.pageNumber : 1
       requests
         .getAllQuestions(
           this.searchQuery,
@@ -166,6 +167,7 @@ export default {
     },
 
     fetchUserQuestions() {
+      this.pageNumber = this.fetchQuestionState === 'user' ? this.pageNumber : 1
       requests
         .getUserQuestions(
           this.searchQuery,
@@ -180,6 +182,8 @@ export default {
     },
 
     fetchUserFavoriteQuestions() {
+      this.pageNumber =
+        this.fetchQuestionState === 'favorite' ? this.pageNumber : 1
       requests
         .getUserFavoriteQuestions(
           this.searchQuery,
@@ -194,6 +198,8 @@ export default {
     },
 
     fetchUnsolvedQuestions() {
+      this.pageNumber =
+        this.fetchQuestionState === 'unsolved' ? this.pageNumber : 1
       requests
         .getUnsolvedQuestions(
           this.searchQuery,
@@ -242,8 +248,8 @@ export default {
 
     addQuestion(form) {
       requests.postQuestion(this.username, this.userId, form).then(() => {
-        this.properFetch()
-        this.switchState('questionsMode')
+        this.pageNumber = 1
+        this.switchStateWithFetch('questionsMode')
       })
     },
 

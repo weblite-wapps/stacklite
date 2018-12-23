@@ -47,7 +47,6 @@ export default {
           text: this.text,
           tag: this.tag,
         })
-        this.switchState('questionsMode')
       }
     },
   },
