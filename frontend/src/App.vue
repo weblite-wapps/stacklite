@@ -1,6 +1,6 @@
 <template>
   <div class="root">
-    <Header appName="Stack Overflow"/>
+    <Header appName="Stack Overflow" :switchState="switchState"/>
 
     <QuestionForm
       v-if="state === 'askingMode'"
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '1',
+      userId: '16',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
