@@ -5,6 +5,7 @@ const database = require('./database')
 const router = express.Router()
 router.use(bodyParser.json())
 
+// TODO: REST
 router.post('/postQuestion', ({ body: { username, userId, form } }, res) =>
   database
     .addQuestion(username, userId, form, Date.now())

@@ -14,6 +14,7 @@ exports.connect = function connect(name) {
 
 exports.addQuestion = (username, userId, form, date) =>
   new models.Question({
+    // Use default in mongoose schema
     authorName: username,
     authorId: userId,
     title: form.title,
@@ -27,7 +28,11 @@ exports.addQuestion = (username, userId, form, date) =>
     solved: false,
   }).save()
 
-exports.updateQuestionLevel = (score, userId, questionId) =>
+exports.updateQuestionLevel = (
+  score,
+  userId,
+  questionId, // TODO: DRY
+) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
@@ -48,7 +53,10 @@ exports.changeAnswersNum = (questionId, change) =>
     },
   )
 
-exports.toggleSolve = (questionId, bool) =>
+exports.toggleSolve = (
+  questionId,
+  bool, // TODO: it's not toggle bro!
+) =>
   models.Question.findOneAndUpdate(
     {
       _id: questionId,
@@ -57,11 +65,14 @@ exports.toggleSolve = (questionId, bool) =>
     { overwrite: true },
   )
 
-exports.toggleChosen = (answerId, bool) =>
+exports.toggleChosen = (
+  answerId,
+  bool, // TODO: it's not toggle bro!
+) =>
   models.Answer.findOneAndUpdate(
     { _id: answerId },
     { $set: { chosen: bool } },
-    { overwrite: true },
+    { overwrite: true }, // TODO: investigate
   )
 
 exports.updateAnswerLevel = (score, userId, answerId) =>
@@ -91,7 +102,12 @@ exports.checkIfVotedAlreadyForQuestion = (userId, questionId) =>
     .select('_id')
     .exec()
 
-exports.getAllQuestions = (skip, limit, filter, sortRule) =>
+exports.getAllQuestions = (
+  skip,
+  limit,
+  filter,
+  sortRule, // TODO: ???????!!!!?!?!?!?!?!?!
+) =>
   models.Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)
@@ -163,7 +179,13 @@ exports.editAnswer = (answerId, editedText) =>
 exports.getAnswers = questionId =>
   models.Answer.find({ questionId }, { voters: 0 }).exec()
 
-exports.storeAnswer = (questionId, username, userId, text, date) =>
+exports.storeAnswer = (
+  questionId,
+  username,
+  userId,
+  text,
+  date, // TODO: default in schema
+) =>
   new models.Answer({
     questionId,
     authorName: username,
