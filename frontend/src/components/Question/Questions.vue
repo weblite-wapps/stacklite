@@ -8,7 +8,7 @@
         maxlength="50"
         class="searchBar"
       >
-      <i @click="searchAndFetch()" class="searchButton">search</i>
+      <i @click="searchAndFetch" class="searchButton">search</i>
       
       <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
     </div>
@@ -70,7 +70,6 @@ export default {
     updateQuestionLevel: Function,
     changeUserFavorite: Function,
     deleteQuestion: Function,
-    properFetch: Function,
     updateSearchQuery: Function,
     changePage: Function,
     pageNumber: Number,
@@ -91,28 +90,21 @@ export default {
 
     searchAndFetch() {
       this.updateSearchQuery(this.searchString)
-      this.changePage(1 - this.pageNumber)
-      this.properFetch()
+      this.changePage()
     },
 
     goPrevious() {
       this.changePage(-1)
-      this.properFetch()
     },
 
     goNext() {
       this.changePage(1)
-      this.properFetch()
     },
   },
 
   watch: {
     searchString: function() {
       this.updateSearchQuery(this.searchString)
-      if (!this.searchString) {
-        this.changePage(1 - this.pageNumber)
-        this.properFetch()
-      }
     },
   },
 }

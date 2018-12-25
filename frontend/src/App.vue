@@ -21,11 +21,10 @@
       :changeUserFavorite="changeUserFavorite"
       :switchState="switchState"
       :deleteQuestion="deleteQuestion"
-      :properFetch="properFetch"
       :updateSearchQuery="updateSearchQuery"
       :changePage="changePage"
-      :pageNumber="pageNumber"
       :nextValid="nextValid"
+      :pageNumber="pageNumber"
     />
 
     <Answers
@@ -135,10 +134,13 @@ export default {
 
     updateSearchQuery(searchString) {
       this.searchQuery = searchString
+      if (!searchString) this.changePage()
     },
 
     changePage(amount) {
-      this.pageNumber = R.add(this.pageNumber, amount)
+      if (amount === undefined) this.pageNumber = 1
+      else this.pageNumber = R.add(this.pageNumber, amount)
+      this.properFetch()
     },
 
     setQuestions(res) {
@@ -151,6 +153,7 @@ export default {
       }
     },
 
+    // TODO: refactor
     fetchAllQuestions() {
       this.pageNumber = this.fetchQuestionState === 'all' ? this.pageNumber : 1
       requests

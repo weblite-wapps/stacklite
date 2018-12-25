@@ -10,7 +10,7 @@
     <textarea v-model="tag" class="tag" maxlength="25"></textarea>
 
     <div class="button">
-      <button @click="sendQuestionToDB()" type="submit" class="done">Done</button>
+      <button @click="sendQuestionToDB" type="submit" class="done">Done</button>
       <button @click="switchState('questionsMode')" type="submit" class="back">back</button>
     </div>
   </div>
