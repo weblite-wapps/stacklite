@@ -163,7 +163,7 @@ export default {
         .storeAnswer(this.question._id, this.username, this.userId, text)
         .then(() =>
           requests
-            .changeAnswersNum(this.question._id, 1)
+            .changeAnswersCount(this.question._id, 1)
             .then(() => this.fetchAnswers()),
         )
     },
@@ -237,7 +237,7 @@ export default {
         .deleteAnswer(answerId)
         .then(() =>
           requests
-            .changeAnswersNum(this.question._id, -1)
+            .changeAnswersCount(this.question._id, -1)
             .then(() => this.fetchAnswers()),
         )
     },

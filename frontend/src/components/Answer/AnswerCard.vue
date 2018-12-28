@@ -4,13 +4,13 @@
       <pre class="ansText"> {{answer.text}} </pre>
 
       <i
-        v-if="userId === answer.authorId"
+        v-if="userId === answer.authorId && !answer.chosen"
         @click="deleteAnswer(answer._id)"
         type="submit"
         class="deleteAns"
       >delete_forever</i>
       <i
-        v-if="userId === answer.authorId && !isEditState"
+        v-if="userId === answer.authorId && !isEditState && !answer.chosen"
         @click="toggleEditState()"
         type="submit"
         class="editAns"

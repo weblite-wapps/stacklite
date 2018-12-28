@@ -1,7 +1,4 @@
-// TODO: Use file for each model
 const mongoose = require('mongoose')
-
-// UserSchema
 
 const questionSchema = new mongoose.Schema({
   authorName: String,
@@ -9,12 +6,12 @@ const questionSchema = new mongoose.Schema({
   title: String,
   text: String,
   tag: String,
-  level: Number,
-  voters: Array,
-  answers: Number, // TODO: answersCount
+  level: { type: Number, default: 0 },
+  voters: { type: Array, default: [] },
+  answersCount: { type: Number, default: 0 },
   date: Number,
-  favorite: Array,
-  solved: Boolean,
+  favorite: { type: Array, default: [] },
+  solved: { type: Boolean, default: false },
 })
 
 questionSchema.index(
@@ -26,18 +23,3 @@ questionSchema.index(
 )
 
 exports.Question = mongoose.model('Question', questionSchema)
-
-exports.Answer = mongoose.model(
-  'Answer',
-  new mongoose.Schema({
-    questionId: { type: String, index: true },
-    authorName: String,
-    authorId: String,
-    text: String,
-    level: Number,
-    voters: Array,
-    date: Number,
-    replys: Array,
-    chosen: Boolean,
-  }),
-)

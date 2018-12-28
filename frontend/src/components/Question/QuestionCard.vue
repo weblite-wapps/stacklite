@@ -33,6 +33,7 @@
       <p class="footerItem">Date: {{formattedDate}}</p>
       <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
       <p class="ansNumber">{{numberOfAnswers}}</p>
+      <p>{{question.date}}</p>
     </div>
   </div>
 </template>
@@ -93,7 +94,7 @@ export default {
     question: function() {
       const { question } = this
       this.level = question.level
-      this.numberOfAnswers = question.answers
+      this.numberOfAnswers = question.answersCount
       this.favorite =
         R.indexOf(this.userId, question.favorite) === -1 ? false : true
     },
@@ -102,7 +103,7 @@ export default {
   mounted() {
     const { question } = this
     this.level = question.level
-    this.numberOfAnswers = question.answers
+    this.numberOfAnswers = question.answersCount
     this.favorite =
       R.indexOf(this.userId, question.favorite) === -1 ? false : true
     const date = new Date(this.question.date)
