@@ -14,10 +14,10 @@
     </div>
 
     <div class="inRow">
-      <p @click="fetchAllQuestions()" class="fetchLableButton">All</p>
-      <p @click="fetchUserQuestions()" class="fetchLableButton">Yours</p>
-      <p @click="fetchUserFavoriteQuestions()" class="fetchLableButton">Favorite</p>
-      <p @click="fetchUnsolvedQuestions()" class="fetchLableButton">Unsolved</p>
+      <p @click="fetchQuestions('all')" class="fetchLableButton">All</p>
+      <p @click="fetchQuestions('user')" class="fetchLableButton">Yours</p>
+      <p @click="fetchQuestions('favorite')" class="fetchLableButton">Favorite</p>
+      <p @click="fetchQuestions('unsolved')" class="fetchLableButton">Unsolved</p>
     </div>
 
     <div class="cards">
@@ -63,10 +63,7 @@ export default {
     userId: String,
     state: String,
     switchState: Function,
-    fetchAllQuestions: Function,
-    fetchUserQuestions: Function,
-    fetchUserFavoriteQuestions: Function,
-    fetchUnsolvedQuestions: Function,
+    fetchQuestions: Function,
     updateQuestionLevel: Function,
     changeUserFavorite: Function,
     deleteQuestion: Function,

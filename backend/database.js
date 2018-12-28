@@ -102,33 +102,7 @@ exports.checkIfVotedAlreadyForQuestion = (userId, questionId) =>
     .select('_id')
     .exec()
 
-exports.getAllQuestions = (
-  skip,
-  limit,
-  filter,
-  sortRule, // TODO: ???????!!!!?!?!?!?!?!?!
-) =>
-  models.Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
-    .sort(sortRule)
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUserQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
-    .sort(sortRule)
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUserFavoriteQuestions = (skip, limit, filter, sortRule) =>
-  models.Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
-    .sort(sortRule)
-    .skip(skip)
-    .limit(limit)
-    .exec()
-
-exports.getUnsolvedQuestions = (skip, limit, filter, sortRule) =>
+exports.getQuestions = (skip, limit, filter, sortRule) =>
   models.Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
     .sort(sortRule)
     .skip(skip)

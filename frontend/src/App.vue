@@ -13,10 +13,7 @@
       :questions="questions"
       :userId="userId"
       :state="state"
-      :fetchAllQuestions="fetchAllQuestions"
-      :fetchUserQuestions="fetchUserQuestions"
-      :fetchUserFavoriteQuestions="fetchUserFavoriteQuestions"
-      :fetchUnsolvedQuestions="fetchUnsolvedQuestions"
+      :fetchQuestions="fetchQuestions"
       :updateQuestionLevel="updateQuestionLevel"
       :changeUserFavorite="changeUserFavorite"
       :switchState="switchState"
@@ -79,7 +76,7 @@ export default {
   data() {
     return {
       username: 'Armin',
-      userId: '16',
+      userId: '2',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
@@ -102,7 +99,7 @@ export default {
   },
 
   mounted: function() {
-    this.fetchAllQuestions()
+    this.fetchQuestions('all')
   },
 
   methods: {
@@ -111,20 +108,7 @@ export default {
     },
 
     properFetch() {
-      switch (this.fetchQuestionState) {
-        case 'all':
-          this.fetchAllQuestions()
-          break
-        case 'user':
-          this.fetchUserQuestions()
-          break
-        case 'favorite':
-          this.fetchUserFavoriteQuestions()
-          break
-        case 'unsolved':
-          this.fetchUnsolvedQuestions()
-          break
-      }
+      this.fetchQuestions(this.fetchQuestionState)
     },
 
     switchStateWithFetch(state) {
@@ -153,64 +137,20 @@ export default {
       }
     },
 
-    // TODO: refactor
-    fetchAllQuestions() {
-      this.pageNumber = this.fetchQuestionState === 'all' ? this.pageNumber : 1
+    fetchQuestions(fetchType) {
+      this.pageNumber =
+        this.fetchQuestionState === fetchType ? this.pageNumber : 1
       requests
-        .getAllQuestions(
-          this.searchQuery,
-          this.skip,
-          R.add(this.fetchAmount, 1),
-        )
-        .then(res => {
-          this.setQuestions(res)
-          this.fetchQuestionState = 'all'
-        })
-    },
-
-    fetchUserQuestions() {
-      this.pageNumber = this.fetchQuestionState === 'user' ? this.pageNumber : 1
-      requests
-        .getUserQuestions(
+        .getQuestions(
           this.searchQuery,
           this.skip,
           R.add(this.fetchAmount, 1),
           this.userId,
+          fetchType,
         )
         .then(res => {
           this.setQuestions(res)
-          this.fetchQuestionState = 'user'
-        })
-    },
-
-    fetchUserFavoriteQuestions() {
-      this.pageNumber =
-        this.fetchQuestionState === 'favorite' ? this.pageNumber : 1
-      requests
-        .getUserFavoriteQuestions(
-          this.searchQuery,
-          this.skip,
-          R.add(this.fetchAmount, 1),
-          this.userId,
-        )
-        .then(res => {
-          this.setQuestions(res)
-          this.fetchQuestionState = 'favorite'
-        })
-    },
-
-    fetchUnsolvedQuestions() {
-      this.pageNumber =
-        this.fetchQuestionState === 'unsolved' ? this.pageNumber : 1
-      requests
-        .getUnsolvedQuestions(
-          this.searchQuery,
-          this.skip,
-          R.add(this.fetchAmount, 1),
-        )
-        .then(res => {
-          this.setQuestions(res)
-          this.fetchQuestionState = 'unsolved'
+          this.fetchQuestionState = fetchType
         })
     },
 

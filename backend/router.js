@@ -132,62 +132,54 @@ router.get(
 )
 
 router.get(
-  '/getAllQuestions',
-  ({ query: { searchQuery, skip, limit } }, res) => {
-    const filter = searchQuery ? { $text: { $search: searchQuery } } : {}
-    const sortRule = searchQuery
-      ? { score: { $meta: 'textScore' } }
-      : { level: -1 }
-    return database
-      .getAllQuestions(Number(skip), Number(limit), filter, sortRule)
-      .then(data => res.send(data))
-      .catch(err => res.status(500).send(err))
-  },
-)
+  '/getQuestions',
+  ({ query: { searchQuery, skip, limit, userId, fetchType } }, res) => {
+    const { filter, sortRule } = (function assignFilterAndSortRule() {
+      switch (fetchType) {
+        case 'all':
+          return {
+            filter: searchQuery ? { $text: { $search: searchQuery } } : {},
+            sortRule: searchQuery
+              ? { score: { $meta: 'textScore' } }
+              : { level: -1 },
+          }
+        case 'user':
+          return {
+            filter: searchQuery
+              ? { authorId: userId, $text: { $search: searchQuery } }
+              : { authorId: userId },
+            sortRule: searchQuery
+              ? { score: { $meta: 'textScore' } }
+              : { date: -1 },
+          }
+        case 'favorite':
+          return {
+            filter: searchQuery
+              ? {
+                  favorite: { $all: [userId] },
+                  $text: { $search: searchQuery },
+                }
+              : { favorite: { $all: [userId] } },
+            sortRule: searchQuery
+              ? { score: { $meta: 'textScore' } }
+              : { date: -1 },
+          }
+        case 'unsolved':
+          return {
+            filter: searchQuery
+              ? { solved: false, $text: { $search: searchQuery } }
+              : { solved: false },
+            sortRule: searchQuery
+              ? { score: { $meta: 'textScore' } }
+              : { level: -1 },
+          }
+        default:
+          return null
+      }
+    })()
 
-router.get(
-  '/getUserQuestions',
-  ({ query: { searchQuery, skip, limit, userId } }, res) => {
-    const filter = searchQuery
-      ? { authorId: userId, $text: { $search: searchQuery } }
-      : { authorId: userId }
-    const sortRule = searchQuery
-      ? { score: { $meta: 'textScore' } }
-      : { date: -1 }
     return database
-      .getUserQuestions(Number(skip), Number(limit), filter, sortRule, userId)
-      .then(data => res.send(data))
-      .catch(err => res.status(500).send(err))
-  },
-)
-
-router.get(
-  '/getUserFavoriteQuestions',
-  ({ query: { searchQuery, skip, limit, userId } }, res) => {
-    const filter = searchQuery
-      ? { favorite: { $all: [userId] }, $text: { $search: searchQuery } }
-      : { favorite: { $all: [userId] } }
-    const sortRule = searchQuery
-      ? { score: { $meta: 'textScore' } }
-      : { date: -1 }
-    return database
-      .getUserFavoriteQuestions(Number(skip), Number(limit), filter, sortRule)
-      .then(data => res.send(data))
-      .catch(err => res.status(500).send(err))
-  },
-)
-
-router.get(
-  '/getUnsolvedQuestions',
-  ({ query: { searchQuery, skip, limit } }, res) => {
-    const filter = searchQuery
-      ? { solved: false, $text: { $search: searchQuery } }
-      : { solved: false }
-    const sortRule = searchQuery
-      ? { score: { $meta: 'textScore' } }
-      : { level: -1 }
-    return database
-      .getUnsolvedQuestions(Number(skip), Number(limit), filter, sortRule)
+      .getQuestions(Number(skip), Number(limit), filter, sortRule)
       .then(data => res.send(data))
       .catch(err => res.status(500).send(err))
   },
