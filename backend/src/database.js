@@ -23,10 +23,7 @@ exports.addQuestion = (username, userId, form) =>
     date: Date.now(),
   }).save()
 
-exports.deleteQuestion = questionId =>
-  Question.deleteOne({
-    _id: questionId,
-  })
+exports.deleteQuestion = questionId => Question.deleteOne({ _id: questionId })
 
 exports.getQuestions = (skip, limit, filter, sortRule) =>
   Question.find(filter, { voters: 0, score: { $meta: 'textScore' } })
@@ -45,9 +42,7 @@ exports.checkIfVotedAlreadyForQuestion = (userId, questionId) =>
 
 exports.updateQuestionLevel = (score, userId, questionId) =>
   Question.findOneAndUpdate(
-    {
-      _id: questionId,
-    },
+    { _id: questionId },
     {
       $inc: { level: score },
       $push: { voters: userId },
@@ -56,41 +51,24 @@ exports.updateQuestionLevel = (score, userId, questionId) =>
 
 exports.addToFavorite = (questionId, userId) =>
   Question.findOneAndUpdate(
-    {
-      _id: questionId,
-    },
-    {
-      $push: { favorite: userId },
-    },
+    { _id: questionId },
+    { $push: { favorite: userId } },
   )
 
 exports.removeFromFavorite = (questionId, userId) =>
   Question.findOneAndUpdate(
-    {
-      _id: questionId,
-    },
-    {
-      $pull: { favorite: userId },
-    },
+    { _id: questionId },
+    { $pull: { favorite: userId } },
   )
 
 exports.changeAnswersCount = (questionId, change) =>
   Question.findOneAndUpdate(
-    {
-      _id: questionId,
-    },
-    {
-      $inc: { answersCount: change },
-    },
+    { _id: questionId },
+    { $inc: { answersCount: change } },
   )
 
 exports.changeSolve = (questionId, bool) =>
-  Question.findOneAndUpdate(
-    {
-      _id: questionId,
-    },
-    { $set: { solved: bool } },
-  )
+  Question.findOneAndUpdate({ _id: questionId }, { $set: { solved: bool } })
 
 exports.storeAnswer = (questionId, username, userId, text) =>
   new Answer({
@@ -101,20 +79,10 @@ exports.storeAnswer = (questionId, username, userId, text) =>
     date: Date.now(),
   }).save()
 
-exports.deleteAnswer = answerId =>
-  Answer.deleteOne({
-    _id: answerId,
-  })
+exports.deleteAnswer = answerId => Answer.deleteOne({ _id: answerId })
 
 exports.editAnswer = (answerId, editedText) =>
-  Answer.findOneAndUpdate(
-    {
-      _id: answerId,
-    },
-    {
-      $set: { text: editedText },
-    },
-  )
+  Answer.findOneAndUpdate({ _id: answerId }, { $set: { text: editedText } })
 
 exports.getAnswers = questionId =>
   Answer.find({ questionId }, { voters: 0 })
@@ -131,9 +99,7 @@ exports.checkIfVotedAlreadyForAnswer = (userId, answerId) =>
 
 exports.updateAnswerLevel = (score, userId, answerId) =>
   Answer.findOneAndUpdate(
-    {
-      _id: answerId,
-    },
+    { _id: answerId },
     {
       $inc: { level: score },
       $push: { voters: userId },
@@ -145,10 +111,6 @@ exports.changeChosen = (answerId, bool) =>
 
 exports.addReply = (username, userId, answerId, text) =>
   Answer.findOneAndUpdate(
-    {
-      _id: answerId,
-    },
-    {
-      $push: { replys: { authorName: username, authorId: userId, text } },
-    },
+    { _id: answerId },
+    { $push: { replys: { authorName: username, authorId: userId, text } } },
   )

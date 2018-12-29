@@ -73,14 +73,19 @@ export default {
     nextValid: Boolean,
   },
 
-  created() {
+  created: function() {
     bus.$on('search-tag', tag => {
       this.searchString = tag
       this.searchAndFetch()
+      this.debouncedLog = _.debounce(this.log, 500)
     })
   },
 
   methods: {
+    log: function() {
+      console.log('salam')
+    },
+
     haveNumber() {
       return R.length(this.questions) > 0 ? true : false
     },
@@ -102,6 +107,7 @@ export default {
   watch: {
     searchString: function() {
       this.updateSearchQuery(this.searchString)
+      this.debouncedLog()
     },
   },
 }
