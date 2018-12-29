@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { Question } = require('./Model/questionModel')
 const { Answer } = require('./Model/answerModel')
+const { User } = require('./Model/userModel')
 
 exports.connect = function connect(name) {
   mongoose.connect(`mongodb://localhost/${name}`)
@@ -11,6 +12,33 @@ exports.connect = function connect(name) {
     console.log('connected to database successfully ...')
     db.db.dropDatabase()
   })
+}
+
+exports.addUser = (userName, userId) =>
+  User.findOneAndUpdate(
+    { userId },
+    {
+      $set: {},
+      $setOnInsert: {
+        userName,
+        score: 0,
+        favoriteQuestions: [],
+      },
+    },
+    { upsert: true },
+  )
+
+exports.getFavoriteQuestionIds = userId =>
+  User.findOne({ userId })
+    .select('favoriteQuestions')
+    .exec()
+
+exports.changeUserFavorite = (questionId, userId, action) => {
+  const update =
+    action === 'add'
+      ? { $push: { favoriteQuestions: questionId } }
+      : { $pull: { favoriteQuestions: questionId } }
+  return User.findOneAndUpdate({ userId }, update)
 }
 
 exports.addQuestion = (username, userId, form) =>
@@ -49,17 +77,13 @@ exports.updateQuestionLevel = (score, userId, questionId) =>
     },
   )
 
-exports.addToFavorite = (questionId, userId) =>
-  Question.findOneAndUpdate(
-    { _id: questionId },
-    { $push: { favorite: userId } },
-  )
-
-exports.removeFromFavorite = (questionId, userId) =>
-  Question.findOneAndUpdate(
-    { _id: questionId },
-    { $pull: { favorite: userId } },
-  )
+// exports.changeUserFavorite = (questionId, userId, action) => {
+//   const update =
+//     action === 'add'
+//       ? { $push: { favorite: userId } }
+//       : { $pull: { favorite: userId } }
+//   return Question.findOneAndUpdate({ _id: questionId }, update)
+// }
 
 exports.changeAnswersCount = (questionId, change) =>
   Question.findOneAndUpdate(

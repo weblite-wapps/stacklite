@@ -21,7 +21,7 @@ router.post('/questions/delete', ({ body, body: { questionId } }, res) =>
 
 router.get(
   '/questions/fetch',
-  ({ query: { searchQuery, skip, limit, userId, fetchType } }, res) => {
+  ({ query: { searchQuery, skip, limit, userId, fetchType, qIds } }, res) => {
     const { filter, sortRule } = (function assignFilterAndSortRule() {
       switch (fetchType) {
         case 'all':
@@ -44,10 +44,10 @@ router.get(
           return {
             filter: searchQuery
               ? {
-                  favorite: { $all: [userId] },
+                  _id: { $in: qIds },
                   $text: { $search: searchQuery },
                 }
-              : { favorite: { $all: [userId] } },
+              : { _id: { $in: qIds } },
             sortRule: searchQuery
               ? { score: { $meta: 'textScore' } }
               : { date: -1 },
@@ -69,21 +69,6 @@ router.get(
     return database
       .getQuestions(Number(skip), Number(limit), filter, sortRule)
       .then(data => res.send(data))
-      .catch(err => res.status(500).send(err))
-  },
-)
-
-router.post(
-  '/questions/change-favorite',
-  ({ body, body: { questionId, userId, action } }, res) => {
-    if (action === 'remove')
-      return database
-        .removeFromFavorite(questionId, userId)
-        .then(() => res.send(body))
-        .catch(err => res.status(500).send(err))
-    return database
-      .addToFavorite(questionId, userId)
-      .then(() => res.send(body))
       .catch(err => res.status(500).send(err))
   },
 )

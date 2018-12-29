@@ -25,6 +25,8 @@
         v-for="(question) in questions"
         :key="question._id"
         :question="question"
+        :favoriteQuestionIds="favoriteQuestionIds"
+        :getFavoriteQuestionIds="getFavoriteQuestionIds"
         :userId="userId"
         :updateQuestionLevel="updateQuestionLevel"
         :changeUserFavorite="changeUserFavorite"
@@ -60,6 +62,8 @@ export default {
 
   props: {
     questions: [Array, Object],
+    favoriteQuestionIds: Array,
+    getFavoriteQuestionIds: Function,
     userId: String,
     state: String,
     switchState: Function,

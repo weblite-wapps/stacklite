@@ -10,7 +10,6 @@ const questionSchema = new mongoose.Schema({
   voters: { type: Array, default: [] },
   answersCount: { type: Number, default: 0 },
   date: Number,
-  favorite: { type: Array, default: [] },
   solved: { type: Boolean, default: false },
 })
 

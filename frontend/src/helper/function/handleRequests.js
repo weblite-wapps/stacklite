@@ -6,6 +6,38 @@ import bus from './bus'
 import config from '../../config'
 
 export default {
+  //users
+  addUser: (username, userId) =>
+    request
+      .post(config.server + '/users/add')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ username, userId })
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured in adding user...'),
+      ),
+
+  getFavoriteQuestionIds: userId =>
+    request
+      .get(config.server + '/users/favorites/fetch')
+      .set('Access-Control-Allow-Origin', '*')
+      .query({ userId })
+      .then(res => res.body)
+      .catch(() =>
+        bus.$emit('show-message', 'Error has occured getting users ...'),
+      ),
+
+  changeUserFavorite: (questionId, userId, action) =>
+    request
+      .post(config.server + '/users/favorites/change')
+      .set('Access-Control-Allow-Origin', '*')
+      .send({ questionId, userId, action })
+      .catch(() =>
+        bus.$emit(
+          'show-message',
+          'Error has occured in changing user favorite...',
+        ),
+      ),
+
   //questions
   postQuestion: (username, userId, form) =>
     request
@@ -25,11 +57,11 @@ export default {
         bus.$emit('show-message', 'Error has occured in deleting question...'),
       ),
 
-  getQuestions: (searchQuery, skip, limit, userId, fetchType) => {
+  getQuestions: (searchQuery, skip, limit, userId, fetchType, qIds) => {
     return request
       .get(config.server + '/questions/fetch')
       .set('Access-Control-Allow-Origin', '*')
-      .query({ searchQuery, skip, limit, userId, fetchType })
+      .query({ searchQuery, skip, limit, userId, fetchType, qIds })
       .then(res => res.body)
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in getting questions...'),
@@ -57,18 +89,6 @@ export default {
       .send({ score, userId, questionId })
       .catch(() =>
         bus.$emit('show-message', 'Error has occured in updating level...'),
-      ),
-
-  changeUserFavorite: (questionId, userId, action) =>
-    request
-      .post(config.server + '/questions/change-favorite')
-      .set('Access-Control-Allow-Origin', '*')
-      .send({ questionId, userId, action })
-      .catch(() =>
-        bus.$emit(
-          'show-message',
-          'Error has occured in changing user favorite...',
-        ),
       ),
 
   changeSolve: (questionId, bool) =>

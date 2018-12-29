@@ -33,7 +33,6 @@
       <p class="footerItem">Date: {{formattedDate}}</p>
       <button @click="goToAnswersMode()" type="submit" class="answers">answers</button>
       <p class="ansNumber">{{numberOfAnswers}}</p>
-      <p>{{question.date}}</p>
     </div>
   </div>
 </template>
@@ -50,6 +49,8 @@ export default {
 
   props: {
     question: Object,
+    favoriteQuestionIds: Array,
+    getFavoriteQuestionIds: Function,
     userId: String,
     updateQuestionLevel: Function,
     changeUserFavorite: Function,
@@ -77,6 +78,7 @@ export default {
       this.favorite
         ? this.changeUserFavorite(this.question._id, 'remove')
         : this.changeUserFavorite(this.question._id, 'add')
+      this.getFavoriteQuestionIds()
       this.favorite = !this.favorite
     },
 
@@ -96,7 +98,9 @@ export default {
       this.level = question.level
       this.numberOfAnswers = question.answersCount
       this.favorite =
-        R.indexOf(this.userId, question.favorite) === -1 ? false : true
+        R.indexOf(this.question._id, this.favoriteQuestionIds) === -1
+          ? false
+          : true
     },
   },
 
@@ -105,7 +109,9 @@ export default {
     this.level = question.level
     this.numberOfAnswers = question.answersCount
     this.favorite =
-      R.indexOf(this.userId, question.favorite) === -1 ? false : true
+      R.indexOf(this.question._id, this.favoriteQuestionIds) === -1
+        ? false
+        : true
     const date = new Date(this.question.date)
     this.formattedDate =
       date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()

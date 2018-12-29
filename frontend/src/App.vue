@@ -11,6 +11,8 @@
     <Questions
       v-show="state === 'questionsMode'"
       :questions="questions"
+      :favoriteQuestionIds="favoriteQuestionIds"
+      :getFavoriteQuestionIds="getFavoriteQuestionIds"
       :userId="userId"
       :state="state"
       :fetchQuestions="fetchQuestions"
@@ -75,13 +77,14 @@ export default {
 
   data() {
     return {
-      username: 'Armin',
-      userId: '2',
+      username: 'Srmin',
+      userId: '10',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
       answers: [],
       question: {},
+      favoriteQuestionIds: [],
       searchQuery: '',
       pageNumber: 1,
       nextValid: true,
@@ -100,6 +103,7 @@ export default {
 
   mounted: function() {
     this.fetchQuestions('all')
+    this.addUser()
   },
 
   methods: {
@@ -137,6 +141,12 @@ export default {
       }
     },
 
+    getFavoriteQuestionIds() {
+      requests
+        .getFavoriteQuestionIds(this.userId)
+        .then(res => (this.favoriteQuestionIds = res))
+    },
+
     fetchQuestions(fetchType) {
       this.pageNumber =
         this.fetchQuestionState === fetchType ? this.pageNumber : 1
@@ -147,6 +157,7 @@ export default {
           R.add(this.fetchAmount, 1),
           this.userId,
           fetchType,
+          this.favoriteQuestionIds,
         )
         .then(res => {
           this.setQuestions(res)
@@ -205,6 +216,12 @@ export default {
         this.pageNumber = 1
         this.switchStateWithFetch('questionsMode')
       })
+    },
+
+    addUser() {
+      requests
+        .addUser(this.username, this.userId)
+        .then(() => bus.$emit('show-message', 'user added...'))
     },
 
     toggleChosen(answerId, bool) {
