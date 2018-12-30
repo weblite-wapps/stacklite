@@ -10,7 +10,7 @@
       >
       <i @click="searchAndFetch" class="searchButton">search</i>
       
-      <button @click="switchState('askingMode')" type="sbmit" class="askButton">ask question</button>
+      <button @click="switchState('asking')" type="sbmit" class="askButton">ask question</button>
     </div>
 
     <div class="inRow">
@@ -67,6 +67,7 @@ export default {
     deleteQuestion: Function,
     updateSearchQuery: Function,
     changePage: Function,
+    properFetch: Function,
     pageNumber: Number,
     nextValid: Boolean,
   },
@@ -98,14 +99,17 @@ export default {
     searchAndFetch() {
       this.updateSearchQuery(this.searchString)
       this.changePage()
+      this.properFetch()
     },
 
     goPrevious() {
       this.changePage(-1)
+      this.properFetch()
     },
 
     goNext() {
       this.changePage(1)
+      this.properFetch()
     },
   },
 }

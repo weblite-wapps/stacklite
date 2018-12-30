@@ -2,14 +2,10 @@
   <div class="root">
     <Header appName="Stack Overflow" :switchState="switchState"/>
 
-    <QuestionForm
-      v-if="state === 'askingMode'"
-      :addQuestion="addQuestion"
-      :switchState="switchState"
-    />
+    <QuestionForm v-if="state === 'asking'" :addQuestion="addQuestion" :switchState="switchState"/>
 
     <Questions
-      v-show="state === 'questionsMode'"
+      v-show="state === 'questions'"
       :questions="questions"
       :favoriteQuestionIds="favoriteQuestionIds"
       :getFavoriteQuestionIds="getFavoriteQuestionIds"
@@ -21,13 +17,14 @@
       :switchState="switchState"
       :deleteQuestion="deleteQuestion"
       :updateSearchQuery="updateSearchQuery"
+      :properFetch="properFetch"
       :changePage="changePage"
       :nextValid="nextValid"
       :pageNumber="pageNumber"
     />
 
     <Answers
-      v-show="state === 'answersMode'"
+      v-show="state === 'answers'"
       :userId="userId"
       :userName="username"
       :questionTitle="question.title"
@@ -84,16 +81,16 @@ export default {
     return {
       username: 'armin',
       userId: '1',
-      questions: [],
-      state: 'questionsMode',
+      state: 'questions',
       fetchQuestionState: 'all',
-      answers: [],
+      questions: [],
       question: {},
+      answers: [],
       favoriteQuestionIds: [],
       searchQuery: '',
       pageNumber: 1,
       nextValid: true,
-      fetchAmount: 3, /// set to more than 1
+      fetchAmount: 3, // set to more than 1
     }
   },
 
@@ -104,6 +101,7 @@ export default {
   },
 
   watch: {
+    //TODO hande it!
     fetchQuestionState: function() {
       this.pageNumber = 1
     },
@@ -113,8 +111,10 @@ export default {
     W && webliteHandler(this)
     bus.$on('answers-mode', question => {
       this.question = question
+      //TODO
+      // insert setSelectedQuestion(question)
       this.fetchAnswers()
-      this.switchState('answersMode')
+      this.switchState('answers')
     })
   },
 
@@ -128,24 +128,9 @@ export default {
       this.state = state
     },
 
-    properFetch() {
-      this.fetchQuestions(this.fetchQuestionState)
-    },
-
-    switchStateWithFetch(state) {
-      this.properFetch()
-      this.switchState(state)
-    },
-
     updateSearchQuery(searchString) {
       this.searchQuery = searchString
       if (!searchString) this.changePage()
-    },
-
-    changePage(amount) {
-      if (amount === undefined) this.pageNumber = 1
-      else this.pageNumber = R.add(this.pageNumber, amount)
-      this.properFetch()
     },
 
     setQuestions(res) {
@@ -180,6 +165,20 @@ export default {
           this.setQuestions(res)
           this.fetchQuestionState = fetchType
         })
+    },
+
+    properFetch() {
+      this.fetchQuestions(this.fetchQuestionState)
+    },
+
+    switchStateWithFetch(state) {
+      this.properFetch()
+      this.switchState(state)
+    },
+
+    changePage(amount) {
+      if (amount === undefined) this.pageNumber = 1
+      else this.pageNumber = R.add(this.pageNumber, amount)
     },
 
     fetchAnswers() {
@@ -231,7 +230,7 @@ export default {
     addQuestion(form) {
       requests.postQuestion(this.username, this.userId, form).then(() => {
         this.pageNumber = 1
-        this.switchStateWithFetch('questionsMode')
+        this.switchStateWithFetch('questions')
       })
     },
 

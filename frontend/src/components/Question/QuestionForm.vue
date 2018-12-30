@@ -11,7 +11,7 @@
 
     <div class="button">
       <button @click="sendQuestionToDB" type="submit" class="done">Done</button>
-      <button @click="switchState('questionsMode')" type="submit" class="back">back</button>
+      <button @click="switchState('questions')" type="submit" class="back">back</button>
     </div>
   </div>
 </template>

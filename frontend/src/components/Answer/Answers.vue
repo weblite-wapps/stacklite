@@ -1,7 +1,7 @@
 <template>
   <div class="ansRoot">
     <button
-      @click="switchStateWithFetch('questionsMode')"
+      @click="switchStateWithFetch('questions')"
       type="submit"
       class="backToQuestions"
     >Questions</button>
@@ -9,7 +9,7 @@
     <p class="qTitle">{{questionTitle}}</p>
     <p/>
 
-    <AnswerForm v-if="state === 'answersMode'" :storeAnswer="storeAnswer"/>
+    <AnswerForm v-if="state === 'answers'" :storeAnswer="storeAnswer"/>
 
     <div class="ansCards">
       <AnswerCard
