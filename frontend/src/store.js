@@ -17,7 +17,7 @@ export default new Vuex.Store({
     // stuff came from weblite
     title: 'STACKOVERFLOW',
     username: 'armin',
-    userId: '1',
+    userId: '31',
 
     // view states
     state: 'questions', // questions, answers, asking
@@ -79,6 +79,10 @@ export default new Vuex.Store({
 
     setAnswers(state, answers) {
       state.answers = answers
+    },
+
+    updateSearchQuery(state, searchString) {
+      state.searchQuery = searchString
     },
   },
 

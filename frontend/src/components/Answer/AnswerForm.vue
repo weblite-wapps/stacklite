@@ -10,10 +10,6 @@
 import bus from '../../helper/function/bus'
 
 export default {
-  props: {
-    storeAnswer: Function,
-  },
-
   data() {
     return {
       text: '',
@@ -26,7 +22,7 @@ export default {
       if (R.trim(text) === '')
         bus.$emit('show-message', 'please fill all requirements ...')
       else {
-        this.storeAnswer(text)
+        this.$store.dispatch('storeAnswer', text)
         this.clean()
       }
     },

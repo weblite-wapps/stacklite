@@ -1,36 +1,26 @@
 <template>
   <div class="ansRoot">
     <button
-      @click="switchStateWithFetch('questions')"
+      @click="$store.dispatch('switchStateWithFetch', 'questions')"
       type="submit"
       class="backToQuestions"
     >Questions</button>
 
-    <p class="qTitle">{{questionTitle}}</p>
+    <p class="qTitle">{{question.title}}</p>
     <p/>
 
-    <AnswerForm v-if="state === 'answers'" :storeAnswer="storeAnswer"/>
+    <AnswerForm v-if="state === 'answers'"/>
 
     <div class="ansCards">
-      <AnswerCard
-        v-for="(answer, i) in answers"
-        :key="i"
-        :answer="answer"
-        :userId="userId"
-        :userName="userName"
-        :questionWriter="questionWriter"
-        :updateAnswerLevel="updateAnswerLevel"
-        :storeReply="storeReply"
-        :state="state"
-        :toggleChosen="toggleChosen"
-        :deleteAnswer="deleteAnswer"
-        :editAnswer="editAnswer"
-      />
+      <AnswerCard v-for="(answer, i) in answers" :key="i" :answer="answer"/>
     </div>
   </div>
 </template>
 
 <script>
+// modules
+import { mapState } from 'vuex'
+
 //components
 import AnswerForm from './AnswerForm'
 import AnswerCard from './AnswerCard'
@@ -41,21 +31,7 @@ export default {
     AnswerCard,
   },
 
-  props: {
-    userId: String,
-    userName: String,
-    questionTitle: String,
-    questionWriter: String,
-    answers: Array,
-    state: String,
-    switchStateWithFetch: Function,
-    storeAnswer: Function,
-    storeReply: Function,
-    updateAnswerLevel: Function,
-    toggleChosen: Function,
-    deleteAnswer: Function,
-    editAnswer: Function,
-  },
+  computed: mapState(['question', 'answers', 'state']),
 }
 </script>
 

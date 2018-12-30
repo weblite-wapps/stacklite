@@ -10,23 +10,21 @@
     <textarea v-model="tag" class="tag" maxlength="25"></textarea>
 
     <div class="button">
-      <button @click="sendQuestionToDB" type="submit" class="done">Done</button>
+      <button @click="sendQuestion" type="submit" class="done">Done</button>
       <button @click="switchState('questions')" type="submit" class="back">back</button>
     </div>
   </div>
 </template>
 
 <script>
+// modules
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 //helper
 import bus from '../../helper/function/bus'
 
 export default {
   name: 'QuestionForm',
-
-  props: {
-    addQuestion: Function,
-    switchState: Function,
-  },
 
   data() {
     return {
@@ -36,8 +34,13 @@ export default {
     }
   },
 
+  computed: mapState(['state']),
+
   methods: {
-    sendQuestionToDB() {
+    ...mapMutations(['switchState']),
+    ...mapActions(['addQuestion']),
+
+    sendQuestion() {
       const valid =
         R.trim(this.title) === '' || R.trim(this.text) === '' ? false : true
       if (!valid) bus.$emit('show-message', 'please fill all requirements ...')

@@ -21,29 +21,23 @@
     </div>
 
     <div class="cards">
-      <QuestionCard
-        v-for="(question) in questions"
-        :key="question._id"
-        :question="question"
-        :favoriteQuestionIds="favoriteQuestionIds"
-        :getFavoriteQuestionIds="getFavoriteQuestionIds"
-        :userId="userId"
-        :updateQuestionLevel="updateQuestionLevel"
-        :changeUserFavorite="changeUserFavorite"
-        :deleteQuestion="deleteQuestion"
-      />
+      <QuestionCard v-for="(question) in questions" :key="question._id" :question="question"/>
     </div>
     <div class="inRow">
-      <p v-if="pageNumber !== 1" @click="goPrevious()" class="prePage">prev</p>
+      <p v-if="pageNumber !== 1" @click="changePageAndFetch(-1)" class="prePage">prev</p>
       <p v-if="haveNumber()">{{pageNumber}}</p>
-      <p v-if="nextValid" @click="goNext()" class="nextPage">next</p>
+      <p v-if="nextValid" @click="changePageAndFetch(1)" class="nextPage">next</p>
     </div>
   </div>
 </template>
 
 <script>
+// modules
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 //helper
 import bus from '../../helper/function/bus'
+
 //components
 import QuestionCard from './QuestionCard'
 
@@ -54,33 +48,17 @@ export default {
     QuestionCard,
   },
 
-  props: {
-    questions: [Array, Object],
-    favoriteQuestionIds: Array,
-    getFavoriteQuestionIds: Function,
-    userId: String,
-    state: String,
-    switchState: Function,
-    fetchQuestions: Function,
-    updateQuestionLevel: Function,
-    changeUserFavorite: Function,
-    deleteQuestion: Function,
-    updateSearchQuery: Function,
-    changePage: Function,
-    properFetch: Function,
-    pageNumber: Number,
-    nextValid: Boolean,
-  },
-
   data() {
     return {
       searchString: '',
     }
   },
 
+  computed: mapState(['questions', 'pageNumber', 'nextValid']),
+
   watch: {
     searchString: function() {
-      this.updateSearchQuery(this.searchString)
+      if (!R.length(this.searchString)) this.searchAndFetch()
     },
   },
 
@@ -91,7 +69,16 @@ export default {
     })
   },
 
+  mounted: function() {
+    this.fetchQuestions('all')
+    this.addUser()
+  },
+
   methods: {
+    ...mapMutations(['switchState', 'updateSearchQuery', 'changePage']),
+
+    ...mapActions(['fetchQuestions', 'properFetch', 'addUser']),
+
     haveNumber() {
       return R.length(this.questions) > 0 ? true : false
     },
@@ -102,13 +89,8 @@ export default {
       this.properFetch()
     },
 
-    goPrevious() {
-      this.changePage(-1)
-      this.properFetch()
-    },
-
-    goNext() {
-      this.changePage(1)
+    changePageAndFetch(direction) {
+      this.changePage(direction)
       this.properFetch()
     },
   },

@@ -12,7 +12,6 @@ import bus from '../../helper/function/bus'
 export default {
   props: {
     answerId: String,
-    storeReply: Function,
     toggleReplyPermission: Function,
     addReply: Function,
     allReplys: Function,
@@ -26,11 +25,11 @@ export default {
 
   methods: {
     checkAndSaveReply() {
-      const { text } = this
+      const { answerId, text } = this
       if (text === '')
         bus.$emit('show-message', 'empty reply does not allowed ...')
       else {
-        this.storeReply(this.answerId, text)
+        this.$store.dispatch('storeReply', { answerId, text })
         this.addReply(text)
         this.clear()
         this.toggleReplyPermission()

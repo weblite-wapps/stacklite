@@ -38,9 +38,13 @@
 </template>
 
 <script>
+// modules
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 //helper
 import bus from '../../helper/function/bus'
 import TagShow from '../../helper/components/TagShow'
+import requests from '../../helper/function/handleRequests'
 
 export default {
   name: 'QuestionCard',
@@ -49,12 +53,6 @@ export default {
 
   props: {
     question: Object,
-    favoriteQuestionIds: Array,
-    getFavoriteQuestionIds: Function,
-    userId: String,
-    updateQuestionLevel: Function,
-    changeUserFavorite: Function,
-    deleteQuestion: Function,
   },
 
   data() {
@@ -66,6 +64,8 @@ export default {
       tags: [],
     }
   },
+
+  computed: mapState(['favoriteQuestionIds', 'userId']),
 
   watch: {
     question: function() {
@@ -94,6 +94,13 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'getFavoriteQuestionIds',
+      'updateQuestionLevel',
+      'changeUserFavorite',
+      'deleteQuestion',
+    ]),
+
     share() {},
 
     goToAnswersMode() {
@@ -102,8 +109,14 @@ export default {
 
     changeFavorite() {
       this.favorite
-        ? this.changeUserFavorite(this.question._id, 'remove')
-        : this.changeUserFavorite(this.question._id, 'add')
+        ? this.changeUserFavorite({
+            questionId: this.question._id,
+            action: 'remove',
+          })
+        : this.changeUserFavorite({
+            questionId: this.question._id,
+            action: 'add',
+          })
       this.getFavoriteQuestionIds()
       this.favorite = !this.favorite
     },
@@ -111,7 +124,7 @@ export default {
     changeLevel(score) {
       const { question } = this
       if (this.userId !== question.authorId && this.level === question.level) {
-        this.updateQuestionLevel(score, question._id)
+        this.updateQuestionLevel({ score, questionId: question._id })
           .then(() => (this.level += score))
           .catch(() => (this.level += 0))
       }

@@ -14,7 +14,6 @@ export default {
   props: {
     answer: Object,
     toggleEditState: Function,
-    editAnswer: Function,
   },
 
   data() {
@@ -35,7 +34,10 @@ export default {
           'if you want to left answer text empty, better delete it.',
         )
       else {
-        this.editAnswer(this.answer._id, this.editedText)
+        this.$store.dispatch('editAnswer', {
+          answerId: this.answer._id,
+          editedText: this.editedText,
+        })
         this.answer.text = this.editedText
         this.toggleEditState()
       }

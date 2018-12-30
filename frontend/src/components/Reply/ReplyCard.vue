@@ -1,7 +1,7 @@
 <template>
   <div class="replyCard">
     <pre class="breakLine"> replyText: {{reply.text}} </pre>
-    <p class="replyAuthor"> author: {{reply.authorName}} </p>
+    <p class="replyAuthor">author: {{reply.authorName}}</p>
   </div>
 </template>
 

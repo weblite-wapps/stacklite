@@ -24,12 +24,14 @@
 
 
 <script>
+// modules
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'Header',
 
   props: {
     appName: String,
-    switchState: Function,
   },
 
   data() {
@@ -43,13 +45,15 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['switchState']),
+
     showSigniture() {
       this.switchState('signiture')
       this.icon = 'back'
     },
 
     backToQuestions() {
-      this.switchState('questionsMode')
+      this.switchState('questions')
       this.icon = 'description'
     },
   },

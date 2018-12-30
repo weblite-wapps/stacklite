@@ -15,12 +15,7 @@
         type="submit"
         class="editAns"
       >border_color</i>
-      <AnswerEditForm
-        v-if="isEditState"
-        :answer="answer"
-        :toggleEditState="toggleEditState"
-        :editAnswer="editAnswer"
-      />
+      <AnswerEditForm v-if="isEditState" :answer="answer" :toggleEditState="toggleEditState"/>
 
       <CheckBox :isWriter="isWriter" @click="changeChosen()" :selected="chosen"/>
       <i @click="changeLevel(1)" type="submit" class="upLevelAns">arrow_drop_up</i>
@@ -39,7 +34,6 @@
       <ReplyForm
         v-show="replyPermission === true"
         :answerId="answer._id"
-        :storeReply="storeReply"
         :toggleReplyPermission="toggleReplyPermission"
         :allReplys="allReplys"
         :addReply="addReply"
@@ -56,6 +50,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 //components
 import ReplyForm from '../Reply/ReplyForm'
 import ReplyCard from '../Reply/ReplyCard'
@@ -72,15 +68,6 @@ export default {
 
   props: {
     answer: Object,
-    userId: String,
-    userName: String,
-    questionWriter: String,
-    updateAnswerLevel: Function,
-    storeReply: Function,
-    state: String,
-    toggleChosen: Function,
-    deleteAnswer: Function,
-    editAnswer: Function,
   },
 
   data() {
@@ -96,8 +83,10 @@ export default {
   },
 
   computed: {
+    ...mapState(['userId', 'userName', 'question', 'state']),
+
     isWriter() {
-      return this.userId === this.questionWriter ? true : false
+      return this.userId === this.question.authorId ? true : false
     },
   },
 
@@ -124,6 +113,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['updateAnswerLevel', 'toggleChosen', 'deleteAnswer']),
+
     toggleEditState() {
       this.isEditState = !this.isEditState
     },
@@ -131,7 +122,7 @@ export default {
     changeLevel(score) {
       const { answer } = this
       if (this.level === answer.level && this.userId !== answer.authorId)
-        this.updateAnswerLevel(score, answer._id)
+        this.updateAnswerLevel({ score, answerId: answer._id })
           .then(() => (this.level += score))
           .catch(() => (this.level += 0))
     },
@@ -152,7 +143,7 @@ export default {
       if (this.isWriter) {
         this.chosen = !this.chosen
         this.answer.chosen = this.chosen
-        this.toggleChosen(this.answer._id, this.chosen)
+        this.toggleChosen({ answerId: this.answer._id, bool: this.chosen })
       }
     },
 

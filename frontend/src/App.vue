@@ -1,44 +1,12 @@
 <template>
   <div class="root">
-    <Header appName="Stack Overflow" :switchState="switchState"/>
+    <Header appName="Stack Overflow"/>
 
-    <QuestionForm v-if="state === 'asking'" :addQuestion="addQuestion" :switchState="switchState"/>
+    <QuestionForm v-if="state === 'asking'"/>
 
-    <Questions
-      v-show="state === 'questions'"
-      :questions="questions"
-      :favoriteQuestionIds="favoriteQuestionIds"
-      :getFavoriteQuestionIds="getFavoriteQuestionIds"
-      :userId="userId"
-      :state="state"
-      :fetchQuestions="fetchQuestions"
-      :updateQuestionLevel="updateQuestionLevel"
-      :changeUserFavorite="changeUserFavorite"
-      :switchState="switchState"
-      :deleteQuestion="deleteQuestion"
-      :updateSearchQuery="updateSearchQuery"
-      :properFetch="properFetch"
-      :changePage="changePage"
-      :nextValid="nextValid"
-      :pageNumber="pageNumber"
-    />
+    <Questions v-show="state === 'questions'"/>
 
-    <Answers
-      v-show="state === 'answers'"
-      :userId="userId"
-      :userName="username"
-      :questionTitle="question.title"
-      :questionWriter="question.authorId"
-      :answers="answers"
-      :state="state"
-      :switchStateWithFetch="switchStateWithFetch"
-      :storeAnswer="storeAnswer"
-      :storeReply="storeReply"
-      :updateAnswerLevel="updateAnswerLevel"
-      :toggleChosen="toggleChosen"
-      :deleteAnswer="deleteAnswer"
-      :editAnswer="editAnswer"
-    />
+    <Answers v-show="state === 'answers'"/>
 
     <SnackBar/>
   </div>
@@ -46,6 +14,9 @@
 
 
 <script>
+// modules
+import { mapState } from 'vuex'
+
 // components
 import QuestionForm from './components/Question/QuestionForm'
 import Questions from './components/Question/Questions'
@@ -55,7 +26,6 @@ import SnackBar from './helper/components/SnackBar'
 
 // helper
 import webliteHandler from './helper/function/weblite.api'
-import requests from './helper/function/handleRequests'
 import bus from './helper/function/bus'
 
 // R && W
@@ -77,209 +47,15 @@ export default {
     SnackBar,
   },
 
-  data() {
-    return {
-      username: 'armin',
-      userId: '1',
-      state: 'questions',
-      fetchQuestionState: 'all',
-      questions: [],
-      question: {},
-      answers: [],
-      favoriteQuestionIds: [],
-      searchQuery: '',
-      pageNumber: 1,
-      nextValid: true,
-      fetchAmount: 3, // set to more than 1
-    }
-  },
-
-  computed: {
-    skip() {
-      return R.multiply(R.subtract(this.pageNumber, 1), this.fetchAmount)
-    },
-  },
-
-  watch: {
-    //TODO hande it!
-    fetchQuestionState: function() {
-      this.pageNumber = 1
-    },
-  },
+  computed: mapState(['state']),
 
   created() {
     W && webliteHandler(this)
     bus.$on('answers-mode', question => {
-      this.question = question
-      //TODO
-      // insert setSelectedQuestion(question)
-      this.fetchAnswers()
-      this.switchState('answers')
+      this.$store.commit('setSelectedQuestion', question)
+      this.$store.dispatch('fetchAnswers')
+      this.$store.commit('switchState', 'answers')
     })
-  },
-
-  mounted: function() {
-    this.fetchQuestions('all')
-    this.addUser()
-  },
-
-  methods: {
-    switchState(state) {
-      this.state = state
-    },
-
-    updateSearchQuery(searchString) {
-      this.searchQuery = searchString
-      if (!searchString) this.changePage()
-    },
-
-    setQuestions(res) {
-      if (typeof res === Object || R.length(res) <= this.fetchAmount) {
-        this.questions = res
-        this.nextValid = false
-      } else {
-        this.questions = R.dropLast(1, res)
-        this.nextValid = true
-      }
-    },
-
-    getFavoriteQuestionIds() {
-      requests
-        .getFavoriteQuestionIds(this.userId)
-        .then(res => (this.favoriteQuestionIds = res))
-    },
-
-    fetchQuestions(fetchType) {
-      this.pageNumber =
-        this.fetchQuestionState === fetchType ? this.pageNumber : 1
-      requests
-        .getQuestions(
-          this.searchQuery,
-          this.skip,
-          R.add(this.fetchAmount, 1),
-          this.userId,
-          fetchType,
-          this.favoriteQuestionIds,
-        )
-        .then(res => {
-          this.setQuestions(res)
-          this.fetchQuestionState = fetchType
-        })
-    },
-
-    properFetch() {
-      this.fetchQuestions(this.fetchQuestionState)
-    },
-
-    switchStateWithFetch(state) {
-      this.properFetch()
-      this.switchState(state)
-    },
-
-    changePage(amount) {
-      if (amount === undefined) this.pageNumber = 1
-      else this.pageNumber = R.add(this.pageNumber, amount)
-    },
-
-    fetchAnswers() {
-      requests.getAnswers(this.question._id).then(res => (this.answers = res))
-    },
-
-    storeAnswer(text) {
-      requests
-        .storeAnswer(this.question._id, this.username, this.userId, text)
-        .then(() =>
-          requests
-            .changeAnswersCount(this.question._id, 1)
-            .then(() => this.fetchAnswers()),
-        )
-    },
-
-    storeReply(answerId, text) {
-      requests
-        .addReply(this.username, this.userId, answerId, text)
-        .then(() => bus.$emit('show-message', 'reply ...'))
-    },
-
-    updateQuestionLevel(score, questionId) {
-      return requests
-        .checkIfVotedAlreadyForQuestion(this.userId, questionId)
-        .then(res => {
-          if (res === null)
-            requests
-              .updateQuestionLevel(score, this.userId, questionId)
-              .then(() =>
-                bus.$emit('show-message', 'question level updated ...'),
-              )
-          else return Promise.reject()
-        })
-    },
-
-    updateAnswerLevel(score, answerId) {
-      return requests
-        .checkIfVotedAlreadyForAnswer(this.userId, answerId)
-        .then(res => {
-          if (res === null)
-            requests
-              .updateAnswerLevel(score, this.userId, answerId)
-              .then(() => bus.$emit('show-message', 'answer level updated ...'))
-          else return Promise.reject()
-        })
-    },
-
-    addQuestion(form) {
-      requests.postQuestion(this.username, this.userId, form).then(() => {
-        this.pageNumber = 1
-        this.switchStateWithFetch('questions')
-      })
-    },
-
-    addUser() {
-      requests
-        .addUser(this.username, this.userId)
-        .then(() => bus.$emit('show-message', 'user added...'))
-    },
-
-    toggleChosen(answerId, bool) {
-      requests.toggleChosen(answerId, bool).then(() => {
-        const chosens = R.map(answer => answer.chosen, this.answers)
-        const bool = R.reduce(R.or, false, chosens)
-        requests
-          .changeSolve(this.question._id, bool)
-          .then(() =>
-            bus.$emit('show-message', 'toggle and change solved happend ...'),
-          )
-      })
-    },
-
-    changeUserFavorite(questionId, action) {
-      requests
-        .changeUserFavorite(questionId, this.userId, action)
-        .then(() => bus.$emit('show-message', 'user favorite changed...'))
-    },
-
-    deleteQuestion(questionId) {
-      requests.deleteQuestion(questionId).then(() => {
-        this.properFetch()
-        this.fetchAnswers()
-      })
-    },
-
-    deleteAnswer(answerId) {
-      requests
-        .deleteAnswer(answerId)
-        .then(() =>
-          requests
-            .changeAnswersCount(this.question._id, -1)
-            .then(() => this.fetchAnswers()),
-        )
-    },
-
-    editAnswer(answerId, editedText) {
-      requests
-        .editAnswer(answerId, editedText)
-        .then(() => bus.$emit('show-message', 'answer edited ...'))
-    },
   },
 }
 </script>
