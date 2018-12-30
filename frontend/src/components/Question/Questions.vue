@@ -54,12 +54,6 @@ export default {
     QuestionCard,
   },
 
-  data() {
-    return {
-      searchString: '',
-    }
-  },
-
   props: {
     questions: [Array, Object],
     favoriteQuestionIds: Array,
@@ -77,19 +71,26 @@ export default {
     nextValid: Boolean,
   },
 
+  data() {
+    return {
+      searchString: '',
+    }
+  },
+
+  watch: {
+    searchString: function() {
+      this.updateSearchQuery(this.searchString)
+    },
+  },
+
   created: function() {
     bus.$on('search-tag', tag => {
       this.searchString = tag
       this.searchAndFetch()
-      this.debouncedLog = _.debounce(this.log, 500)
     })
   },
 
   methods: {
-    log: function() {
-      console.log('salam')
-    },
-
     haveNumber() {
       return R.length(this.questions) > 0 ? true : false
     },
@@ -105,13 +106,6 @@ export default {
 
     goNext() {
       this.changePage(1)
-    },
-  },
-
-  watch: {
-    searchString: function() {
-      this.updateSearchQuery(this.searchString)
-      this.debouncedLog()
     },
   },
 }

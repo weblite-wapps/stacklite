@@ -11,16 +11,20 @@ import bus from '../../helper/function/bus'
 import { object } from 'prop-types'
 
 export default {
+  props: {
+    answer: Object,
+    toggleEditState: Function,
+    editAnswer: Function,
+  },
+
   data() {
     return {
       editedText: '',
     }
   },
 
-  props: {
-    answer: Object,
-    toggleEditState: Function,
-    editAnswer: Function,
+  mounted: function() {
+    this.editedText = this.answer.text
   },
 
   methods: {
@@ -36,10 +40,6 @@ export default {
         this.toggleEditState()
       }
     },
-  },
-
-  mounted: function() {
-    this.editedText = this.answer.text
   },
 }
 </script>

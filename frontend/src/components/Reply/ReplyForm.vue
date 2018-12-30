@@ -10,18 +10,18 @@
 import bus from '../../helper/function/bus'
 
 export default {
-  data() {
-    return {
-      text: '',
-    }
-  },
-
   props: {
     answerId: String,
     storeReply: Function,
     toggleReplyPermission: Function,
     addReply: Function,
     allReplys: Function,
+  },
+
+  data() {
+    return {
+      text: '',
+    }
   },
 
   methods: {

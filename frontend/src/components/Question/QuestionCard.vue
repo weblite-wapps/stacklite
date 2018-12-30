@@ -67,31 +67,6 @@ export default {
     }
   },
 
-  methods: {
-    share() {},
-
-    goToAnswersMode() {
-      bus.$emit('answers-mode', this.question)
-    },
-
-    changeFavorite() {
-      this.favorite
-        ? this.changeUserFavorite(this.question._id, 'remove')
-        : this.changeUserFavorite(this.question._id, 'add')
-      this.getFavoriteQuestionIds()
-      this.favorite = !this.favorite
-    },
-
-    changeLevel(score) {
-      const { question } = this
-      if (this.userId !== question.authorId && this.level === question.level) {
-        this.updateQuestionLevel(score, question._id)
-          .then(() => (this.level += score))
-          .catch(() => (this.level += 0))
-      }
-    },
-  },
-
   watch: {
     question: function() {
       const { question } = this
@@ -116,6 +91,31 @@ export default {
     this.formattedDate =
       date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
     this.tags = R.split(' ', R.replace(/\n/g, ' ', this.question.tag))
+  },
+
+  methods: {
+    share() {},
+
+    goToAnswersMode() {
+      bus.$emit('answers-mode', this.question)
+    },
+
+    changeFavorite() {
+      this.favorite
+        ? this.changeUserFavorite(this.question._id, 'remove')
+        : this.changeUserFavorite(this.question._id, 'add')
+      this.getFavoriteQuestionIds()
+      this.favorite = !this.favorite
+    },
+
+    changeLevel(score) {
+      const { question } = this
+      if (this.userId !== question.authorId && this.level === question.level) {
+        this.updateQuestionLevel(score, question._id)
+          .then(() => (this.level += score))
+          .catch(() => (this.level += 0))
+      }
+    },
   },
 }
 </script>

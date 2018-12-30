@@ -70,6 +70,19 @@ export default {
     AnswerEditForm,
   },
 
+  props: {
+    answer: Object,
+    userId: String,
+    userName: String,
+    questionWriter: String,
+    updateAnswerLevel: Function,
+    storeReply: Function,
+    state: String,
+    toggleChosen: Function,
+    deleteAnswer: Function,
+    editAnswer: Function,
+  },
+
   data() {
     return {
       level: -100,
@@ -82,17 +95,32 @@ export default {
     }
   },
 
-  props: {
-    answer: Object,
-    userId: String,
-    userName: String,
-    questionWriter: String,
-    updateAnswerLevel: Function,
-    storeReply: Function,
-    state: String,
-    toggleChosen: Function,
-    deleteAnswer: Function,
-    editAnswer: Function,
+  computed: {
+    isWriter() {
+      return this.userId === this.questionWriter ? true : false
+    },
+  },
+
+  watch: {
+    answer: function() {
+      this.level = this.answer.level
+      this.chosen = this.answer.chosen
+      this.showReplys = [...this.answer.replys]
+    },
+
+    state: function() {
+      this.showReplysPermission = false
+      this.replyPermission = false
+    },
+  },
+
+  mounted: function() {
+    this.level = this.answer.level
+    this.chosen = this.answer.chosen
+    this.showReplys = R.concat([], this.answer.replys)
+    const date = new Date(this.answer.date)
+    this.formattedDate =
+      date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
   },
 
   methods: {
@@ -132,34 +160,6 @@ export default {
       const reply = { text: text, authorName: this.userName }
       this.showReplys = R.append(reply, this.showReplys)
     },
-  },
-
-  computed: {
-    isWriter() {
-      return this.userId === this.questionWriter ? true : false
-    },
-  },
-
-  watch: {
-    answer: function() {
-      this.level = this.answer.level
-      this.chosen = this.answer.chosen
-      this.showReplys = [...this.answer.replys]
-    },
-
-    state: function() {
-      this.showReplysPermission = false
-      this.replyPermission = false
-    },
-  },
-
-  mounted: function() {
-    this.level = this.answer.level
-    this.chosen = this.answer.chosen
-    this.showReplys = R.concat([], this.answer.replys)
-    const date = new Date(this.answer.date)
-    this.formattedDate =
-      date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
   },
 }
 </script>

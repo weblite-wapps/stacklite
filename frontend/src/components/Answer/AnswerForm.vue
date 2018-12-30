@@ -10,14 +10,14 @@
 import bus from '../../helper/function/bus'
 
 export default {
+  props: {
+    storeAnswer: Function,
+  },
+
   data() {
     return {
       text: '',
     }
-  },
-
-  props: {
-    storeAnswer: Function,
   },
 
   methods: {

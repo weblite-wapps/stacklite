@@ -64,8 +64,13 @@ import bus from './helper/function/bus'
 // R && W
 const { R, W } = window
 
+// store
+import store from './store'
+
 export default {
   name: 'App',
+
+  store,
 
   components: {
     QuestionForm,
@@ -77,8 +82,8 @@ export default {
 
   data() {
     return {
-      username: 'Srmin',
-      userId: '10',
+      username: 'armin',
+      userId: '1',
       questions: [],
       state: 'questionsMode',
       fetchQuestionState: 'all',
@@ -90,6 +95,18 @@ export default {
       nextValid: true,
       fetchAmount: 3, /// set to more than 1
     }
+  },
+
+  computed: {
+    skip() {
+      return R.multiply(R.subtract(this.pageNumber, 1), this.fetchAmount)
+    },
+  },
+
+  watch: {
+    fetchQuestionState: function() {
+      this.pageNumber = 1
+    },
   },
 
   created() {
@@ -263,18 +280,6 @@ export default {
       requests
         .editAnswer(answerId, editedText)
         .then(() => bus.$emit('show-message', 'answer edited ...'))
-    },
-  },
-
-  watch: {
-    fetchQuestionState: function() {
-      this.pageNumber = 1
-    },
-  },
-
-  computed: {
-    skip() {
-      return R.multiply(R.subtract(this.pageNumber, 1), this.fetchAmount)
     },
   },
 }

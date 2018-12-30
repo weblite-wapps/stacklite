@@ -27,6 +27,11 @@
 export default {
   name: 'Header',
 
+  props: {
+    appName: String,
+    switchState: Function,
+  },
+
   data() {
     return {
       wappName: 'StackOverFlow',
@@ -35,11 +40,6 @@ export default {
       date: 'December 2018',
       icon: 'description',
     }
-  },
-
-  props: {
-    appName: String,
-    switchState: Function,
   },
 
   methods: {
