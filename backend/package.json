@@ -1,12 +1,17 @@
 {
+  "name": "stacklite-backend",
+  "version": "0.1.0",
+  "description": "",
   "scripts": {
-    "start": "node ./src/main.js"
+    "start": "nodemon src/main.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "mongoose": "^5.2.3",
+    "mongoose": "^5.2.3"
+  },
+  "devDependencies": {
     "nodemon": "^1.18.4"
   }
 }
